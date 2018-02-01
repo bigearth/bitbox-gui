@@ -1,11 +1,12 @@
-const electron = require('electron')
+const electron = require('electron');
 // Module to control application life.
 const app = electron.app
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 
-const path = require('path')
-const url = require('url')
+const path = require('path');
+const url = require('url');
+const express = require('express');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -13,7 +14,13 @@ let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600})
+  mainWindow = new BrowserWindow({
+    width: 1281,
+    height: 800,
+    minWidth: 1281,
+    minHeight: 800,
+    icon: path.join(__dirname, './assets/icons/mac/icon.icns') 
+  });
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
@@ -32,6 +39,16 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+
+  const server = express();
+  let endpoints = ['abandonTransaction', 'addmultisigaddress', 'addnode', 'addwitnessaddress', 'backupWallet', 'bumpfee', 'clearbanned', 'createmultisig', 'createrawtransaction', 'decoderawtransaction', 'decodescript', 'disconnectnode'];
+  endpoints.forEach(function(endpoint, index) {
+    server.get('/' + endpoint, function(req, res) {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify({ endpoint: endpoint }));
+    });
+  });
+  server.listen(8332, function() {console.log('listening on port 8332,')});
 }
 
 // This method will be called when Electron has finished

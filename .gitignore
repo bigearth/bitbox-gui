@@ -1,1 +1,9 @@
 node_modules
+
+release-builds
+
+*/**/.DS_STORE
+
+package-lock.json
+yarn.lock
+bundle.js

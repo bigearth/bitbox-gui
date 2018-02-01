@@ -1,12 +1,15 @@
 {
-  "name": "electron-quick-start",
-  "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "name": "BITBOX",
+  "version": "0.0.1",
+  "description": "A development framework for Bitcoin Cash",
   "main": "main.js",
+  "productName": "BITBOX",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
+    "create-installer-mac": "electron-installer-dmg ./release-builds/BITBOX-darwin-x64/BITBOX.app BITBOX --out=release-builds --overwrite --icon=assets/icons/mac/icon.icns"
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/bigearth/bitbox-electron",
   "keywords": [
     "Electron",
     "quick",
@@ -14,9 +17,13 @@
     "tutorial",
     "demo"
   ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "author": "Gabriel Cardona w/ EARTH",
+  "license": "MIT",
   "devDependencies": {
-    "electron": "~1.7.8"
+    "electron": "^1.7.12",
+    "electron-packager": "^10.1.2"
+  },
+  "dependencies": {
+    "express": "^4.16.2"
   }
 }
