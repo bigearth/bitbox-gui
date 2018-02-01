@@ -7,3 +7,5 @@ release-builds
 package-lock.json
 yarn.lock
 bundle.js
+
+.DS_STORE
