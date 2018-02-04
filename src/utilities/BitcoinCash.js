@@ -86,8 +86,8 @@ class BitcoinCash {
     return BIP39.entropyToMnemonic(Crypto.randomBytes(bits));
   }
 
-  static mnemonicToSeed(mnemonic) {
-    return BIP39.mnemonicToSeed(mnemonic, '');
+  static mnemonicToSeed(mnemonic, password = '') {
+    return BIP39.mnemonicToSeed(mnemonic, password);
   }
 
   static fromSeedBuffer(seed) {
@@ -122,7 +122,7 @@ class BitcoinCash {
       config.path = path;
     }
 
-    let seed = BitcoinCash.mnemonicToSeed(config.mnemonic);
+    let seed = BitcoinCash.mnemonicToSeed(config.mnemonic, config.password);
     let masterkey = BitcoinCash.fromSeedBuffer(seed);
 
     let account = masterkey.derivePath(config.path);

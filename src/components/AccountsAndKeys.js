@@ -12,8 +12,10 @@ class AccountsAndKeys extends Component {
       totalAccounts: props.wallet.totalAccounts,
       autogenerateMnemonic: props.wallet.autogenerateMnemonic,
       autogeneratePath: props.wallet.autogeneratePath,
-      displayCashaddr: props.displayCashaddr,
+      displayCashaddr: props.wallet.displayCashaddr,
       entropy: props.wallet.entropy,
+      password: props.wallet.password,
+      usePassword: props.wallet.usePassword
     }
   }
 
@@ -84,6 +86,29 @@ class AccountsAndKeys extends Component {
    this.props.handleEntropySliderChange(value);
   };
 
+  handleUsePasswordChange(e) {
+    let value = e.target.checked;
+    this.setState({
+      usePassword: value
+    })
+    if(!value) {
+      this.setState({
+        password: ''
+      })
+      this.props.handlePasswordChange('');
+    }
+
+   this.props.handleUsePasswordChange(value);
+  }
+
+  handlePasswordChange(e) {
+    let value = e.target.value;
+    this.setState({
+      password: value
+    })
+    this.props.handlePasswordChange(value);
+  }
+
   render() {
         // <p id='newRobotName'>Name: <input type='text' placeholder="Robot Name" value={this.state.robotName} onChange={this.handleRobotNameChange.bind(this)} /></p>
     let customMnemonicLabel;
@@ -92,12 +117,19 @@ class AccountsAndKeys extends Component {
       customMnemonicLabel = <label>Enter the Mnemonic you wish to use</label>;
       customMnemonic = <input type='text' placeholder={this.state.mnemonic} onChange={this.handleMnemonicChange.bind(this)} />;
     }
-    //
+
     let customPathLabel;
     let customPath;
     if(!this.state.autogeneratePath) {
       customPathLabel = <input type='text' placeholder={this.state.path} onChange={this.handlePathChange.bind(this)} />;
       customPath = <label>Enter the HD path you wish to use</label>;
+    }
+
+    let customPasswordLabel;
+    let customPassword;
+    if(this.state.usePassword) {
+      customPasswordLabel = <input type='text' placeholder={this.state.password} onChange={this.handlePasswordChange.bind(this)} />;
+      customPassword = <label>Enter the password you wish to use</label>;
     }
 
     let entropySlider;
@@ -106,7 +138,7 @@ class AccountsAndKeys extends Component {
         <Slider
           min={16}
           max={32}
-          step={8}
+          step={4}
           value={this.state.entropy}
           onChange={this.handleEntropySliderChange.bind(this)}
         />
@@ -143,6 +175,12 @@ class AccountsAndKeys extends Component {
 
                 {customPathLabel}
                 {customPath}
+
+                <label>Use password</label>
+                <input type="checkbox" checked={this.state.usePassword} onChange={this.handleUsePasswordChange.bind(this)} />
+
+                {customPasswordLabel}
+                {customPassword}
 
                 <label>Display in Cashaddr format</label>
                 <input type="checkbox" checked={this.state.displayCashaddr} onChange={this.handleDisplayCashaddrChange.bind(this)} />

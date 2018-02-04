@@ -45,15 +45,20 @@ class App extends Component {
       totalAccounts: 10,
       autogenerateMnemonic: true,
       autogeneratePath: true,
-      path: ''
+      path: '',
+      displayCashaddr: true,
+      password: '',
+      usePassword: false
     });
 
     this.state = {
-      mnemonic: '',
+      mnemonic: this.wallet.mnemonic,
       addresses: [],
       blockchainInstance: '',
       utxoSet: new Utxo(),
-      displayCashaddr: true,
+      displayCashaddr: this.wallet.displayCashaddr,
+      password: '',
+      usePassword: false,
       showCreateBtn: false
     };
   }
@@ -194,6 +199,7 @@ class App extends Component {
   }
 
   handleDisplayCashaddrChange(displayCashaddr) {
+    this.wallet.displayCashaddr = displayCashaddr;
     this.setState({
       displayCashaddr: displayCashaddr
     });
@@ -221,6 +227,17 @@ class App extends Component {
 
   handleEntropySliderChange(value) {
     this.wallet.entropy = value;
+  };
+
+  handleUsePasswordChange(usePassword) {
+    this.wallet.usePassword = usePassword;
+    this.setState({
+      usePassword: usePassword
+    });
+  };
+
+  handlePasswordChange(value) {
+    this.wallet.password = value;
   };
 
   createBlock() {
@@ -337,11 +354,6 @@ class App extends Component {
         <Configuration
           match={props.match}
           resetBitbox={this.resetBitbox.bind(this)}
-          mnemonic={this.state.mnemonic}
-          path={this.state.path}
-          displayCashaddr={this.state.displayCashaddr}
-          autogenerateMnemonic={this.autogenerateMnemonic}
-          autogeneratePath={this.autogeneratePath}
           handleTotalAccountsChange={this.handleTotalAccountsChange.bind(this)}
           handleMnemonicChange={this.handleMnemonicChange.bind(this)}
           handlePathChange={this.handlePathChange.bind(this)}
@@ -349,6 +361,8 @@ class App extends Component {
           handleAutoGeneratePathChange={this.handleAutoGeneratePathChange.bind(this)}
           handleDisplayCashaddrChange={this.handleDisplayCashaddrChange.bind(this)}
           handleEntropySliderChange={this.handleEntropySliderChange.bind(this)}
+          handleUsePasswordChange={this.handleUsePasswordChange.bind(this)}
+          handlePasswordChange={this.handlePasswordChange.bind(this)}
           wallet={this.wallet}
         />
       );

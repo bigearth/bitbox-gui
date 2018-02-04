@@ -51,6 +51,14 @@ class Configuration extends Component {
     this.props.handleEntropySliderChange(value);
   };
 
+  handleUsePasswordChange(value) {
+    this.props.handleUsePasswordChange(value);
+  };
+
+  handlePasswordChange(value) {
+    this.props.handlePasswordChange(value);
+  };
+
   render() {
 
     if (this.state.redirect) {
@@ -68,11 +76,8 @@ class Configuration extends Component {
           handleAutoGeneratePathChange={this.handleAutoGeneratePathChange.bind(this)}
           handleDisplayCashaddrChange={this.handleDisplayCashaddrChange.bind(this)}
           handleEntropySliderChange={this.handleEntropySliderChange.bind(this)}
-          mnemonic={this.props.mnemonic}
-          path={this.props.path}
-          displayCashaddr={this.props.displayCashaddr}
-          autogenerateMnemonic={this.props.autogenerateMnemonic}
-          autogeneratePath={this.props.autogeneratePath}
+          handleUsePasswordChange={this.handleUsePasswordChange.bind(this)}
+          handlePasswordChange={this.handlePasswordChange.bind(this)}
           resetBitbox={this.resetBitbox.bind(this)}
           wallet={this.props.wallet}
         />

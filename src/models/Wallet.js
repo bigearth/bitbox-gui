@@ -7,6 +7,9 @@ class Wallet {
     this.autogenerateMnemonic = config.autogenerateMnemonic || true;
     this.autogeneratePath = config.autogeneratePath || true;
     this.path = config.path || '';
+    this.displayCashaddr = config.displayCashaddr || true;
+    this.password = config.password || '';
+    this.usePassword = config.usePassword || '';
   }
 }
 
