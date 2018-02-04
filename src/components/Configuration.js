@@ -43,10 +43,18 @@ class Configuration extends Component {
     this.props.handleDisplayCashaddrChange(displayCashaddr);
   }
 
+  handleDisplayCashaddrChange(displayCashaddr) {
+    this.props.handleDisplayCashaddrChange(displayCashaddr);
+  }
+
+  handleEntropySliderChange(value) {
+    this.props.handleEntropySliderChange(value);
+  };
+
   render() {
 
     if (this.state.redirect) {
-      this.props.resetBitbox({});
+      this.props.resetBitbox();
       return <Redirect to='/'/>;
     }
 
@@ -59,13 +67,14 @@ class Configuration extends Component {
           handleAutoGenerateMnemonicChange={this.handleAutoGenerateMnemonicChange.bind(this)}
           handleAutoGeneratePathChange={this.handleAutoGeneratePathChange.bind(this)}
           handleDisplayCashaddrChange={this.handleDisplayCashaddrChange.bind(this)}
-          totalAccounts={this.props.totalAccounts}
+          handleEntropySliderChange={this.handleEntropySliderChange.bind(this)}
           mnemonic={this.props.mnemonic}
           path={this.props.path}
           displayCashaddr={this.props.displayCashaddr}
           autogenerateMnemonic={this.props.autogenerateMnemonic}
           autogeneratePath={this.props.autogeneratePath}
           resetBitbox={this.resetBitbox.bind(this)}
+          wallet={this.props.wallet}
         />
       );
     };

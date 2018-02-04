@@ -343,31 +343,31 @@ a.pure-button-primary {
   color: #2d3e50;
 }
 
-.Wallet ul {
+.WalletDisplay ul {
   list-style-type: none;
   color: #34495e;
   padding-left: 1em;
   padding-right: 1em;
 }
 
-.Wallet ul.subheader li {
+.WalletDisplay ul.subheader li {
   display: inline;
 }
 
-.Wallet ul.subheader {
+.WalletDisplay ul.subheader {
   font-size: 0.8em;
   margin: 0;
 }
 
-.Wallet.content {
+.WalletDisplay.content {
   padding: 1em 0;
 }
 
-.Wallet.content, .Blocks, .WrapperBlockDetails, .Configuration {
+.WalletDisplay.content, .Blocks, .WrapperBlockDetails, .Configuration {
   background: white;
 }
 
-.Wallet td {
+.WalletDisplay td {
   padding: 1.2em;
 }
 
@@ -514,4 +514,8 @@ a.pure-button-primary {
 .Faq a {
   text-decoration: none;
   color: #6FBEF3;
+}
+
+.rangeslider-horizontal .rangeslider__fill {
+  background: #6FBEF3;
 }

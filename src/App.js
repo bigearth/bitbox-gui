@@ -15,9 +15,10 @@ import Block from './models/Block';
 import Transaction from './models/Transaction';
 import Output from './models/Output';
 import Utxo from './models/Utxo';
+import Wallet from './models/Wallet';
 
 // custom components
-import Wallet from './components/Wallet';
+import WalletDisplay from './components/WalletDisplay';
 import Blocks from './components/Blocks';
 import BlockDetails from './components/BlockDetails';
 // import AddressDetails from './components/AddressDetails';
@@ -35,11 +36,17 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.totalAccounts = 10;
-    this.mnemonic = '';
-    this.path = '';
-    this.autogenerateMnemonic = true;
-    this.autogeneratePath = true;
+
+    // Create HD wallet w/ default configuration
+    this.wallet = new Wallet({
+      entropy: 16,
+      network: 'bitcoin',
+      mnemonic: '',
+      totalAccounts: 10,
+      autogenerateMnemonic: true,
+      autogeneratePath: true,
+      path: ''
+    });
 
     this.state = {
       mnemonic: '',
@@ -47,32 +54,20 @@ class App extends Component {
       blockchainInstance: '',
       utxoSet: new Utxo(),
       displayCashaddr: true,
-      configuration: {
-        wallet: {
-          createNewWallet: true,
-          network: 'bitcoin'
-        }
-      },
       showCreateBtn: false
     };
   }
 
   componentDidMount() {
-    if(this.state.configuration.wallet.createNewWallet) {
-      let [mnemonic, path, addresses] = BitcoinCash.createHDWallet({
-        totalAccounts: this.totalAccounts,
-        autogenerateMnemonic: this.autogenerateMnemonic,
-        autogeneratePath: this.autogeneratePath
-      });
-      let config = this.state.configuration;
-      this.setState({
-        mnemonic: mnemonic,
-        path: path,
-        addresses: addresses,
-        configuration: config
-      });
-      this.createBlockchain(addresses);
-    }
+    let [mnemonic, path, addresses] = BitcoinCash.createHDWallet(this.wallet);
+    let config = this.state.configuration;
+    this.setState({
+      mnemonic: mnemonic,
+      path: path,
+      addresses: addresses,
+      configuration: config
+    });
+    this.createBlockchain(addresses);
   }
 
   // rng() {
@@ -168,24 +163,8 @@ class App extends Component {
     this.handleUtxoUpdate(utxoSet);
   }
 
-  resetBitbox(config) {
-    config.totalAccounts = this.totalAccounts;
-
-    if(!config.mnemonic && this.mnemonic !== '') {
-      config.mnemonic = this.mnemonic;
-    }
-
-    if(!config.autogenerateMnemonic && this.autogenerateMnemonic !== false) {
-      config.autogenerateMnemonic = this.autogenerateMnemonic;
-    }
-
-    if(!config.autogeneratePath && this.autogeneratePath === false) {
-      config.autogeneratePath = this.autogeneratePath;
-      config.path = this.path;
-    } else {
-      config.autogeneratePath = true;
-    }
-    let [mnemonic, path, addresses] = BitcoinCash.createHDWallet(config);
+  resetBitbox() {
+    let [mnemonic, path, addresses] = BitcoinCash.createHDWallet(this.wallet);
     this.setState({
       mnemonic: mnemonic,
       path: path,
@@ -195,23 +174,23 @@ class App extends Component {
   }
 
   handleMnemonicChange(mnemonic) {
-    this.mnemonic = mnemonic;
+    this.wallet.mnemonic = mnemonic;
   }
 
   handlePathChange(path) {
-    this.path = path;
+    this.wallet.path = path;
   }
 
   handleTotalAccountsChange(totalAccounts) {
-    this.totalAccounts = +totalAccounts;
+    this.wallet.totalAccounts = totalAccounts;
   }
 
   handleAutoGenerateMnemonicChange(autogenerateMnemonic) {
-    this.autogenerateMnemonic = autogenerateMnemonic;
+    this.wallet.autogenerateMnemonic = autogenerateMnemonic;
   }
 
   handleAutoGeneratePathChange(autogeneratePath) {
-    this.autogeneratePath = autogeneratePath;
+    this.wallet.autogeneratePath = autogeneratePath;
   }
 
   handleDisplayCashaddrChange(displayCashaddr) {
@@ -239,6 +218,10 @@ class App extends Component {
       utxoSet: utxoSet
     })
   }
+
+  handleEntropySliderChange(value) {
+    this.wallet.entropy = value;
+  };
 
   createBlock() {
     let blockchainInstance = this.state.blockchainInstance;
@@ -299,7 +282,7 @@ class App extends Component {
 
     const WalletPage = (props) => {
       return (
-        <Wallet
+        <WalletDisplay
           mnemonic={this.state.mnemonic}
           path={this.state.path}
           blockchainInstance={this.state.blockchainInstance}
@@ -354,7 +337,6 @@ class App extends Component {
         <Configuration
           match={props.match}
           resetBitbox={this.resetBitbox.bind(this)}
-          totalAccounts={this.totalAccounts}
           mnemonic={this.state.mnemonic}
           path={this.state.path}
           displayCashaddr={this.state.displayCashaddr}
@@ -366,6 +348,8 @@ class App extends Component {
           handleAutoGenerateMnemonicChange={this.handleAutoGenerateMnemonicChange.bind(this)}
           handleAutoGeneratePathChange={this.handleAutoGeneratePathChange.bind(this)}
           handleDisplayCashaddrChange={this.handleDisplayCashaddrChange.bind(this)}
+          handleEntropySliderChange={this.handleEntropySliderChange.bind(this)}
+          wallet={this.wallet}
         />
       );
     };
@@ -381,7 +365,7 @@ class App extends Component {
           //   <Route exact path="/blocks" component={BlocksPage}/>
           //   <Route path="/blocks/:block_id" component={BlockPage}/>
           //   <Route path="/configuration" component={ConfigurationPage}/>
-          //   <Route exact path="/" component={WalletPage}/>
+          //   <Route exact path="/" component={WalletDisplayPage}/>
           //   <Redirect from='*' to='/' />
           // </Switch>
     return (

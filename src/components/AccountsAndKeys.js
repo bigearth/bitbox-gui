@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
+import Slider from 'react-rangeslider'
+import 'react-rangeslider/lib/index.css'
 
 class AccountsAndKeys extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      mnemonic: this.props.mnemonic,
-      path: this.props.path,
-      totalAccounts: this.props.totalAccounts,
-      autogenerateMnemonic: this.props.autogenerateMnemonic,
-      autogeneratePath: this.props.autogeneratePath,
-      displayCashaddr: this.props.displayCashaddr
+      mnemonic: props.wallet.mnemonic,
+      path: props.wallet.path,
+      totalAccounts: props.wallet.totalAccounts,
+      autogenerateMnemonic: props.wallet.autogenerateMnemonic,
+      autogeneratePath: props.wallet.autogeneratePath,
+      displayCashaddr: props.displayCashaddr,
+      entropy: props.wallet.entropy,
     }
   }
 
@@ -74,6 +77,13 @@ class AccountsAndKeys extends Component {
    this.props.handleDisplayCashaddrChange(value);
   }
 
+  handleEntropySliderChange(value) {
+    this.setState({
+      entropy: value
+    })
+   this.props.handleEntropySliderChange(value);
+  };
+
   render() {
         // <p id='newRobotName'>Name: <input type='text' placeholder="Robot Name" value={this.state.robotName} onChange={this.handleRobotNameChange.bind(this)} /></p>
     let customMnemonicLabel;
@@ -90,17 +100,38 @@ class AccountsAndKeys extends Component {
       customPath = <label>Enter the HD path you wish to use</label>;
     }
 
+    let entropySlider;
+    if(this.state.autogenerateMnemonic) {
+      entropySlider = <div><label>Entropy</label>
+        <Slider
+          min={16}
+          max={32}
+          step={8}
+          value={this.state.entropy}
+          onChange={this.handleEntropySliderChange.bind(this)}
+        />
+        <div className='value'>{this.state.entropy} bytes/{this.state.entropy * 8} bits</div></div>;
+    }
+
     return (
       <div className="AccountsAndKeys">
         <h2 className="content-head is-center">Accounts & Keys</h2>
         <div className="pure-g">
-          <div className="l-box-lrg pure-u-1 pure-u-md-2-5">
+          <div className="l-box-lrg pure-u-1-2">
             <form className="pure-form pure-form-stacked">
               <fieldset>
                 <button className="pure-button" onClick={this.props.resetBitbox.bind(this)}><i className="fas fa-redo" /> Restart</button>
 
                 <label>Total number of accounts to generate</label>
                 <input type='number' placeholder="Number of accounts" value={this.state.totalAccounts} onChange={this.handleTotalAccountsChange.bind(this)} />
+
+                {entropySlider}
+              </fieldset>
+            </form>
+          </div>
+          <div className="l-box-lrg pure-u-1-2">
+            <form className="pure-form pure-form-stacked">
+              <fieldset>
 
                 <label>Autogenerate HD Mnemonic</label>
                 <input type="checkbox" checked={this.state.autogenerateMnemonic} onChange={this.handleAutoGenerateMnemonicChange.bind(this)} />

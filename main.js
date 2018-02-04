@@ -15,8 +15,8 @@ let mainWindow
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1281,
-    height: 800,
+    width: 1550,
+    height: 1000,
     minWidth: 1281,
     minHeight: 800,
     icon: path.join(__dirname, './assets/icons/mac/icon.icns')
@@ -89,7 +89,6 @@ function createWindow () {
     'getnettotals',
     'getnetworkhashps',
     'getnetworkinfo',
-    'getnewaddress',
     'getpeerinfo',
     'getrawchangeaddress',
     'getrawmempool',
@@ -103,7 +102,6 @@ function createWindow () {
     'getunconfirmedbalance',
     'getwalletinfo',
     'getwork',
-    'help',
     'importaddress',
     'importmulti',
     'importprivkey',
@@ -153,6 +151,16 @@ function createWindow () {
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify({ endpoint: endpoint }));
     });
+  });
+
+  server.get('/help', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ endpoints: endpoints.push('help') }));
+  });
+
+  server.post('/getnewaddress', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ endpoints: endpoints.push('help') }));
   });
   server.listen(8332, function() {console.log('listening on port 8332,')});
 }

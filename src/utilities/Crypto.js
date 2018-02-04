@@ -12,7 +12,7 @@ class Crypto {
   }
 
   static randomBytes(size = 16) {
-    return crypto.randomBytes(16).toString('hex');
+    return crypto.randomBytes(size).toString('hex');
   }
 }
 

@@ -82,8 +82,8 @@ class BitcoinCash {
     return bchaddr.detectAddressType(address);
   }
 
-  static entropyToMnemonic() {
-    return BIP39.entropyToMnemonic(Crypto.randomBytes());
+  static entropyToMnemonic(bits = 16) {
+    return BIP39.entropyToMnemonic(Crypto.randomBytes(bits));
   }
 
   static mnemonicToSeed(mnemonic) {
@@ -107,11 +107,11 @@ class BitcoinCash {
   }
 
   static createHDWallet(config) {
-    if(!config.mnemonic && config.autogenerateMnemonic) {
-      config.mnemonic = BitcoinCash.entropyToMnemonic();
+    if(config.autogenerateMnemonic) {
+      config.mnemonic = BitcoinCash.entropyToMnemonic(config.entropy);
     }
 
-    if(!config.path && config.autogeneratePath) {
+    if(config.autogeneratePath) {
       let depth = Math.floor(Math.random() * 11);
 
       let path = "m/44'/0'";
@@ -120,16 +120,14 @@ class BitcoinCash {
         path = `${path}/${child}'`;
       }
       config.path = path;
-    } else {
-      config.path = config.path;
     }
 
-    const seed = BitcoinCash.mnemonicToSeed(config.mnemonic);
-    const masterkey = BitcoinCash.fromSeedBuffer(seed);
+    let seed = BitcoinCash.mnemonicToSeed(config.mnemonic);
+    let masterkey = BitcoinCash.fromSeedBuffer(seed);
 
-    const account = masterkey.derivePath(config.path);
+    let account = masterkey.derivePath(config.path);
 
-    const addresses = [];
+    let addresses = [];
     for (let i = 0; i < config.totalAccounts; i++) {
       addresses.push(new Address(account.derive(i).keyPair.toWIF()));
       // addresses.push(new Address(BitcoinCash.toCashAddress(account.derive(i).getAddress()), account.derive(i).keyPair.toWIF()));

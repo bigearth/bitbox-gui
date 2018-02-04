@@ -4,7 +4,7 @@ import Crypto from '../utilities/Crypto';
 import AddressDetails from './AddressDetails';
 import underscore from 'underscore';
 
-class Wallet extends Component {
+class WalletDisplay extends Component {
   render() {
     // console.log(this.props.utxoSet);
     let list = [];
@@ -55,7 +55,7 @@ class Wallet extends Component {
     }
 
     return (
-      <div className="Wallet content pure-g">
+      <div className="WalletDisplay content pure-g">
         <div className="pure-u-1-1">
           <ul className='subheader'>
             <li className=''>MNEMONIC</li>
@@ -76,4 +76,4 @@ class Wallet extends Component {
   }
 }
 
-export default Wallet;
+export default WalletDisplay;
