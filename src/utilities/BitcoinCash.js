@@ -90,8 +90,8 @@ class BitcoinCash {
     return BIP39.mnemonicToSeed(mnemonic, password);
   }
 
-  static fromSeedBuffer(seed) {
-    return Bitcoin.HDNode.fromSeedBuffer(seed, Bitcoin.networks['bitcoin']);
+  static fromSeedBuffer(rootSeed) {
+    return Bitcoin.HDNode.fromSeedBuffer(rootSeed, Bitcoin.networks['bitcoin']);
   }
 
   static fromWIF(privateKeyWIF) {
@@ -107,29 +107,41 @@ class BitcoinCash {
   }
 
   static createHDWallet(config) {
+    // nore info: https://github.com/bitcoinbook/bitcoinbook/blob/develop/ch05.asciidoc
+
     if(config.autogenerateMnemonic) {
+      // create a 512 byte HMAC-SHA512 random mnemonic w/ user provided entropy size
       config.mnemonic = BitcoinCash.entropyToMnemonic(config.entropy);
     }
 
-    if(config.autogeneratePath) {
-      let depth = Math.floor(Math.random() * 11);
+    // create 512 byte HMAC-SHA512 root seed
+    let rootSeed = BitcoinCash.mnemonicToSeed(config.mnemonic, config.password);
 
-      let path = "m/44'/0'";
-      for(let i = 0; i <= depth; i++) {
-        let child = Math.floor(Math.random() * 100);
-        path = `${path}/${child}'`;
-      }
+    // create master private key
+    let masterkey = BitcoinCash.fromSeedBuffer(rootSeed);
+
+    if(config.autogeneratePath) {
+      // create random BIP 44 HD path
+      // m / purpose' / coin_type' / account' / change / address_index
+
+      // purpose is always 44' to show the wallet is BIP 44 compliant
+      let purpose = "44'";
+
+      // BCH's coin code is 145'
+      let coin = "145'";
+      let path = `m/${purpose}/${coin}`;
       config.path = path;
     }
 
-    let seed = BitcoinCash.mnemonicToSeed(config.mnemonic, config.password);
-    let masterkey = BitcoinCash.fromSeedBuffer(seed);
-
-    let account = masterkey.derivePath(config.path);
-
     let addresses = [];
+    let account;
+    let tmpPath;
     for (let i = 0; i < config.totalAccounts; i++) {
-      addresses.push(new Address(account.derive(i).keyPair.toWIF()));
+      // create accounts
+      account = masterkey.derivePath(`${config.path.replace(/\/$/, "")}/${i}'`);
+
+      // get 1st receiving address of account i
+      addresses.push(new Address(account.derive(0).keyPair.toWIF()));
       // addresses.push(new Address(BitcoinCash.toCashAddress(account.derive(i).getAddress()), account.derive(i).keyPair.toWIF()));
     };
 

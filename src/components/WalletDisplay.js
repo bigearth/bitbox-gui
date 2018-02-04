@@ -63,7 +63,7 @@ class WalletDisplay extends Component {
           </ul>
           <ul className='subheader'>
             <li className='content-head'>{this.props.mnemonic}</li>
-            <li className='content-head right'>{this.props.path}</li>
+            <li className='content-head right'>{this.props.path.replace(/\/$/, "")}/account_index&rsquo;</li>
           </ul>
           <table className="pure-table">
             <tbody>
