@@ -89,7 +89,6 @@ class App extends Component {
   //   // newTxb.addOutput(addresses[2].publicKey, 12000);
   //   // newTxb.sign(0, owner)
   //   // let newTxHex = newTxb.build().toHex();
-  //   // console.log(newTxHex);
   //
   //   // let testnet = Bitcoin.networks.testnet;
   //   // var txb = new Bitcoin.TransactionBuilder(testnet)
@@ -97,7 +96,6 @@ class App extends Component {
   //   // var aliceChange = Bitcoin.ECPair.makeRandom({ rng: this.rng, network: testnet })
   //   //
   //   //
-  //   // console.log(alice1, aliceChange);
   //
   //   // GetHash()      =
   //   // hashMerkleRoot = 0x4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b
@@ -115,7 +113,7 @@ class App extends Component {
   //   //     CTxIn(COutPoint(000000, -1), coinbase 04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73)
   //   //     CTxOut(nValue=50.00000000, scriptPubKey=0x5F1DF16B2B704C8A578D0B)
   //   // vMerkleTree: 4a5e1e
-    let keyPair = BitcoinCash.fromWIF(addresses[0].privateKeyWIF);
+    let keyPair = BitcoinCash.fromWIF(addresses[0].privateKeyWIF, this.wallet.network);
     let address = keyPair.getAddress();
     let ripemd160 = Crypto.createRIPEMD160Hash(address);
     let output = new Output({
@@ -144,25 +142,20 @@ class App extends Component {
       transactions: [genesisTx],
       previousHash: '00000000000000'
     };
-    // console.log(genesisBlock);
     let blockchainInstance = new Blockchain(genesisBlock);
 
     let utxoSet = this.state.utxoSet;
     utxoSet.addUtxo(address, genesisBlock.transactions[0].outputs[0].value);
-    // console.log(utxoSet);
   //   // let coinbase = BitcoinCash.fromWIF(addresses[0].privateKeyWIF);
   //   // let txb = BitcoinCash.transactionBuilder();
   //   //
-  //   // // console.log(genesisTx.createTransactionHash(genesisTx));
   //   // txb.addInput(Crypto.createSHA256Hash(genesisTx), 0);
   //   // // f5a5ce5988cc72b9b90e8d1d6c910cda53c88d2175177357cc2f2cf0899fbaad
   //   // txb.addOutput(addresses[1].publicKey, 12000);
   //   //
   //   // txb.sign(0, coinbase)
   //   // let txHex = txb.build().toHex();
-  //   // // console.log(txHex)
   //   // let txHash = Crypto.createSHA256Hash(txHex);
-  //   // console.log(txHash);
   //
     this.handleBlockchainUpdate(blockchainInstance);
     this.handleUtxoUpdate(utxoSet);
@@ -243,7 +236,7 @@ class App extends Component {
   createBlock() {
     let blockchainInstance = this.state.blockchainInstance;
 
-    let keyPair = BitcoinCash.fromWIF(this.state.addresses[0].privateKeyWIF);
+    let keyPair = BitcoinCash.fromWIF(this.state.addresses[0].privateKeyWIF, this.wallet.network);
     let address = keyPair.getAddress();
     let ripemd160 = Crypto.createRIPEMD160Hash(address);
 
@@ -306,6 +299,7 @@ class App extends Component {
           addresses={this.state.addresses}
           utxoSet={this.state.utxoSet}
           displayCashaddr={this.state.displayCashaddr}
+          wallet={this.wallet}
         />
       );
     };

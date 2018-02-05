@@ -90,12 +90,12 @@ class BitcoinCash {
     return BIP39.mnemonicToSeed(mnemonic, password);
   }
 
-  static fromSeedBuffer(rootSeed) {
-    return Bitcoin.HDNode.fromSeedBuffer(rootSeed, Bitcoin.networks['bitcoin']);
+  static fromSeedBuffer(rootSeed, network = 'bitcoin') {
+    return Bitcoin.HDNode.fromSeedBuffer(rootSeed, Bitcoin.networks[network]);
   }
 
-  static fromWIF(privateKeyWIF) {
-    return Bitcoin.ECPair.fromWIF(privateKeyWIF);
+  static fromWIF(privateKeyWIF, network = 'bitcoin') {
+    return Bitcoin.ECPair.fromWIF(privateKeyWIF, Bitcoin.networks[network]);
   }
 
   static transaction() {
@@ -118,7 +118,9 @@ class BitcoinCash {
     let rootSeed = BitcoinCash.mnemonicToSeed(config.mnemonic, config.password);
 
     // create master private key
-    let masterkey = BitcoinCash.fromSeedBuffer(rootSeed);
+    let masterkey = BitcoinCash.fromSeedBuffer(rootSeed, config.network);
+
+    // let tmpkey = BitcoinCash.fromSeedBuffer(rootSeed);
 
     if(config.autogeneratePath) {
       // create random BIP 44 HD path
@@ -139,6 +141,13 @@ class BitcoinCash {
     for (let i = 0; i < config.totalAccounts; i++) {
       // create accounts
       account = masterkey.derivePath(`${config.path.replace(/\/$/, "")}/${i}'`);
+
+      // var keyhash = Bitcoin.crypto.hash160(account.getPublicKeyBuffer())
+      // var scriptSig = Bitcoin.script.witnessPubKeyHash.output.encode(keyhash)
+      // var addressBytes = Bitcoin.crypto.hash160(scriptSig)
+      // var outputScript = Bitcoin.script.scriptHash.output.encode(addressBytes)
+      // var address = Bitcoin.address.fromOutputScript(outputScript, Bitcoin.networks.testnet)
+      // console.log(address.derive(0));
 
       // get 1st receiving address of account i
       addresses.push(new Address(account.derive(0).keyPair.toWIF()));

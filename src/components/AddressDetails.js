@@ -6,7 +6,7 @@ class AddressDetails extends Component {
   constructor(props) {
     super(props);
     let privateKeyWIF = this.props.address.privateKeyWIF;
-    let address = BitcoinCash.fromWIF(privateKeyWIF).getAddress();
+    let address = BitcoinCash.fromWIF(privateKeyWIF, this.props.wallet.network).getAddress();
     this.state = {
       address: address,
       showPrivKey: false
@@ -32,7 +32,7 @@ class AddressDetails extends Component {
     let address;
     if(this.state.showPrivKey) {
 
-      btn = <td><button className="pure-button danger-background" onClick={this.hideKey.bind(this, BitcoinCash.fromWIF(this.state.address).getAddress())}><i className="fas fa-key" /></button></td>;
+      btn = <td><button className="pure-button danger-background" onClick={this.hideKey.bind(this, BitcoinCash.fromWIF(this.state.address, this.props.wallet.network).getAddress())}><i className="fas fa-key" /></button></td>;
       address = <span className='danger'>{this.state.address}</span>;
     } else {
       btn = <td><button className="pure-button" onClick={this.showKey.bind(this, this.props.address.privateKeyWIF)}><i className="fas fa-key" /></button></td>;

@@ -6,12 +6,11 @@ import underscore from 'underscore';
 
 class WalletDisplay extends Component {
   render() {
-    // console.log(this.props.utxoSet);
     let list = [];
     if (this.props.addresses.length) {
       this.props.addresses.forEach((address, index) => {
         // get balances
-        let publicKey = BitcoinCash.fromWIF(address.privateKeyWIF).getAddress();
+        let publicKey = BitcoinCash.fromWIF(address.privateKeyWIF, this.props.wallet.network).getAddress();
         let ripemd160 = Crypto.createRIPEMD160Hash(publicKey);
 
         let outputs = [];
@@ -26,7 +25,6 @@ class WalletDisplay extends Component {
            balance += output.value;
          });
 
-        // console.log(balance);
         // get transactions
         let transactions = [];
         underscore.each(this.props.blockchainInstance.chain, (block, index) => {
@@ -49,6 +47,7 @@ class WalletDisplay extends Component {
             balance={balance}
             transactionsCount={transactionsCount}
             displayCashaddr={this.props.displayCashaddr}
+            wallet={this.props.wallet}
           />
         );
       });

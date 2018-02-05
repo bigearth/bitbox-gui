@@ -16,13 +16,11 @@ class Blocks extends Component {
     // blockchainInstance.addBlock(new Block(2, "20/07/2017", { amount: 8 }));
 
     // Check if chain is valid (will return true)
-    // console.log('Blockchain valid? ' + blockchainInstance.isChainValid());
 
     // Let's now manipulate the data
     // blockchainInstance.chain[1].data = { amount: 100 };
 
     // Check our chain again (will now return false)
-    // console.log("Blockchain valid? " + blockchainInstance.isChainValid());
   }
 
   handleBlockDetails(blockId) {
