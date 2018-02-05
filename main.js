@@ -19,8 +19,14 @@ function createWindow () {
     height: 1000,
     minWidth: 1281,
     minHeight: 800,
-    icon: path.join(__dirname, './assets/icons/mac/icon.icns')
+    icon: path.join(__dirname, './assets/icons/mac/icon.icns'),
+    backgroundColor: '#6FBEF3',
+    show: false
   });
+
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show()
+  })
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
