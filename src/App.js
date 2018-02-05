@@ -170,18 +170,6 @@ class App extends Component {
     this.createBlockchain(addresses);
   }
 
-  handleMnemonicChange(mnemonic) {
-    this.wallet.mnemonic = mnemonic;
-  }
-
-  handlePathChange(path) {
-    this.wallet.path = path;
-  }
-
-  handleTotalAccountsChange(totalAccounts) {
-    this.wallet.totalAccounts = totalAccounts;
-  }
-
   handlePathMatch(path) {
     if(path === '/' || path === '/blocks' || path === '/transactions' || path === '/logs' || path === '/configuration/accounts-and-keys') {
       return true;
@@ -206,12 +194,19 @@ class App extends Component {
     this.wallet.entropy = value;
   }
 
-  handlePasswordChange(value) {
-    this.wallet.password = value;
+  handleConfigChange(value, id) {
+    if(id === 'mnemonic') {
+      this.wallet.mnemonic = value;
+    } else if (id === 'path') {
+      this.wallet.path = value;
+    } else if (id === 'password') {
+      this.wallet.password = value;
+    } else if (id === 'totalAccounts') {
+      this.wallet.totalAccounts = value;
+    }
   }
 
-  handleConfigChange(value, id) {
-    console.log('handleConfigChange called', value, id);
+  handleConfigToggle(value, id) {
     if(id === 'displayTestnet') {
       if(value) {
         this.wallet.network = 'testnet';
@@ -349,12 +344,9 @@ class App extends Component {
         <Configuration
           match={props.match}
           resetBitbox={this.resetBitbox.bind(this)}
-          handleTotalAccountsChange={this.handleTotalAccountsChange.bind(this)}
-          handleMnemonicChange={this.handleMnemonicChange.bind(this)}
-          handlePathChange={this.handlePathChange.bind(this)}
           handleEntropySliderChange={this.handleEntropySliderChange.bind(this)}
-          handlePasswordChange={this.handlePasswordChange.bind(this)}
           wallet={this.wallet}
+          handleConfigToggle={this.handleConfigToggle.bind(this)}
           handleConfigChange={this.handleConfigChange.bind(this)}
         />
       );

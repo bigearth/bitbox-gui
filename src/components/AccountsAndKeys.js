@@ -20,30 +20,6 @@ class AccountsAndKeys extends Component {
     }
   }
 
-  handleMnemonicChange(e) {
-    let value = e.target.value;
-    this.setState({
-      mnemonic: value
-    })
-   this.props.handleMnemonicChange(value);
-  }
-
-  handlePathChange(e) {
-    let value = e.target.value;
-    this.setState({
-      path: value
-    })
-   this.props.handlePathChange(value);
-  }
-
-  handleTotalAccountsChange(e) {
-    let value = e.target.value;
-    this.setState({
-      totalAccounts: value
-    })
-   this.props.handleTotalAccountsChange(value);
-  }
-
   handleEntropySliderChange(value) {
     this.setState({
       entropy: value
@@ -51,37 +27,56 @@ class AccountsAndKeys extends Component {
    this.props.handleEntropySliderChange(value);
   };
 
-  handlePasswordChange(e) {
-    let value = e.target.value;
-    this.setState({
-      password: value
-    })
-    this.props.handlePasswordChange(value);
-  }
-
   handleConfigChange(e) {
-    let value = e.target.checked;
+    let value = e.target.value;
     let id = e.target.id;
     let obj = {};
     obj[id] = value;
     this.setState(obj)
     this.props.handleConfigChange(value, id);
+  }
+
+  handleConfigToggle(e) {
+    let value = e.target.checked;
+    let id = e.target.id;
+    let obj = {};
+    obj[id] = value;
+    this.setState(obj)
+    this.props.handleConfigToggle(value, id);
 
     if(value && id === 'autogenerateMnemonic') {
       this.setState({
         mnemonic: ''
       })
-      this.props.handleMnemonicChange('');
+
+      this.handleConfigChange({
+        target: {
+          value: '',
+          id: 'mnemonic'
+        }
+      });
     } else if(value && id === 'autogeneratePath') {
       this.setState({
         path: ''
       })
-      this.props.handlePathChange('');
+
+      this.handleConfigChange({
+        target: {
+          value: '',
+          id: 'path'
+        }
+      });
     } else if(!value && id === 'usePassword') {
       this.setState({
         password: ''
       })
-      this.props.handlePasswordChange('');
+
+      this.handleConfigChange({
+        target: {
+          value: '',
+          id: 'password'
+        }
+      });
     }
   }
 
@@ -91,20 +86,20 @@ class AccountsAndKeys extends Component {
     let customMnemonic;
     if(!this.state.autogenerateMnemonic) {
       customMnemonicLabel = <label>Enter the Mnemonic you wish to use</label>;
-      customMnemonic = <input type='text' placeholder={this.state.mnemonic} onChange={this.handleMnemonicChange.bind(this)} />;
+      customMnemonic = <input id='mnemonic' type='text' placeholder={this.state.mnemonic} onChange={this.handleConfigChange.bind(this)} />;
     }
 
     let customPathLabel;
     let customPath;
     if(!this.state.autogeneratePath) {
-      customPathLabel = <input type='text' placeholder={this.state.path} onChange={this.handlePathChange.bind(this)} />;
-      customPath = <label>Enter the HD path you wish to use</label>;
+      customPathLabel = <label>Enter the HD path you wish to use</label>;
+      customPath = <input id='path' type='text' placeholder={this.state.path} onChange={this.handleConfigChange.bind(this)} />;
     }
 
     let customPasswordLabel;
     let customPassword;
     if(this.state.usePassword) {
-      customPasswordLabel = <input type='text' placeholder={this.state.password} onChange={this.handlePasswordChange.bind(this)} />;
+      customPasswordLabel = <input id='password' type='text' placeholder={this.state.password} onChange={this.handleConfigChange.bind(this)} />;
       customPassword = <label>Enter the password you wish to use</label>;
     }
 
@@ -131,7 +126,7 @@ class AccountsAndKeys extends Component {
                 <button className="pure-button" onClick={this.props.resetBitbox.bind(this)}><i className="fas fa-redo" /> Restart</button>
 
                 <label>Total number of accounts to generate</label>
-                <input type='number' placeholder="Number of accounts" value={this.state.totalAccounts} onChange={this.handleTotalAccountsChange.bind(this)} />
+                <input id='totalAccounts' type='number' placeholder="Number of accounts" value={this.state.totalAccounts} onChange={this.handleConfigChange.bind(this)} />
 
                 {entropySlider}
               </fieldset>
@@ -142,27 +137,27 @@ class AccountsAndKeys extends Component {
               <fieldset>
 
                 <label>Autogenerate HD Mnemonic</label>
-                <input id='autogenerateMnemonic' type="checkbox" checked={this.state.autogenerateMnemonic} onChange={this.handleConfigChange.bind(this)} />
+                <input id='autogenerateMnemonic' type="checkbox" checked={this.state.autogenerateMnemonic} onChange={this.handleConfigToggle.bind(this)} />
                 {customMnemonicLabel}
                 {customMnemonic}
 
                 <label>Autogenerate HD Path</label>
-                <input id='autogeneratePath' type="checkbox" checked={this.state.autogeneratePath} onChange={this.handleConfigChange.bind(this)} />
+                <input id='autogeneratePath' type="checkbox" checked={this.state.autogeneratePath} onChange={this.handleConfigToggle.bind(this)} />
 
                 {customPathLabel}
                 {customPath}
 
                 <label>Use password</label>
-                <input id='usePassword' type="checkbox" checked={this.state.usePassword} onChange={this.handleConfigChange.bind(this)} />
+                <input id='usePassword' type="checkbox" checked={this.state.usePassword} onChange={this.handleConfigToggle.bind(this)} />
 
                 {customPasswordLabel}
                 {customPassword}
 
                 <label>Display in Cashaddr format</label>
-                <input id='displayCashaddr' type="checkbox" checked={this.state.displayCashaddr} onChange={this.handleConfigChange.bind(this)} />
+                <input id='displayCashaddr' type="checkbox" checked={this.state.displayCashaddr} onChange={this.handleConfigToggle.bind(this)} />
 
                 <label>Display on testnet</label>
-                <input id='displayTestnet' type="checkbox" checked={this.state.displayTestnet} onChange={this.handleConfigChange.bind(this)} />
+                <input id='displayTestnet' type="checkbox" checked={this.state.displayTestnet} onChange={this.handleConfigToggle.bind(this)} />
               </fieldset>
             </form>
           </div>
