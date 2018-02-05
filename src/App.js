@@ -57,9 +57,7 @@ class App extends Component {
       addresses: [],
       blockchainInstance: '',
       utxoSet: new Utxo(),
-      displayCashaddr: this.wallet.displayCashaddr,
       password: '',
-      usePassword: false,
       showCreateBtn: false
     };
   }
@@ -184,21 +182,6 @@ class App extends Component {
     this.wallet.totalAccounts = totalAccounts;
   }
 
-  handleAutoGenerateMnemonicChange(autogenerateMnemonic) {
-    this.wallet.autogenerateMnemonic = autogenerateMnemonic;
-  }
-
-  handleAutoGeneratePathChange(autogeneratePath) {
-    this.wallet.autogeneratePath = autogeneratePath;
-  }
-
-  handleDisplayCashaddrChange(displayCashaddr) {
-    this.wallet.displayCashaddr = displayCashaddr;
-    this.setState({
-      displayCashaddr: displayCashaddr
-    });
-  }
-
   handlePathMatch(path) {
     if(path === '/' || path === '/blocks' || path === '/transactions' || path === '/logs' || path === '/configuration/accounts-and-keys') {
       return true;
@@ -223,24 +206,32 @@ class App extends Component {
     this.wallet.entropy = value;
   }
 
-  handleUsePasswordChange(usePassword) {
-    this.wallet.usePassword = usePassword;
-    this.setState({
-      usePassword: usePassword
-    });
-  }
-
   handlePasswordChange(value) {
     this.wallet.password = value;
   }
 
-  handleDisplayTestnetChange(displayTestnet) {
-    if(displayTestnet) {
-      this.wallet.network = 'testnet';
-    } else {
-      this.wallet.network = 'bitcoin';
+  handleConfigChange(value, id) {
+    console.log('handleConfigChange called', value, id);
+    if(id === 'displayTestnet') {
+      if(value) {
+        this.wallet.network = 'testnet';
+      } else {
+        this.wallet.network = 'bitcoin';
+      }
+      this.wallet.displayTestnet = value;
+    } else if(id === 'displayCashaddr') {
+
+      this.wallet.displayCashaddr = value;
+    } else if(id === 'autogenerateMnemonic') {
+
+      this.wallet.autogenerateMnemonic = value;
+    } else if(id === 'autogeneratePath') {
+
+      this.wallet.autogeneratePath = value;
+    } else if(id === 'usePassword') {
+
+      this.wallet.usePassword = value;
     }
-    this.wallet.displayTestnet = displayTestnet;
   }
 
   createBlock() {
@@ -361,14 +352,10 @@ class App extends Component {
           handleTotalAccountsChange={this.handleTotalAccountsChange.bind(this)}
           handleMnemonicChange={this.handleMnemonicChange.bind(this)}
           handlePathChange={this.handlePathChange.bind(this)}
-          handleAutoGenerateMnemonicChange={this.handleAutoGenerateMnemonicChange.bind(this)}
-          handleAutoGeneratePathChange={this.handleAutoGeneratePathChange.bind(this)}
-          handleDisplayCashaddrChange={this.handleDisplayCashaddrChange.bind(this)}
           handleEntropySliderChange={this.handleEntropySliderChange.bind(this)}
-          handleUsePasswordChange={this.handleUsePasswordChange.bind(this)}
           handlePasswordChange={this.handlePasswordChange.bind(this)}
           wallet={this.wallet}
-          handleDisplayTestnetChange={this.handleDisplayTestnetChange.bind(this)}
+          handleConfigChange={this.handleConfigChange.bind(this)}
         />
       );
     };

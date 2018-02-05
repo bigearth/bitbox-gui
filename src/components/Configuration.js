@@ -31,36 +31,16 @@ class Configuration extends Component {
     this.props.handlePathChange(path);
   }
 
-  handleAutoGenerateMnemonicChange(autogenerateMnemonic) {
-    this.props.handleAutoGenerateMnemonicChange(autogenerateMnemonic);
-  }
-
-  handleAutoGeneratePathChange(autogeneratePath) {
-    this.props.handleAutoGeneratePathChange(autogeneratePath);
-  }
-
-  handleDisplayCashaddrChange(displayCashaddr) {
-    this.props.handleDisplayCashaddrChange(displayCashaddr);
-  }
-
-  handleDisplayCashaddrChange(displayCashaddr) {
-    this.props.handleDisplayCashaddrChange(displayCashaddr);
-  }
-
   handleEntropySliderChange(value) {
     this.props.handleEntropySliderChange(value);
-  };
-
-  handleUsePasswordChange(value) {
-    this.props.handleUsePasswordChange(value);
   };
 
   handlePasswordChange(value) {
     this.props.handlePasswordChange(value);
   };
 
-  handleDisplayTestnetChange(displayTestnet) {
-    this.props.handleDisplayTestnetChange(displayTestnet);
+  handleConfigChange(value, id) {
+    this.props.handleConfigChange(value, id);
   }
 
   render() {
@@ -76,15 +56,11 @@ class Configuration extends Component {
           handleTotalAccountsChange={this.props.handleTotalAccountsChange.bind(this)}
           handleMnemonicChange={this.handleMnemonicChange.bind(this)}
           handlePathChange={this.handlePathChange.bind(this)}
-          handleAutoGenerateMnemonicChange={this.handleAutoGenerateMnemonicChange.bind(this)}
-          handleAutoGeneratePathChange={this.handleAutoGeneratePathChange.bind(this)}
-          handleDisplayCashaddrChange={this.handleDisplayCashaddrChange.bind(this)}
           handleEntropySliderChange={this.handleEntropySliderChange.bind(this)}
-          handleUsePasswordChange={this.handleUsePasswordChange.bind(this)}
           handlePasswordChange={this.handlePasswordChange.bind(this)}
           resetBitbox={this.resetBitbox.bind(this)}
           wallet={this.props.wallet}
-          handleDisplayTestnetChange={this.handleDisplayTestnetChange.bind(this)}
+          handleConfigChange={this.handleConfigChange.bind(this)}
         />
       );
     };

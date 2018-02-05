@@ -37,7 +37,7 @@ class AddressDetails extends Component {
     } else {
       btn = <td><button className="pure-button" onClick={this.showKey.bind(this, this.props.address.privateKeyWIF)}><i className="fas fa-key" /></button></td>;
 
-      if(this.props.displayCashaddr) {
+      if(this.props.wallet.displayCashaddr) {
         address = <span className='success'>{BitcoinCash.toCashAddress(this.state.address)}</span>;
       } else {
         address = <span className='success'>{this.state.address}</span>;
