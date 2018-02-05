@@ -10,6 +10,7 @@ class Wallet {
     this.displayCashaddr = config.displayCashaddr === false ? false : true;
     this.password = config.password || '';
     this.usePassword = config.usePassword || '';
+    this.displayTestnet = config.displayTestnet === false ? false : true;
   }
 }
 

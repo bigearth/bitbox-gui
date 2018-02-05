@@ -48,7 +48,8 @@ class App extends Component {
       path: '',
       displayCashaddr: true,
       password: '',
-      usePassword: false
+      usePassword: false,
+      displayTestnet: false
     });
 
     this.state = {
@@ -220,18 +221,27 @@ class App extends Component {
 
   handleEntropySliderChange(value) {
     this.wallet.entropy = value;
-  };
+  }
 
   handleUsePasswordChange(usePassword) {
     this.wallet.usePassword = usePassword;
     this.setState({
       usePassword: usePassword
     });
-  };
+  }
 
   handlePasswordChange(value) {
     this.wallet.password = value;
-  };
+  }
+
+  handleDisplayTestnetChange(displayTestnet) {
+    if(displayTestnet) {
+      this.wallet.network = 'testnet';
+    } else {
+      this.wallet.network = 'bitcoin';
+    }
+    this.wallet.displayTestnet = displayTestnet;
+  }
 
   createBlock() {
     let blockchainInstance = this.state.blockchainInstance;
@@ -358,6 +368,7 @@ class App extends Component {
           handleUsePasswordChange={this.handleUsePasswordChange.bind(this)}
           handlePasswordChange={this.handlePasswordChange.bind(this)}
           wallet={this.wallet}
+          handleDisplayTestnetChange={this.handleDisplayTestnetChange.bind(this)}
         />
       );
     };

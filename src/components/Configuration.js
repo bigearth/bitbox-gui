@@ -59,6 +59,10 @@ class Configuration extends Component {
     this.props.handlePasswordChange(value);
   };
 
+  handleDisplayTestnetChange(displayTestnet) {
+    this.props.handleDisplayTestnetChange(displayTestnet);
+  }
+
   render() {
 
     if (this.state.redirect) {
@@ -80,6 +84,7 @@ class Configuration extends Component {
           handlePasswordChange={this.handlePasswordChange.bind(this)}
           resetBitbox={this.resetBitbox.bind(this)}
           wallet={this.props.wallet}
+          handleDisplayTestnetChange={this.handleDisplayTestnetChange.bind(this)}
         />
       );
     };

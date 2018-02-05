@@ -15,7 +15,8 @@ class AccountsAndKeys extends Component {
       displayCashaddr: props.wallet.displayCashaddr,
       entropy: props.wallet.entropy,
       password: props.wallet.password,
-      usePassword: props.wallet.usePassword
+      usePassword: props.wallet.usePassword,
+      displayTestnet: props.wallet.displayTestnet
     }
   }
 
@@ -109,6 +110,14 @@ class AccountsAndKeys extends Component {
     this.props.handlePasswordChange(value);
   }
 
+  handleDisplayTestnetChange(e) {
+    let value = e.target.checked;
+    this.setState({
+      displayTestnet: value
+    })
+    this.props.handleDisplayTestnetChange(value);
+  }
+
   render() {
         // <p id='newRobotName'>Name: <input type='text' placeholder="Robot Name" value={this.state.robotName} onChange={this.handleRobotNameChange.bind(this)} /></p>
     let customMnemonicLabel;
@@ -184,6 +193,9 @@ class AccountsAndKeys extends Component {
 
                 <label>Display in Cashaddr format</label>
                 <input type="checkbox" checked={this.state.displayCashaddr} onChange={this.handleDisplayCashaddrChange.bind(this)} />
+
+                <label>Display on testnet</label>
+                <input type="checkbox" checked={this.state.displayTestnet} onChange={this.handleDisplayTestnetChange.bind(this)} />
               </fieldset>
             </form>
           </div>
