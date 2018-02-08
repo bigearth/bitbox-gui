@@ -5,21 +5,22 @@ import Utxo from './Utxo';
 class Block {
   constructor(blockData) {
     this.index = blockData.index;
-    this.magicNo = '0xD9B4BEF9';
-    this.blocksize = 0;
-    this.nonce = blockData.nonce;
-    this.transactionCounter = blockData.transactions.length;
+    // this.magicNo = '0xD9B4BEF9';
+    // this.blocksize = 0;
+    // this.nonce = blockData.nonce;
+    // this.transactionCounter = blockData.transactions.length;
     this.transactions = blockData.transactions;
-    this.timestamp = blockData.time;
+    this.timestamp = Date.now();
+    this.hash;
 
-    let blockHeaderData = {
-      hashPrevBlock: blockData.previousHash,
-      nonce: this.nonce,
-      time: blockData.time,
-      bits: blockData.bits,
-      hashMerkleRoot: this.calculateMerkle()
-    };
-    this.blockheader = new BlockHeader(blockHeaderData);
+    // let blockHeaderData = {
+    //   hashPrevBlock: blockData.previousHash,
+    //   nonce: this.nonce,
+    //   time: blockData.time,
+    //   bits: blockData.bits,
+    //   hashMerkleRoot: this.calculateMerkle()
+    // };
+    // this.blockheader = new BlockHeader(blockHeaderData);
   }
 
 
@@ -36,16 +37,13 @@ class Block {
     return root.toString('hex');
   }
 
-  calculateHash(data) {
-    return Crypto.createSHA256Hash(data);
-  }
-
   mineBlock(difficulty) {
-    while (this.blockheader.hashMerkleRoot.substring(0, difficulty) !== Array(difficulty + 1).join("0")) {
-      this.nonce++;
-      this.blockheader.hashMerkleRoot = this.calculateMerkle();
-    }
-    console.log("BLOCK MINED: " + this.blockheader.hashMerkleRoot);
+    // while (this.blockheader.hashMerkleRoot.substring(0, difficulty) !== Array(difficulty + 1).join("0")) {
+    //   this.nonce++;
+    //   this.blockheader.hashMerkleRoot = this.calculateMerkle();
+    // }
+    // console.log("BLOCK MINED: " + this.blockheader.hashMerkleRoot);
+    this.hash = Crypto.createSHA256Hash(`${Date.now()}`);
   }
 }
 

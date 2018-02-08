@@ -2,17 +2,9 @@ import BitcoinCash from '../utilities/BitcoinCash';
 // import Crypto from '../utilities/Crypto';
 
 class Transaction {
-  constructor(transactionData, isCoinbase = false) {
-    this.versionNumber = transactionData.versionNumber;
-    this.inputCounter = transactionData.inputs.length;
+  constructor(transactionData) {
     this.inputs = transactionData.inputs;
-    this.outputCounter = transactionData.outputs.length;
     this.outputs = transactionData.outputs;
-    this.lockTime = transactionData.time;
-
-    if(isCoinbase) {
-      this.createCoinbaseTransaction(transactionData.address);
-    }
   }
 
 

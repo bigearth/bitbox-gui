@@ -14,6 +14,7 @@ import Blockchain from './models/Blockchain';
 import Block from './models/Block';
 import Transaction from './models/Transaction';
 import Output from './models/Output';
+import Input from './models/Input';
 import Utxo from './models/Utxo';
 import Wallet from './models/Wallet';
 
@@ -22,12 +23,13 @@ import WalletDisplay from './components/WalletDisplay';
 import Blocks from './components/Blocks';
 import BlockDetails from './components/BlockDetails';
 // import AddressDetails from './components/AddressDetails';
-import Transactions from './components/Transactions';
+import TransactionsDisplay from './components/TransactionsDisplay';
 import Configuration from './components/Configuration';
 
 // utilities
 import Crypto from './utilities/Crypto';
 import BitcoinCash from './utilities/BitcoinCash';
+import Miner from './utilities/Miner';
 
 // css
 import './styles/app.scss';
@@ -52,10 +54,15 @@ class App extends Component {
       displayTestnet: false
     });
 
+    // Miner Utility for handling txs and blocks
+    this.blockchain = new Blockchain();
+
+    this.miner = new Miner(this.blockchain);
+
     this.state = {
       mnemonic: this.wallet.mnemonic,
       addresses: [],
-      blockchainInstance: '',
+      blockchainInstance: this.blockchain,
       utxoSet: new Utxo(),
       password: '',
       showCreateBtn: false
@@ -71,57 +78,113 @@ class App extends Component {
       addresses: addresses,
       configuration: config
     });
+
     this.createBlockchain(addresses);
   }
-
-  // rng() {
-  //   return Buffer.from('YT8dAtK4d16A3P1z+TpwB2jJ4aFH3g9M1EioIBkLEV4=', 'base64')
-  // }
-  //
   createBlockchain(addresses) {
 
-  //   // // create new tx
-  //   // let owner = Bitcoin.ECPair.fromWIF(addresses[1].privateKeyWIF);
-  //   // let newTxb = new Bitcoin.TransactionBuilder();
-  //   //
-  //   // newTxb.addInput(txHash, 0);
-  //   // newTxb.addOutput(addresses[2].publicKey, 12000);
-  //   // newTxb.sign(0, owner)
-  //   // let newTxHex = newTxb.build().toHex();
-  //
-  //   // let testnet = Bitcoin.networks.testnet;
-  //   // var txb = new Bitcoin.TransactionBuilder(testnet)
-  //   // var alice1 = Bitcoin.ECPair.makeRandom({ network: testnet })
-  //   // var aliceChange = Bitcoin.ECPair.makeRandom({ rng: this.rng, network: testnet })
-  //   //
-  //   //
-  //
-  //   // GetHash()      =
-  //   // hashMerkleRoot = 0x4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b
-  //   // txNew.vin[0].scriptSig     = 486604799 4 0x736B6E616220726F662074756F6C69616220646E6F63657320666F206B6E697262206E6F20726F6C6C65636E61684320393030322F6E614A2F33302073656D695420656854
-  //   // txNew.vout[0].nValue       = 5000000000
-  //   // txNew.vout[0].scriptPubKey = 0x5F1DF16B2B704C8A578D0BBAF74D385CDE12C11EE50455F3C438EF4C3FBCF649B6DE611FEAE06279A60939E028A8D65C10B73071A6F16719274855FEB0FD8A6704 OP_CHECKSIG
-  //   // block.nVersion = 1
-  //   // block.nTime    = 1231006505
-  //   // block.nBits    = 0x1d00ffff
-  //   // block.nNonce   = 2083236893
-  //   //
-  //   //
-  //   // CBlock(hash=000000000019d6, ver=1, hashPrevBlock=00000000000000, hashMerkleRoot=4a5e1e, nTime=1231006505, nBits=1d00ffff, nNonce=2083236893, vtx=1)
-  //   //   CTransaction(hash=4a5e1e, ver=1, vin.size=1, vout.size=1, nLockTime=0)
-  //   //     CTxIn(COutPoint(000000, -1), coinbase 04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73)
-  //   //     CTxOut(nValue=50.00000000, scriptPubKey=0x5F1DF16B2B704C8A578D0B)
-  //   // vMerkleTree: 4a5e1e
+    // create new tx
+    // let input = new Input({
+    //   txid: "d18e7106e5492baf8f3929d2d573d27d89277f3825d3836aa86ea1d843b5158b",
+    //   vout: 0,
+    //   scriptSig : "3045022100884d142d86652a3f47ba4746ec719bbfbd040a570b1deccbb6498c75c4ae24cb02204b9f039ff08df09cbe9f6addac960298cad530a863ea8f53982c09db8f6e3813[ALL] 0484ecc0d46f1918b30928fa0e4ed99f16a0fb4fde0735e7ade8416ab9fe423cc5412336376789d172787ec3457eee41c04f4938de5cc17b4a10fa336a8d752adf"
+    // });
+    // let output1 = new Output({
+    //   "value": 0.01500000,
+    //   "scriptPubKey": "OP_DUP OP_HASH160 ab68025513c3dbd2f7b92a94e0581f5d50f654e7 OP_EQUALVERIFY OP_CHECKSIG"
+    // });
+    //
+    // let output2 = new Output({
+    //   "value": 0.08450000,
+    //   "scriptPubKey": "OP_DUP OP_HASH160 7f9b1a7fb68d60c536c2fd8aeaa53a8f3cc025a8 OP_EQUALVERIFY OP_CHECKSIG",
+    // });
+    //
+    // let t = new Transaction({
+    //   inputs: [input],
+    //   outputs: [output1, output2]
+    // })
+    // end create new tx
+
+    // create genesis tx
+    // This is a hack because I've not yet figured out how to properly sign coinbase txs w/ BitcoinCash.transaction
+    let privkey = BitcoinCash.fromWIF(addresses[0].privateKeyWIF);
+    let tb = BitcoinCash.transactionBuilder();
+    let tx = new tb();
+
+    // Hardcode the input hash
+    tx.addInput(new Buffer('d18e7106e5492baf8f3929d2d573d27d89277f3825d3836aa86ea1d843b5158b', 'hex'), 1);
+
+    // send 12.5 BCH to the first newly generated account
+    tx.addOutput(BitcoinCash.fromWIF(addresses[1].privateKeyWIF).getAddress(), BitcoinCash.toSatoshi(12.5));
+    tx.sign(0, privkey);
+    let rawHex = tx.build().toHex();
+    this.miner.pushGenesisTx(rawHex);
+
+    //
+    // // create new tx
+    // let input = new Input({
+    //   txid: "d18e7106e5492baf8f3929d2d573d27d89277f3825d3836aa86ea1d843b5158b",
+    //   vout: 0,
+    //   scriptSig : "3045022100884d142d86652a3f47ba4746ec719bbfbd040a570b1deccbb6498c75c4ae24cb02204b9f039ff08df09cbe9f6addac960298cad530a863ea8f53982c09db8f6e3813[ALL] 0484ecc0d46f1918b30928fa0e4ed99f16a0fb4fde0735e7ade8416ab9fe423cc5412336376789d172787ec3457eee41c04f4938de5cc17b4a10fa336a8d752adf"
+    // });
+    // let output1 = new Output({
+    //   "value": 0.01500000,
+    //   "scriptPubKey": "OP_DUP OP_HASH160 ab68025513c3dbd2f7b92a94e0581f5d50f654e7 OP_EQUALVERIFY OP_CHECKSIG"
+    // });
+    //
+    // let output2 = new Output({
+    //   "value": 0.08450000,
+    //   "scriptPubKey": "OP_DUP OP_HASH160 7f9b1a7fb68d60c536c2fd8aeaa53a8f3cc025a8 OP_EQUALVERIFY OP_CHECKSIG",
+    // });
+    //
+    // let t = new Transaction({
+    //   inputs: [input],
+    //   outputs: [output1, output2]
+    // })
+    // // end create new tx
+
+
+    // create coinbase tx
+    // let coinbase = BitcoinCash.fromWIF(addresses[0].privateKeyWIF);
+    // let txb = BitcoinCash.transactionBuilder();
+    //
+    // txb.addInput(Crypto.createSHA256Hash(genesisTx), 0);
+    // // f5a5ce5988cc72b9b90e8d1d6c910cda53c88d2175177357cc2f2cf0899fbaad
+    // txb.addOutput(addresses[1].publicKey, 12000);
+    //
+    // txb.sign(0, coinbase)
+    // let txHex = txb.build().toHex();
+    // let txHash = Crypto.createSHA256Hash(txHex);
+    // end create coinbase tx
+
+    // Create new tx
+    // let t = BitcoinCash.transaction();
+    // let tb = BitcoinCash.transactionBuilder();
+    // let coinbaseTx = new t();
+    //
+    // // coinbase input w/ hash of 0
+    // let coinbaseInputHex = new Buffer('0000000000000000000000000000000000000000000000000000000000000000', 'hex');
+    // coinbaseTx.addInput(coinbaseInputHex, 0);
+    //
+    // // single output
+    // // get address of first account
+    // let coinbaseOutputAddress = BitcoinCash.fromWIF(addresses[0].privateKeyWIF, this.wallet.network).getAddress();
+    //
+    // // Hex of output address
+    // let coinbaseOutputHex = new Buffer(coinbaseOutputAddress, 'hex');
+    // coinbaseTx.addOutput(coinbaseOutputHex, BitcoinCash.toSatoshi(12.5));
+    //
+    // let foo = tb.fromTransaction(coinbaseTx);
+    // let txHex = coinbaseTx.toHex();
+    // create genesis tx
+
     let keyPair = BitcoinCash.fromWIF(addresses[0].privateKeyWIF, this.wallet.network);
     let address = keyPair.getAddress();
-    let ripemd160 = Crypto.createRIPEMD160Hash(address);
     let output = new Output({
-      value: 5000000000,
-      ripemd160: ripemd160
+      value: 5000000000
     });
 
     let genesisTx = new Transaction({
-      versionNumber: 1,
       inputs: [],
       outputs: [output],
       time: Date.now(),
@@ -145,18 +208,8 @@ class App extends Component {
 
     let utxoSet = this.state.utxoSet;
     utxoSet.addUtxo(address, genesisBlock.transactions[0].outputs[0].value);
-  //   // let coinbase = BitcoinCash.fromWIF(addresses[0].privateKeyWIF);
-  //   // let txb = BitcoinCash.transactionBuilder();
-  //   //
-  //   // txb.addInput(Crypto.createSHA256Hash(genesisTx), 0);
-  //   // // f5a5ce5988cc72b9b90e8d1d6c910cda53c88d2175177357cc2f2cf0899fbaad
-  //   // txb.addOutput(addresses[1].publicKey, 12000);
-  //   //
-  //   // txb.sign(0, coinbase)
-  //   // let txHex = txb.build().toHex();
-  //   // let txHash = Crypto.createSHA256Hash(txHex);
-  //
-    this.handleBlockchainUpdate(blockchainInstance);
+
+    // this.handleBlockchainUpdate(this.state.blockchainInstance);
     this.handleUtxoUpdate(utxoSet);
   }
 
@@ -333,8 +386,9 @@ class App extends Component {
 
     const TransactionsPage = (props) => {
       return (
-        <Transactions
-          addresses={this.state.addresses}
+        <TransactionsDisplay
+          blockchainInstance={this.state.blockchainInstance}
+          match={props.match}
         />
       );
     };
@@ -356,16 +410,10 @@ class App extends Component {
     if(this.state.blockchainInstance.chain) {
       chainlength = this.state.blockchainInstance.chain.length - 1;
     }
+              // <li className="pure-menu-item">
+              //   <button className='pure-button danger-background' onClick={this.createBlock.bind(this)}><i className="fas fa-cube"></i> Create block</button>
+              // </li>
 
-  //   // <Route path="/addresses/:address_id" component={AddressPage}/>
-            // <Route path="/transactions" component={TransactionsPage}/>
-          // <Switch>
-          //   <Route exact path="/blocks" component={BlocksPage}/>
-          //   <Route path="/blocks/:block_id" component={BlockPage}/>
-          //   <Route path="/configuration" component={ConfigurationPage}/>
-          //   <Route exact path="/" component={WalletDisplayPage}/>
-          //   <Redirect from='*' to='/' />
-          // </Switch>
     return (
       <Router>
         <div className="header main-header">
@@ -417,14 +465,12 @@ class App extends Component {
               <li className="pure-menu-item">
                 MINING STATUS <br /> AUTOMINING <i className="fas fa-spinner fa-spin" />
               </li>
-              <li className="pure-menu-item">
-                <button className='pure-button danger-background' onClick={this.createBlock.bind(this)}><i className="fas fa-cube"></i> Create block</button>
-              </li>
             </ul>
           </div>
           <Switch>
             <Route exact path="/blocks" component={BlocksPage}/>
             <Route path="/blocks/:block_id" component={BlockPage}/>
+            <Route path="/transactions/:transaction_id" component={TransactionsPage}/>
             <Route path="/configuration" component={ConfigurationPage}/>
             <Route exact path="/" component={WalletPage}/>
             <Redirect from='*' to='/' />

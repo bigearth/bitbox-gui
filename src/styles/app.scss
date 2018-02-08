@@ -26,6 +26,10 @@
   float: right;
 }
 
+li {
+  list-style-type: none;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -363,7 +367,7 @@ a.pure-button-primary {
   padding: 1em 0;
 }
 
-.WalletDisplay.content, .Blocks, .WrapperBlockDetails, .Configuration {
+.WalletDisplay.content, .Blocks, .WrapperBlockDetails, .Configuration, .Transaction {
   background: white;
 }
 
@@ -447,60 +451,58 @@ a.pure-button-primary {
   background-color: #f39d6f;
 }
 
-.Blocks td:first-of-type, .HeaderBlockDetails td:first-of-type {
+.Blocks td:first-of-type, .DetailsHeader td:first-of-type {
   background-color: #6FBEF3;
   color: white;
   text-align: center;
   padding: 0.75em;
   width: 5%;
-  cursor: pointer;
 }
 
-.HeaderBlockDetails.pure-table td:first-of-type .subheader {
+.DetailsHeader.pure-table td:first-of-type .subheader {
   color: white;
-}
-
-.Blocks td {
-  cursor: pointer;
 }
 
 .Blocks tr:hover {
   background: #eee;
-  cursor: pointer;
 }
 
 .Blocks tr:hover td:first-of-type {
   background: #f39d6f;
 }
 
-.HeaderBlockDetails.pure-table tr:first-of-type td {
+.DetailsHeader.pure-table tr:first-of-type td {
   font-size: 1.5em;
 }
 
-.HeaderBlockDetails.pure-table tr:first-of-type td:first-of-type {
+.DetailsHeader.pure-table tr:first-of-type td:first-of-type {
   font-size: 1em;
 }
 
-.HeaderBlockDetails.pure-table tr:first-of-type td:first-of-type:hover {
+.DetailsHeader.pure-table tr:first-of-type td:first-of-type:hover {
   background-color: #f39d6f;
 }
 
-.BodyBlockDetails.pure-table {
+.tableFormatting.pure-table {
   font-size: 1em;
 }
 
-.BodyBlockDetails.pure-table tr {
+.tableFormatting.pure-table tr {
   border: none;
 }
 
-.BodyBlockDetails.pure-table tr:not(:first-of-type) td {
+.tableFormatting.pure-table tr:not(:first-of-type) td {
   font-weight: normal;
   font-size: 0.75em;
   width: 20%;
 }
 
-.BodyBlockDetails.pure-table tbody:last-of-type {
+.tableFormatting.pure-table tbody:last-of-type {
   border: none;
+}
+
+.tableFormatting ul {
+  padding-left: 0;
 }
 
 .Faq .pure-g h2, .Faq h3, .Faq p {
@@ -518,4 +520,46 @@ a.pure-button-primary {
 
 .rangeslider-horizontal .rangeslider__fill {
   background: #6FBEF3;
+}
+
+.tableFormatting.pure-table tbody.txSummary {
+  border-width: 1px 0;
+  border-style: solid;
+  border-color: #2d3e50 ;
+}
+
+.tableFormatting.pure-table tbody.txSummary:hover {
+  background: #eee ;
+}
+
+.nextPage {
+  cursor: pointer;
+}
+
+.label {
+  color: white;
+  padding: 8px;
+}
+
+.tableFormatting {
+  .coinbase {background-color: #f39d6f;}
+}
+.success {background-color: #4CAF50;} /* Green */
+.info {background-color: #2196F3;} /* Blue */
+.warning {background-color: #ff9800;} /* Orange */
+.danger {background-color: #f44336;} /* Red */
+.other {background-color: #e7e7e7; color: black;} /* Gray */
+
+.breakWord {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  max-width: 100px;
+}
+
+.transactionDetails h3 {
+  padding-left: 1em;
+}
+
+.Transaction .coinbase {
+  width: 10%;
 }

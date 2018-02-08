@@ -12,15 +12,6 @@ class Blocks extends Component {
       redirect: false,
       blockId: 0
     };
-
-    // blockchainInstance.addBlock(new Block(2, "20/07/2017", { amount: 8 }));
-
-    // Check if chain is valid (will return true)
-
-    // Let's now manipulate the data
-    // blockchainInstance.chain[1].data = { amount: 100 };
-
-    // Check our chain again (will now return false)
   }
 
   handleBlockDetails(blockId) {
@@ -33,15 +24,12 @@ class Blocks extends Component {
   render() {
 
     if (this.state.redirect) {
-      return <Redirect
-        push
-        to={{
-          pathname: `${this.props.match.url}/${this.state.blockId}`,
-          state: {
-            block: this.props.blockchainInstance.chain[this.state.blockId]
-          }
-        }}
-      />
+      return (<Redirect to={{
+        pathname: `${this.props.match.url}/${this.state.blockId}`,
+        state: {
+          block: this.props.blockchainInstance.chain[this.state.blockId]
+        }
+      }} />)
     }
 
     let blocks = [];
@@ -61,7 +49,7 @@ class Blocks extends Component {
     }
 
     return (
-      <div className="Blocks">
+      <div className="Blocks nextPage">
         <div className="pure-u-1-1">
           <table className="pure-table">
             <tbody>

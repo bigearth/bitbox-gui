@@ -1,13 +1,9 @@
 import Block from './Block';
 
 class Blockchain {
-  constructor(genesisBlock) {
-    this.chain = [this.createGenesisBlock(genesisBlock)];
+  constructor() {
+    this.chain = [];
     this.difficulty = 0;
-  }
-
-  createGenesisBlock(genesisBlock) {
-    return new Block(genesisBlock);
   }
 
   getLatestBlock() {

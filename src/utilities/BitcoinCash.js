@@ -98,12 +98,28 @@ class BitcoinCash {
     return Bitcoin.ECPair.fromWIF(privateKeyWIF, Bitcoin.networks[network]);
   }
 
+  static ECPair() {
+    return Bitcoin.ECPair;
+  }
+
+  static address() {
+    return Bitcoin.address;
+  }
+
+  static script() {
+    return Bitcoin.script;
+  }
+
   static transaction() {
-    return new Bitcoin.Transaction();
+    return Bitcoin.Transaction;
   }
 
   static transactionBuilder() {
-    return new Bitcoin.TransactionBuilder();
+    return Bitcoin.TransactionBuilder;
+  }
+
+  static fromTransaction() {
+    return Bitcoin.TransactionBuilder;
   }
 
   static createHDWallet(config) {
