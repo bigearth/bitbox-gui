@@ -54,9 +54,9 @@ class App extends Component {
       displayTestnet: false
     });
 
-    // Miner Utility for handling txs and blocks
     this.blockchain = new Blockchain();
 
+    // Miner Utility for handling txs and blocks
     this.miner = new Miner(this.blockchain);
 
     this.state = {
@@ -107,15 +107,15 @@ class App extends Component {
 
     // create genesis tx
     // This is a hack because I've not yet figured out how to properly sign coinbase txs w/ BitcoinCash.transaction
-    let privkey = BitcoinCash.fromWIF(addresses[0].privateKeyWIF);
-    let tb = BitcoinCash.transactionBuilder();
-    let tx = new tb();
+    let privkey = BitcoinCash.fromWIF(addresses[0].privateKeyWIF, this.wallet.network);
+    let tx = BitcoinCash.transactionBuilder(this.wallet.network);
 
     // Hardcode the input hash
-    tx.addInput(new Buffer('d18e7106e5492baf8f3929d2d573d27d89277f3825d3836aa86ea1d843b5158b', 'hex'), 1);
+    // tx.addInput(new Buffer('74bcc32d18744f0e3a8b48941de0ba64f84ebdda4c060ef35a10531446562962', 'hex'), 1);
+    tx.addInput("192b889c434a2872e3719109fad1e9943bce5a3457e4af200944825c32322413", 1);
 
     // send 12.5 BCH to the first newly generated account
-    tx.addOutput(BitcoinCash.fromWIF(addresses[1].privateKeyWIF).getAddress(), BitcoinCash.toSatoshi(12.5));
+    tx.addOutput(BitcoinCash.fromWIF(addresses[1].privateKeyWIF, this.wallet.network).getAddress(), BitcoinCash.toSatoshi(12.5));
     tx.sign(0, privkey);
     let rawHex = tx.build().toHex();
     this.miner.pushGenesisTx(rawHex);
@@ -214,6 +214,11 @@ class App extends Component {
   }
 
   resetBitbox() {
+    this.blockchain = new Blockchain();
+
+    // Miner Utility for handling txs and blocks
+    this.miner = new Miner(this.blockchain);
+
     let [mnemonic, path, addresses] = BitcoinCash.createHDWallet(this.wallet);
     this.setState({
       mnemonic: mnemonic,
@@ -221,6 +226,7 @@ class App extends Component {
       addresses: addresses
     });
     this.createBlockchain(addresses);
+    this.handleBlockchainUpdate(this.blockchain);
   }
 
   handlePathMatch(path) {
@@ -371,6 +377,7 @@ class App extends Component {
         <BlockDetails
           blockchainInstance={this.state.blockchainInstance}
           match={props.match}
+          wallet={this.wallet}
         />
       );
     };
@@ -389,6 +396,7 @@ class App extends Component {
         <TransactionsDisplay
           blockchainInstance={this.state.blockchainInstance}
           match={props.match}
+          wallet={this.wallet}
         />
       );
     };

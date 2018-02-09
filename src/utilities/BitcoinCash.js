@@ -114,8 +114,8 @@ class BitcoinCash {
     return Bitcoin.Transaction;
   }
 
-  static transactionBuilder() {
-    return Bitcoin.TransactionBuilder;
+  static transactionBuilder(network = 'bitcoin') {
+    return new Bitcoin.TransactionBuilder(Bitcoin.networks[network]);
   }
 
   static fromTransaction() {

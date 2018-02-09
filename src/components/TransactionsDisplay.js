@@ -4,6 +4,7 @@ import {
   Redirect
 } from 'react-router-dom';
 import BitcoinCash from '../utilities/BitcoinCash'
+import Bitcoin from 'bitcoinjs-lib';
 import moment from 'moment';
 
 class Transactions extends Component {
@@ -33,7 +34,7 @@ class Transactions extends Component {
     let ecpair = BitcoinCash.ECPair();
     decodedTx.ins.forEach((input, index) => {
       let chunksIn = s.decompile(input.script);
-      let inputPubKey = ecpair.fromPublicKeyBuffer(chunksIn[1]).getAddress();
+      let inputPubKey = ecpair.fromPublicKeyBuffer(chunksIn[1], Bitcoin.networks[this.props.wallet.network]).getAddress();
       ins.push({
         inputPubKey: inputPubKey,
         hex: input.script.toString('hex'),
@@ -49,7 +50,7 @@ class Transactions extends Component {
     decodedTx.outs.forEach((output, index) => {
       value += output.value;
       let chunksIn = s.decompile(output.script);
-      let outputPubKey = a.fromOutputScript(output.script);
+      let outputPubKey = a.fromOutputScript(output.script, Bitcoin.networks[this.props.wallet.network]);
       outs.push({
         outputPubKey: outputPubKey,
         hex: output.script.toString('hex'),
@@ -81,11 +82,17 @@ class Transactions extends Component {
 
     let outs = [];
     this.state.transaction.outputs.forEach((outp, ind) => {
+      if(this.props.wallet.displayCashaddr) {
+        outp = BitcoinCash.toCashAddress(outp);
+      }
       outs.push(<li key={ind}>{outp}</li>);
     })
 
     let inputs = [];
     this.state.inputs.forEach((input, index) => {
+      if(this.props.wallet.displayCashaddr) {
+        input.inputPubKey = BitcoinCash.toCashAddress(input.inputPubKey);
+      }
       inputs.push(
         <table className="pure-table tableFormatting" key={index}>
           <tbody>
@@ -105,6 +112,9 @@ class Transactions extends Component {
 
     let outputs = [];
     this.state.outputs.forEach((output, index) => {
+      if(this.props.wallet.displayCashaddr) {
+        output.outputPubKey = BitcoinCash.toCashAddress(output.outputPubKey);
+      }
       outputs.push(
         <table className="pure-table tableFormatting" key={index}>
           <tbody>

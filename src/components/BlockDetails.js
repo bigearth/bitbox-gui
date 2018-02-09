@@ -5,6 +5,7 @@ import {
   Redirect
 } from 'react-router-dom';
 
+import Bitcoin from 'bitcoinjs-lib';
 import moment from 'moment';
 
 class BlockDetails extends Component {
@@ -31,7 +32,7 @@ class BlockDetails extends Component {
       let ecpair = BitcoinCash.ECPair();
       decodedTx.ins.forEach((input, index) => {
         let chunksIn = s.decompile(input.script);
-        let inputPubKey = ecpair.fromPublicKeyBuffer(chunksIn[1]).getAddress();
+        let inputPubKey = ecpair.fromPublicKeyBuffer(chunksIn[1], Bitcoin.networks[this.props.wallet.network]).getAddress();
         ins.push(inputPubKey);
       })
 
@@ -39,7 +40,7 @@ class BlockDetails extends Component {
       let value = 0;
       decodedTx.outs.forEach((output, index) => {
         value += output.value;
-        let outputPubKey = a.fromOutputScript(output.script);
+        let outputPubKey = a.fromOutputScript(output.script, Bitcoin.networks[this.props.wallet.network]);
         outs.push(outputPubKey);
       })
 
@@ -93,11 +94,18 @@ class BlockDetails extends Component {
       this.state.transactions.forEach((tx, idx) => {
         let ins = [];
         tx.inputs.forEach((inp, ind) => {
+          if(this.props.wallet.displayCashaddr) {
+            inp = BitcoinCash.toCashAddress(inp);
+          }
+
           ins.push(<li key={ind}>{inp}</li>);
         })
 
         let outs = [];
         tx.outputs.forEach((outp, ind) => {
+          if(this.props.wallet.displayCashaddr) {
+            outp = BitcoinCash.toCashAddress(outp);
+          }
           outs.push(<li key={ind}>{outp}</li>);
         })
 
