@@ -82,11 +82,29 @@ class BitcoinCash {
     return bchaddr.detectAddressType(address);
   }
 
-  static entropyToMnemonic(bits = 16) {
-    return BIP39.entropyToMnemonic(Crypto.randomBytes(bits));
+  static entropyToMnemonic(bytes = 16) {
+    // Generate cryptographically strong pseudo-random data.
+    // The bytes argument is a number indicating the number of bytes to generate.
+    // Uses the NodeJS crypto lib. More info: https://nodejs.org/api/crypto.html#crypto_crypto_randombytes_size_callback
+    let randomBytes = Crypto.randomBytes(bytes);
+
+    // Create BIP 39 compliant mnemonic w/ entropy
+    // Entropy (bits/bytes)	Checksum (bits)	Entropy + checksum (bits)	Mnemonic length (words)
+    // 128/16               4               132                       12
+    //
+    // 160/20               5               165                       15
+    //
+    // 192/24               6               198                       18
+    //
+    // 224/28               7               231                       21
+    //
+    // 256/32               8               264                       24
+
+    return BIP39.entropyToMnemonic(randomBytes);
   }
 
   static mnemonicToSeed(mnemonic, password = '') {
+    // create BIP 39 compliant
     return BIP39.mnemonicToSeed(mnemonic, password);
   }
 
@@ -122,11 +140,12 @@ class BitcoinCash {
     return Bitcoin.TransactionBuilder;
   }
 
+
   static createHDWallet(config) {
     // nore info: https://github.com/bitcoinbook/bitcoinbook/blob/develop/ch05.asciidoc
 
     if(config.autogenerateMnemonic) {
-      // create a 512 byte HMAC-SHA512 random mnemonic w/ user provided entropy size
+      // create a random mnemonic w/ user provided entropy size
       config.mnemonic = BitcoinCash.entropyToMnemonic(config.entropy);
     }
 
@@ -139,7 +158,7 @@ class BitcoinCash {
     // let tmpkey = BitcoinCash.fromSeedBuffer(rootSeed);
 
     if(config.autogeneratePath) {
-      // create random BIP 44 HD path
+      // create BIP 44 HD path
       // m / purpose' / coin_type' / account' / change / address_index
 
       // purpose is always 44' to show the wallet is BIP 44 compliant
