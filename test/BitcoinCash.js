@@ -130,33 +130,6 @@ describe('return address type', () => {
   });
 });
 
-describe('return hex encoded entropy', () => {
-  it('should return 16 bytes of entropy hex encoded', () => {
-    let entropy = BitcoinCash.randomBytes(16);
-    assert.lengthOf(entropy, 32);
-  });
-
-  it('should return 20 bytes of entropy hex encoded', () => {
-    let entropy = BitcoinCash.randomBytes(20);
-    assert.lengthOf(entropy, 40);
-  });
-
-  it('should return 24 bytes of entropy hex encoded', () => {
-    let entropy = BitcoinCash.randomBytes(24);
-    assert.lengthOf(entropy, 48);
-  });
-
-  it('should return 28 bytes of entropy hex encoded', () => {
-    let entropy = BitcoinCash.randomBytes(28);
-    assert.lengthOf(entropy, 56);
-  });
-
-  it('should return 20 bytes of entropy hex encoded', () => {
-    let entropy = BitcoinCash.randomBytes(32);
-    assert.lengthOf(entropy, 64);
-  });
-});
-
 describe('generate specific length mnemonic', () => {
   it('should generate a 12 word mnemonic', () => {
     let mnemonic = BitcoinCash.entropyToMnemonic(16);

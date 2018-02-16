@@ -74,15 +74,11 @@ class BitcoinCash {
     return bchaddr.detectAddressType(address);
   }
 
-  static randomBytes(bytes = 16) {
-    return Crypto.randomBytes(bytes);
-  }
-
   static entropyToMnemonic(bytes = 16) {
     // Generate cryptographically strong pseudo-random data.
     // The bytes argument is a number indicating the number of bytes to generate.
     // Uses the NodeJS crypto lib. More info: https://nodejs.org/api/crypto.html#crypto_crypto_randombytes_size_callback
-    let randomBytes = BitcoinCash.randomBytes(bytes);
+    let randomBytes = Crypto.randomBytes(bytes);
 
     // Create BIP 39 compliant mnemonic w/ entropy
     // Entropy (bits/bytes)	Checksum (bits)	Entropy + checksum (bits)	Mnemonic length (words)

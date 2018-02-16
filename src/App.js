@@ -84,28 +84,6 @@ class App extends Component {
   }
   createBlockchain(addresses) {
 
-    // create new tx
-    // let input = new Input({
-    //   txid: "d18e7106e5492baf8f3929d2d573d27d89277f3825d3836aa86ea1d843b5158b",
-    //   vout: 0,
-    //   scriptSig : "3045022100884d142d86652a3f47ba4746ec719bbfbd040a570b1deccbb6498c75c4ae24cb02204b9f039ff08df09cbe9f6addac960298cad530a863ea8f53982c09db8f6e3813[ALL] 0484ecc0d46f1918b30928fa0e4ed99f16a0fb4fde0735e7ade8416ab9fe423cc5412336376789d172787ec3457eee41c04f4938de5cc17b4a10fa336a8d752adf"
-    // });
-    // let output1 = new Output({
-    //   "value": 0.01500000,
-    //   "scriptPubKey": "OP_DUP OP_HASH160 ab68025513c3dbd2f7b92a94e0581f5d50f654e7 OP_EQUALVERIFY OP_CHECKSIG"
-    // });
-    //
-    // let output2 = new Output({
-    //   "value": 0.08450000,
-    //   "scriptPubKey": "OP_DUP OP_HASH160 7f9b1a7fb68d60c536c2fd8aeaa53a8f3cc025a8 OP_EQUALVERIFY OP_CHECKSIG",
-    // });
-    //
-    // let t = new Transaction({
-    //   inputs: [input],
-    //   outputs: [output1, output2]
-    // })
-    // end create new tx
-
     // create genesis tx
     // This is a hack because I've not yet figured out how to properly sign coinbase txs w/ BitcoinCash.transaction
     let privkey = BitcoinCash.fromWIF(addresses[0].privateKeyWIF, this.wallet.network);
@@ -120,97 +98,7 @@ class App extends Component {
     tx.sign(0, privkey);
     let rawHex = tx.build().toHex();
     this.miner.pushGenesisTx(rawHex);
-
-    //
-    // // create new tx
-    // let input = new Input({
-    //   txid: "d18e7106e5492baf8f3929d2d573d27d89277f3825d3836aa86ea1d843b5158b",
-    //   vout: 0,
-    //   scriptSig : "3045022100884d142d86652a3f47ba4746ec719bbfbd040a570b1deccbb6498c75c4ae24cb02204b9f039ff08df09cbe9f6addac960298cad530a863ea8f53982c09db8f6e3813[ALL] 0484ecc0d46f1918b30928fa0e4ed99f16a0fb4fde0735e7ade8416ab9fe423cc5412336376789d172787ec3457eee41c04f4938de5cc17b4a10fa336a8d752adf"
-    // });
-    // let output1 = new Output({
-    //   "value": 0.01500000,
-    //   "scriptPubKey": "OP_DUP OP_HASH160 ab68025513c3dbd2f7b92a94e0581f5d50f654e7 OP_EQUALVERIFY OP_CHECKSIG"
-    // });
-    //
-    // let output2 = new Output({
-    //   "value": 0.08450000,
-    //   "scriptPubKey": "OP_DUP OP_HASH160 7f9b1a7fb68d60c536c2fd8aeaa53a8f3cc025a8 OP_EQUALVERIFY OP_CHECKSIG",
-    // });
-    //
-    // let t = new Transaction({
-    //   inputs: [input],
-    //   outputs: [output1, output2]
-    // })
-    // // end create new tx
-
-
-    // create coinbase tx
-    // let coinbase = BitcoinCash.fromWIF(addresses[0].privateKeyWIF);
-    // let txb = BitcoinCash.transactionBuilder();
-    //
-    // txb.addInput(Crypto.createSHA256Hash(genesisTx), 0);
-    // // f5a5ce5988cc72b9b90e8d1d6c910cda53c88d2175177357cc2f2cf0899fbaad
-    // txb.addOutput(addresses[1].publicKey, 12000);
-    //
-    // txb.sign(0, coinbase)
-    // let txHex = txb.build().toHex();
-    // let txHash = Crypto.createSHA256Hash(txHex);
-    // end create coinbase tx
-
-    // Create new tx
-    // let t = BitcoinCash.transaction();
-    // // let tb = BitcoinCash.transactionBuilder();
-    // let coinbaseTx = new t();
-    //
-    // // coinbase input w/ hash of 0
-    // let coinbaseInputHex = new Buffer('0000000000000000000000000000000000000000000000000000000000000000', 'hex');
-    // coinbaseTx.addInput(coinbaseInputHex, 0);
-    // console.log(coinbaseTx.isCoinbase());
-    //
-    // // single output
-    // // get address of first account
-    // let coinbaseOutputAddress = BitcoinCash.fromWIF(addresses[1].privateKeyWIF, this.wallet.network).getAddress();
-    //
-    // // Hex of output address
-    // let coinbaseOutputHex = new Buffer(coinbaseOutputAddress, 'hex');
-    // coinbaseTx.addOutput(coinbaseOutputHex, BitcoinCash.toSatoshi(12.5));
-    // // tx.addOutput(BitcoinCash.fromWIF(addresses[1].privateKeyWIF, this.wallet.network).getAddress(), BitcoinCash.toSatoshi(12.5));
-    //
-    // // let foo = tb.fromTransaction(coinbaseTx);
-    // let txHex = coinbaseTx.toHex();
-    // let decodedTx = t.fromHex(txHex);
-    // console.log(decodedTx);
-    // let a = BitcoinCash.address();
-    // let s = BitcoinCash.script();
-    // let ins = [];
-    // let ecpair = BitcoinCash.ECPair();
-    // decodedTx.ins.forEach((input, index) => {
-    //   let chunksIn = s.decompile(input.script);
-    //   let inputPubKey = ecpair.fromPublicKeyBuffer(chunksIn[1], Bitcoin.networks[this.wallet.network]).getAddress();
-    //   ins.push({
-    //     inputPubKey: inputPubKey,
-    //     hex: input.script.toString('hex'),
-    //     script: s.toASM(chunksIn)
-    //   });
-    // })
-    // console.log(ins);
-    //
-    // let outs = [];
-    // let value = 0;
-    // decodedTx.outs.forEach((output, index) => {
-    //   value += output.value;
-    //   let chunksIn = s.decompile(output.script);
-    //   console.log(chunksIn);
-      // let outputPubKey = a.fromOutputScript(output.script, Bitcoin.networks[this.wallet.network]);
-      // outs.push({
-      //   outputPubKey: outputPubKey,
-      //   hex: output.script.toString('hex'),
-      //   script: s.toASM(chunksIn)
-      // });
-    // })
-    // console.log(outs);
-
+    
 
     // create genesis tx
 
