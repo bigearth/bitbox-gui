@@ -1,6 +1,7 @@
 const electron = require('electron');
 // Module to control application life.
 const app = electron.app
+const Menu = electron.Menu;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 
@@ -13,6 +14,21 @@ const express = require('express');
 let mainWindow
 
 function createWindow () {
+  // Check if we are on a MAC
+  if (process.platform === 'darwin') {
+    // Create our menu entries so that we can use MAC shortcuts
+    Menu.setApplicationMenu(Menu.buildFromTemplate([
+      {
+        label: 'Edit',
+        submenu: [
+          { role: 'quit' },
+          { role: 'copy' },
+          { role: 'paste' }
+        ]
+      }
+    ]));
+  }
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1550,
