@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import BitcoinCash from '../utilities/BitcoinCash';
 import Crypto from '../utilities/Crypto';
+import Bitcoin from 'bitcoinjs-lib';
 import AddressDisplay from './AddressDisplay';
 import underscore from 'underscore';
 
@@ -29,15 +30,40 @@ class WalletDisplay extends Component {
         let transactions = [];
         underscore.each(this.props.blockchainInstance.chain, (block, index) => {
           underscore.each(block.transactions, (transaction, index) => {
-            transactions.push(underscore.where(transaction.inputs, {ripemd160: ripemd160}));
-            transactions.push(underscore.where(transaction.outputs, {ripemd160: ripemd160}));
+            let t = BitcoinCash.transaction();
+            let decodedTx = t.fromHex(transaction.rawHex);
+            let a = BitcoinCash.address();
+
+            let s = BitcoinCash.script();
+            let ins = [];
+            let outs = [];
+            let ecpair = BitcoinCash.ECPair();
+            decodedTx.ins.forEach((input, index) => {
+              let chunksIn = s.decompile(input.script);
+              let inputPubKey = ecpair.fromPublicKeyBuffer(chunksIn[1], Bitcoin.networks[this.props.wallet.network]).getAddress();
+              ins.push(inputPubKey);
+            })
+
+            decodedTx.outs.forEach((output, index) => {
+              let outputPubKey = a.fromOutputScript(output.script, Bitcoin.networks[this.network]);
+              outs.push(outputPubKey);
+            })
+
+            ins.forEach((input, ind) => {
+              if(input === publicKey) {
+               transactions.push(input);
+              }
+            });
+
+            outs.forEach((output, ind) => {
+              if(output === publicKey) {
+               transactions.push(output);
+              }
+            });
           });
         });
 
-        let transactionsCount = 0;
-        underscore.each(transactions, (transaction, index) => {
-          transactionsCount += transaction.length;
-        });
+        let transactionsCount = transactions.length;
 
         list.push(
           <AddressDisplay
