@@ -10,20 +10,19 @@ class Miner {
     this.network = network;
   }
 
-  pushGenesisTx(rawHex) {
-    let t = BitcoinCash.transaction();
-    let decodedTx = t.fromHex(rawHex);
-    let a = BitcoinCash.address();
+  pushGenesisBlock(genesisBlock) {
+    genesisBlock.forEach((transaction, index) => {
+      let t = BitcoinCash.transaction();
+      let decodedTx = t.fromHex(transaction.rawHex);
+      let a = BitcoinCash.address();
 
-    decodedTx.outs.forEach((output, index) => {
-      let outputPubKey = a.fromOutputScript(output.script, Bitcoin.networks[this.network]);
-      this.utxoSet.addUtxo(outputPubKey, output.value);
-    })
+      decodedTx.outs.forEach((output, index) => {
+        let outputPubKey = a.fromOutputScript(output.script, Bitcoin.networks[this.network]);
+        this.utxoSet.addUtxo(outputPubKey, output.value);
+      })
+    });
 
-    this.mineBlock([{
-      rawHex: rawHex,
-      timestamp: Date.now()
-    }], 0);
+    this.mineBlock(genesisBlock, 0);
   }
 
   mineBlock(transactions, index) {

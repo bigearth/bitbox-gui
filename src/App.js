@@ -85,20 +85,28 @@ class App extends Component {
   createBlockchain(addresses) {
     // create genesis tx
     // This is a hack because I've not yet figured out how to properly sign coinbase txs w/ BitcoinCash.transaction
-    let privkey = BitcoinCash.fromWIF(addresses[1].privateKeyWIF, this.wallet.network);
-    let tx = BitcoinCash.transactionBuilder(this.wallet.network);
+    let genesisBlock = [];
+    addresses.forEach((address, index) => {
+      let privkey = BitcoinCash.fromWIF(addresses[0].privateKeyWIF, this.wallet.network);
+      let tx = BitcoinCash.transactionBuilder(this.wallet.network);
 
-    // Hardcode the input hash
-    // tx.addInput(new Buffer('74bcc32d18744f0e3a8b48941de0ba64f84ebdda4c060ef35a10531446562962', 'hex'), 1);
-    tx.addInput("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b", 0);
+      // Hardcode the input hash
+      tx.addInput("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b", 0);
 
-    let address = BitcoinCash.fromWIF(addresses[0].privateKeyWIF, this.wallet.network).getAddress();
-    let value = BitcoinCash.toSatoshi(12.5);
-    // send 12.5 BCH to the first newly generated account
-    tx.addOutput(address, value);
-    tx.sign(0, privkey);
-    let rawHex = tx.build().toHex();
-    this.miner.pushGenesisTx(rawHex);
+      let addy = BitcoinCash.fromWIF(address.privateKeyWIF, this.wallet.network).getAddress();
+      // send 12.5 BCH to the first newly generated account
+      let value = BitcoinCash.toSatoshi(12.5);
+
+      tx.addOutput(addy, value);
+      tx.sign(0, privkey);
+      let rawHex = tx.build().toHex();
+      genesisBlock.push({
+        rawHex: rawHex,
+        timestamp: Date.now()
+      });
+    });
+
+    this.miner.pushGenesisBlock(genesisBlock);
   }
 
   resetBitbox() {
