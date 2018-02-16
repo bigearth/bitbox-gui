@@ -8,7 +8,8 @@
     "start": "electron .",
     "dev": "webpack",
     "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
-    "create-installer-mac": "electron-installer-dmg ./release-builds/BITBOX-darwin-x64/BITBOX.app BITBOX --out=release-builds --overwrite --icon=assets/icons/mac/icon.icns"
+    "create-installer-mac": "electron-installer-dmg ./release-builds/BITBOX-darwin-x64/BITBOX.app BITBOX --out=release-builds --overwrite --icon=assets/icons/mac/icon.icns",
+    "test": "mocha --compilers js:babel-core/register"
   },
   "repository": "https://github.com/bigearth/bitbox-electron",
   "keywords": [
@@ -21,14 +22,15 @@
   "author": "Gabriel Cardona w/ EARTH",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^1.7.12",
-    "electron-packager": "^10.1.2"
-  },
-  "dependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
+    "electron": "^1.7.12",
+    "electron-packager": "^10.1.2",
+    "mocha": "^5.0.1"
+  },
+  "dependencies": {
     "bchaddrjs": "^0.1.4",
     "bip39": "^2.5.0",
     "bitcoinjs-lib": "^3.3.2",

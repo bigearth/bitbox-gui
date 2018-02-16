@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import BitcoinCash from '../utilities/BitcoinCash';
 // import Crypto from '../utilities/Crypto';
 
-class AddressDetails extends Component {
+class AddressDisplay extends Component {
   constructor(props) {
     super(props);
     let privateKeyWIF = this.props.address.privateKeyWIF;
@@ -50,7 +50,7 @@ class AddressDetails extends Component {
     }
 
     return (
-      <tr className="AddressDetails">
+      <tr className="AddressDisplay">
         <td className='important'><span className='subheader'>ADDRESS{coinbase}</span> <br />{address}</td>
         <td className='important'><span className='subheader'>BALANCE</span> <br />{BitcoinCash.toBitcoinCash(this.props.balance)} BCH</td>
         <td><span className='subheader'>TX COUNT</span> <br />{this.props.transactionsCount}</td>
@@ -61,4 +61,4 @@ class AddressDetails extends Component {
   }
 }
 
-export default AddressDetails;
+export default AddressDisplay;

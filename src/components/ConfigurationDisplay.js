@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import AccountsAndKeys from './AccountsAndKeys';
+import AccountsAndKeysDisplay from './AccountsAndKeysDisplay';
 import {
   Route,
   Redirect
 } from 'react-router-dom';
 
-class Configuration extends Component {
+class ConfigurationDisplay extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,7 +40,7 @@ class Configuration extends Component {
 
     const AccountsAndKeysPage = (props) => {
       return (
-        <AccountsAndKeys
+        <AccountsAndKeysDisplay
           handleEntropySliderChange={this.handleEntropySliderChange.bind(this)}
           resetBitbox={this.resetBitbox.bind(this)}
           wallet={this.props.wallet}
@@ -53,7 +53,7 @@ class Configuration extends Component {
             // <li><Link to={`${this.props.match.url}/server`}>Server</Link></li>
           // <Route path={`${this.props.match.url}/server`} component={Server}/>
     return (
-      <div className="Configuration">
+      <div className="ConfigurationDisplay">
         <div className="content">
           <Route path={`${this.props.match.url}/accounts-and-keys`} component={AccountsAndKeysPage}/>
         </div>
@@ -62,4 +62,4 @@ class Configuration extends Component {
   }
 }
 
-export default Configuration;
+export default ConfigurationDisplay;

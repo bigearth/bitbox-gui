@@ -368,7 +368,7 @@ a.pure-button-primary {
   padding: 1em 0;
 }
 
-.WalletDisplay.content, .Blocks, .WrapperBlockDetails, .Configuration, .Transaction {
+.WalletDisplay.content, .Blocks, .WrapperBlockDetails, .ConfigurationDisplay, .Transaction {
   background: $white;
 }
 
@@ -408,15 +408,15 @@ a.pure-button-primary {
   font-weight: normal;
 }
 
-.AddressDetails td, .Blocks td {
+.AddressDisplay td, .Blocks td {
   padding: 1.25em 1em;
 }
 
-.AddressDetails td.important .subheader, .Blocks td.important .subheader {
+.AddressDisplay td.important .subheader, .Blocks td.important .subheader {
   font-size: 0.6em;
 }
 
-.AddressDetails td.important, .Blocks td.important {
+.AddressDisplay td.important, .Blocks td.important {
   font-size: 1.3em;
 }
 
@@ -444,7 +444,7 @@ a.pure-button-primary {
   padding-right: 10px;
 }
 
-.AddressDetails .danger {
+.AddressDisplay .danger {
   color: $danger;
 }
 

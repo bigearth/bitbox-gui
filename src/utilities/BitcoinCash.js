@@ -6,12 +6,12 @@ import BIP39 from 'bip39';
 import bchaddr from 'bchaddrjs';
 import sb from 'satoshi-bitcoin';
 
-
 class BitcoinCash {
   // Utility class to wrap the following bitcoin related npm packages
   // * https://github.com/bitcoinjs/bitcoinjs-lib
   // * https://github.com/bitcoinjs/bip39
   // * https://github.com/bitcoincashjs/bchaddrjs
+  // * https://github.com/dawsbot/satoshi-bitcoin
 
   // Translate coins to satoshi value
   static toSatoshi(coins) {
@@ -28,10 +28,6 @@ class BitcoinCash {
     return bchaddr.toLegacyAddress(address);
   }
 
-  static toBitpayAddress(address) {
-    return bchaddr.toBitpayAddress(address);
-  }
-
   static toCashAddress(address) {
     return bchaddr.toCashAddress(address);
   }
@@ -39,10 +35,6 @@ class BitcoinCash {
   // Test for address format.
   static isLegacyAddress(address) {
     return bchaddr.isLegacyAddress(address);
-  }
-
-  static isBitpayAddress(address) {
-    return bchaddr.isBitpayAddress(address);
   }
 
   static isCashAddress(address) {
@@ -82,11 +74,15 @@ class BitcoinCash {
     return bchaddr.detectAddressType(address);
   }
 
+  static randomBytes(bytes = 16) {
+    return Crypto.randomBytes(bytes);
+  }
+
   static entropyToMnemonic(bytes = 16) {
     // Generate cryptographically strong pseudo-random data.
     // The bytes argument is a number indicating the number of bytes to generate.
     // Uses the NodeJS crypto lib. More info: https://nodejs.org/api/crypto.html#crypto_crypto_randombytes_size_callback
-    let randomBytes = Crypto.randomBytes(bytes);
+    let randomBytes = BitcoinCash.randomBytes(bytes);
 
     // Create BIP 39 compliant mnemonic w/ entropy
     // Entropy (bits/bytes)	Checksum (bits)	Entropy + checksum (bits)	Mnemonic length (words)

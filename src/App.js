@@ -8,6 +8,7 @@ import {
   Redirect,
   NavLink
 } from 'react-router-dom';
+import Bitcoin from 'bitcoinjs-lib';
 
 // custom models
 import Blockchain from './models/Blockchain';
@@ -22,9 +23,9 @@ import Wallet from './models/Wallet';
 import WalletDisplay from './components/WalletDisplay';
 import Blocks from './components/Blocks';
 import BlockDetails from './components/BlockDetails';
-// import AddressDetails from './components/AddressDetails';
+// import AddressDisplay from './components/AddressDisplay';
 import TransactionsDisplay from './components/TransactionsDisplay';
-import Configuration from './components/Configuration';
+import ConfigurationDisplay from './components/ConfigurationDisplay';
 
 // utilities
 import Crypto from './utilities/Crypto';
@@ -112,7 +113,7 @@ class App extends Component {
 
     // Hardcode the input hash
     // tx.addInput(new Buffer('74bcc32d18744f0e3a8b48941de0ba64f84ebdda4c060ef35a10531446562962', 'hex'), 1);
-    tx.addInput("192b889c434a2872e3719109fad1e9943bce5a3457e4af200944825c32322413", 1);
+    tx.addInput("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b", 0);
 
     // send 12.5 BCH to the first newly generated account
     tx.addOutput(BitcoinCash.fromWIF(addresses[1].privateKeyWIF, this.wallet.network).getAddress(), BitcoinCash.toSatoshi(12.5));
@@ -159,29 +160,64 @@ class App extends Component {
 
     // Create new tx
     // let t = BitcoinCash.transaction();
-    // let tb = BitcoinCash.transactionBuilder();
+    // // let tb = BitcoinCash.transactionBuilder();
     // let coinbaseTx = new t();
     //
     // // coinbase input w/ hash of 0
     // let coinbaseInputHex = new Buffer('0000000000000000000000000000000000000000000000000000000000000000', 'hex');
     // coinbaseTx.addInput(coinbaseInputHex, 0);
+    // console.log(coinbaseTx.isCoinbase());
     //
     // // single output
     // // get address of first account
-    // let coinbaseOutputAddress = BitcoinCash.fromWIF(addresses[0].privateKeyWIF, this.wallet.network).getAddress();
+    // let coinbaseOutputAddress = BitcoinCash.fromWIF(addresses[1].privateKeyWIF, this.wallet.network).getAddress();
     //
     // // Hex of output address
     // let coinbaseOutputHex = new Buffer(coinbaseOutputAddress, 'hex');
     // coinbaseTx.addOutput(coinbaseOutputHex, BitcoinCash.toSatoshi(12.5));
+    // // tx.addOutput(BitcoinCash.fromWIF(addresses[1].privateKeyWIF, this.wallet.network).getAddress(), BitcoinCash.toSatoshi(12.5));
     //
-    // let foo = tb.fromTransaction(coinbaseTx);
+    // // let foo = tb.fromTransaction(coinbaseTx);
     // let txHex = coinbaseTx.toHex();
+    // let decodedTx = t.fromHex(txHex);
+    // console.log(decodedTx);
+    // let a = BitcoinCash.address();
+    // let s = BitcoinCash.script();
+    // let ins = [];
+    // let ecpair = BitcoinCash.ECPair();
+    // decodedTx.ins.forEach((input, index) => {
+    //   let chunksIn = s.decompile(input.script);
+    //   let inputPubKey = ecpair.fromPublicKeyBuffer(chunksIn[1], Bitcoin.networks[this.wallet.network]).getAddress();
+    //   ins.push({
+    //     inputPubKey: inputPubKey,
+    //     hex: input.script.toString('hex'),
+    //     script: s.toASM(chunksIn)
+    //   });
+    // })
+    // console.log(ins);
+    //
+    // let outs = [];
+    // let value = 0;
+    // decodedTx.outs.forEach((output, index) => {
+    //   value += output.value;
+    //   let chunksIn = s.decompile(output.script);
+    //   console.log(chunksIn);
+      // let outputPubKey = a.fromOutputScript(output.script, Bitcoin.networks[this.wallet.network]);
+      // outs.push({
+      //   outputPubKey: outputPubKey,
+      //   hex: output.script.toString('hex'),
+      //   script: s.toASM(chunksIn)
+      // });
+    // })
+    // console.log(outs);
+
+
     // create genesis tx
 
     let keyPair = BitcoinCash.fromWIF(addresses[0].privateKeyWIF, this.wallet.network);
     let address = keyPair.getAddress();
     let output = new Output({
-      value: 5000000000
+      value: 1250000000
     });
 
     let genesisTx = new Transaction({
@@ -230,7 +266,7 @@ class App extends Component {
   }
 
   handlePathMatch(path) {
-    if(path === '/' || path === '/blocks' || path === '/transactions' || path === '/logs' || path === '/configuration/accounts-and-keys') {
+    if(path === '/' || path === '/blocks' || path === '/transactions' || path === '/configuration/accounts-and-keys') {
       return true;
     } else {
       return false;
@@ -384,7 +420,7 @@ class App extends Component {
 
     const AddressPage = (props) => {
       return (
-        <AddressDetails
+        <AddressDisplay
           blockchainInstance={this.state.blockchainInstance}
           match={props.match}
         />
@@ -403,7 +439,7 @@ class App extends Component {
 
     const ConfigurationPage = (props) => {
       return (
-        <Configuration
+        <ConfigurationDisplay
           match={props.match}
           resetBitbox={this.resetBitbox.bind(this)}
           handleEntropySliderChange={this.handleEntropySliderChange.bind(this)}

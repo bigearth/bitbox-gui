@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import BitcoinCash from '../utilities/BitcoinCash';
 import Crypto from '../utilities/Crypto';
-import AddressDetails from './AddressDetails';
+import AddressDisplay from './AddressDisplay';
 import underscore from 'underscore';
 
 class WalletDisplay extends Component {
@@ -40,7 +40,7 @@ class WalletDisplay extends Component {
         });
 
         list.push(
-          <AddressDetails
+          <AddressDisplay
             address={address}
             index={index}
             key={index}
