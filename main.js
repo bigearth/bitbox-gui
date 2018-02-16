@@ -21,9 +21,15 @@ function createWindow () {
       {
         label: 'Edit',
         submenu: [
-          { role: 'quit' },
-          { role: 'copy' },
-          { role: 'paste' }
+          {role: 'copy'},
+          {role: 'paste'},
+          {role: 'quit'}
+        ]
+      },
+      {
+        label: 'View',
+        submenu: [
+          {role: 'toggledevtools'}
         ]
       }
     ]));

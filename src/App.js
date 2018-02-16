@@ -57,84 +57,48 @@ class App extends Component {
 
     this.blockchain = new Blockchain();
 
+    this.utxoSet = new Utxo();
     // Miner Utility for handling txs and blocks
-    this.miner = new Miner(this.blockchain);
 
     this.state = {
       mnemonic: this.wallet.mnemonic,
       addresses: [],
       blockchainInstance: this.blockchain,
-      utxoSet: new Utxo(),
+      utxoSet: this.utxoSet,
       password: '',
       showCreateBtn: false
     };
+    this.miner = new Miner(this.blockchain, this.utxoSet, this.wallet.network);
   }
 
   componentDidMount() {
     let [mnemonic, path, addresses] = BitcoinCash.createHDWallet(this.wallet);
-    let config = this.state.configuration;
     this.setState({
       mnemonic: mnemonic,
       path: path,
-      addresses: addresses,
-      configuration: config
+      addresses: addresses
     });
 
     this.createBlockchain(addresses);
   }
-  createBlockchain(addresses) {
 
+  createBlockchain(addresses) {
     // create genesis tx
     // This is a hack because I've not yet figured out how to properly sign coinbase txs w/ BitcoinCash.transaction
-    let privkey = BitcoinCash.fromWIF(addresses[0].privateKeyWIF, this.wallet.network);
+    let privkey = BitcoinCash.fromWIF(addresses[1].privateKeyWIF, this.wallet.network);
     let tx = BitcoinCash.transactionBuilder(this.wallet.network);
 
     // Hardcode the input hash
     // tx.addInput(new Buffer('74bcc32d18744f0e3a8b48941de0ba64f84ebdda4c060ef35a10531446562962', 'hex'), 1);
     tx.addInput("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b", 0);
 
+    let address = BitcoinCash.fromWIF(addresses[0].privateKeyWIF, this.wallet.network).getAddress();
+    let value = BitcoinCash.toSatoshi(12.5);
     // send 12.5 BCH to the first newly generated account
-    tx.addOutput(BitcoinCash.fromWIF(addresses[1].privateKeyWIF, this.wallet.network).getAddress(), BitcoinCash.toSatoshi(12.5));
+    tx.addOutput(address, value);
     tx.sign(0, privkey);
     let rawHex = tx.build().toHex();
     this.miner.pushGenesisTx(rawHex);
-    
-
-    // create genesis tx
-
-    let keyPair = BitcoinCash.fromWIF(addresses[0].privateKeyWIF, this.wallet.network);
-    let address = keyPair.getAddress();
-    let output = new Output({
-      value: 1250000000
-    });
-
-    let genesisTx = new Transaction({
-      inputs: [],
-      outputs: [output],
-      time: Date.now(),
-      address: address
-    }, true);
-
-    let genesisBlock = {
-      hash: '0x000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f',
-      version: 1,
-      hashPrevBlock: '00000000000000',
-      hashMerkleRoot: '0x4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b',
-      time: 1231006505,
-      bits: '0x1d00ffff',
-      nonce: '2083236893',
-      vtx: 1,
-      index: 0,
-      transactions: [genesisTx],
-      previousHash: '00000000000000'
-    };
-    let blockchainInstance = new Blockchain(genesisBlock);
-
-    let utxoSet = this.state.utxoSet;
-    utxoSet.addUtxo(address, genesisBlock.transactions[0].outputs[0].value);
-
-    // this.handleBlockchainUpdate(this.state.blockchainInstance);
-    this.handleUtxoUpdate(utxoSet);
   }
 
   resetBitbox() {
