@@ -39,6 +39,7 @@
     "express": "^4.16.2",
     "moment": "^2.20.1",
     "node-sass": "^4.7.2",
+    "qrcode.react": "^0.7.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-rangeslider": "^2.2.0",

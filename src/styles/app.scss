@@ -368,7 +368,7 @@ a.pure-button-primary {
   padding: 1em 0;
 }
 
-.WalletDisplay.content, .Blocks, .WrapperBlockDetails, .ConfigurationDisplay, .Transaction {
+.WalletDisplay.content, .Blocks, .WrapperBlockDetails, .ConfigurationDisplay, .Transaction, .Convert {
   background: $white;
 }
 
@@ -563,4 +563,15 @@ a.pure-button-primary {
 
 .Transaction .coinbase {
   width: 10%;
+}
+
+.Convert {
+  padding-top: 15px;
+  margin-top: 0;
+  text-align: center;
+
+  canvas {
+    height: 250px !important;
+    width: 250px !important;
+  }
 }
