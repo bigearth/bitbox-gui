@@ -301,6 +301,7 @@ class App extends Component {
     const ConvertPage = (props) => {
       return (
         <ConvertDisplay
+          wallet={this.wallet}
         />
       );
     };
