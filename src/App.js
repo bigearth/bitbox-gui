@@ -114,7 +114,7 @@ class App extends Component {
     this.blockchain = new Blockchain();
 
     // Miner Utility for handling txs and blocks
-    this.miner = new Miner(this.blockchain);
+    this.miner = new Miner(this.blockchain, this.utxoSet, this.wallet.network);
 
     let [mnemonic, path, addresses] = BitcoinCash.createHDWallet(this.wallet);
     this.setState({
