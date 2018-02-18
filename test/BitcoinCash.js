@@ -1,6 +1,7 @@
 import BitcoinCash from '../src/utilities/BitcoinCash';
-let chai = require('chai');
+import chai from 'chai';
 let assert = chai.assert;
+let fixtures = require('./fixtures/BitcoinCash.json')
 
 describe('price conversion', () => {
   it('should convert Bitcoin Cash to Satoshis', () => {
@@ -20,30 +21,30 @@ describe('price conversion', () => {
 
 describe('address conversion', () => {
   it('should convert base58Check address to cashaddr', () => {
-    let base58Check = '14pjfbNNaXnuLztCmTCZqJsFJoZ6qmtU8f';
+    let base58Check = fixtures.base58check;
     let cashaddr = BitcoinCash.toCashAddress(base58Check);
 
-    assert.equal(cashaddr, 'bitcoincash:qq57lzhk6qtdny7lwq3amk5npqssmxztrcq0m4arnd');
+    assert.equal(cashaddr, fixtures.cashaddr);
   });
 
   it('should convert cashaddr address to base58Check', () => {
-    let cashaddr = 'bitcoincash:qq57lzhk6qtdny7lwq3amk5npqssmxztrcq0m4arnd';
+    let cashaddr = fixtures.cashaddr;
     let base58Check = BitcoinCash.toLegacyAddress(cashaddr);
 
-    assert.equal(base58Check, '14pjfbNNaXnuLztCmTCZqJsFJoZ6qmtU8f');
+    assert.equal(base58Check, fixtures.base58check);
   });
 });
 
 describe('address format detection', () => {
   it('should detect base58Check address', () => {
-    let base58Check = '14pjfbNNaXnuLztCmTCZqJsFJoZ6qmtU8f';
+    let base58Check = fixtures.base58check;
     let isBase58Check = BitcoinCash.isLegacyAddress(base58Check);
 
     assert.equal(isBase58Check, true);
   });
 
   it('should detect cashaddr address', () => {
-    let cashaddr = 'bitcoincash:qq57lzhk6qtdny7lwq3amk5npqssmxztrcq0m4arnd';
+    let cashaddr = fixtures.cashaddr;
     let isCashaddr = BitcoinCash.isCashAddress(cashaddr);
 
     assert.equal(isCashaddr, true);
@@ -52,14 +53,14 @@ describe('address format detection', () => {
 
 describe('network detection', () => {
   it('should detect mainnet address', () => {
-    let mainnet = '14pjfbNNaXnuLztCmTCZqJsFJoZ6qmtU8f';
+    let mainnet = fixtures.base58check;
     let isMainnet = BitcoinCash.isMainnetAddress(mainnet);
 
     assert.equal(isMainnet, true);
   });
 
   it('should detect testnet address', () => {
-    let testnet = 'mj1jnRqWdqWdWn5Qqh5vdZqVKU1WmuzaGJ';
+    let testnet = fixtures.testnet;
     let isTestnet = BitcoinCash.isTestnetAddress(testnet);
 
     assert.equal(isTestnet, true);
@@ -68,14 +69,14 @@ describe('network detection', () => {
 
 describe('address type detection', () => {
   it('should detect P2PKH address', () => {
-    let P2PKH = '14pjfbNNaXnuLztCmTCZqJsFJoZ6qmtU8f';
+    let P2PKH = fixtures.base58check;
     let isP2PKH = BitcoinCash.isP2PKHAddress(P2PKH);
 
     assert.equal(isP2PKH, true);
   });
 
   it('should detect P2SH address', () => {
-    let P2SH = 'H92i9XpREZiBscxGu6Vx3M8jNGBKqscBBB';
+    let P2SH = fixtures.P2SH;
     let isP2SH = BitcoinCash.isP2SHAddress(P2SH);
 
     assert.equal(isP2SH, true);
@@ -84,14 +85,14 @@ describe('address type detection', () => {
 
 describe('return address format', () => {
   it('should return base58Check address', () => {
-    let base58Check = '14pjfbNNaXnuLztCmTCZqJsFJoZ6qmtU8f';
+    let base58Check = fixtures.base58check;
     let isBase58Check = BitcoinCash.detectAddressFormat(base58Check);
 
     assert.equal(isBase58Check, 'legacy');
   });
 
   it('should return cashaddr address', () => {
-    let cashaddr = 'bitcoincash:qq57lzhk6qtdny7lwq3amk5npqssmxztrcq0m4arnd';
+    let cashaddr = fixtures.cashaddr;
     let isCashaddr = BitcoinCash.detectAddressFormat(cashaddr);
 
     assert.equal(isCashaddr, 'cashaddr');
@@ -100,14 +101,14 @@ describe('return address format', () => {
 
 describe('return address network', () => {
   it('should return mainnet', () => {
-    let mainnet = '14pjfbNNaXnuLztCmTCZqJsFJoZ6qmtU8f';
+    let mainnet = fixtures.base58check;
     let isMainnet = BitcoinCash.detectAddressNetwork(mainnet);
 
     assert.equal(isMainnet, 'mainnet');
   });
 
   it('should return testnet', () => {
-    let testnet = 'mj1jnRqWdqWdWn5Qqh5vdZqVKU1WmuzaGJ';
+    let testnet = fixtures.testnet;
     let isTestnet = BitcoinCash.detectAddressNetwork(testnet);
 
     assert.equal(isTestnet, 'testnet');
@@ -116,14 +117,14 @@ describe('return address network', () => {
 
 describe('return address type', () => {
   it('should return P2PKH', () => {
-    let P2PKH = '14pjfbNNaXnuLztCmTCZqJsFJoZ6qmtU8f';
+    let P2PKH = fixtures.base58check;
     let isP2PKH = BitcoinCash.detectAddressType(P2PKH);
 
     assert.equal(isP2PKH, 'p2pkh');
   });
 
-  it('should return P2PKH', () => {
-    let P2SH = 'H92i9XpREZiBscxGu6Vx3M8jNGBKqscBBB';
+  it('should return P2SH', () => {
+    let P2SH = fixtures.P2SH;
     let isP2SH = BitcoinCash.detectAddressType(P2SH);
 
     assert.equal(isP2SH, 'p2sh');
