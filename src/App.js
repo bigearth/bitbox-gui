@@ -74,6 +74,8 @@ class App extends Component {
 
   componentDidMount() {
     let [mnemonic, path, addresses] = BitcoinCash.createHDWallet(this.wallet);
+    store.set('addresses', addresses);
+
     this.setState({
       mnemonic: mnemonic,
       path: path,

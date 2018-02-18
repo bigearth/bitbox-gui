@@ -1,4 +1,8 @@
-const electron = require('electron');
+require("babel-register");
+
+
+let electron = require('electron');
+
 // Module to control application life.
 const app = electron.app
 const Menu = electron.Menu;
@@ -8,6 +12,12 @@ const BrowserWindow = electron.BrowserWindow
 const path = require('path');
 const url = require('url');
 const express = require('express');
+
+let Store = require('electron-store');
+const store = new Store();
+
+let bc = require('./bc');
+let BitcoinCash = bc.BitcoinCash;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -43,7 +53,10 @@ function createWindow () {
     minHeight: 800,
     icon: path.join(__dirname, './assets/icons/mac/icon.icns'),
     backgroundColor: '#6FBEF3',
-    show: false
+    show: false,
+    webPreferences: {
+      preload: __dirname + '/preload.js'
+    }
   });
 
   mainWindow.once('ready-to-show', () => {
@@ -82,7 +95,6 @@ function createWindow () {
     'decoderawtransaction',
     'decodescript',
     'disconnectnode',
-    'dumpprivkey',
     'dumpwallet',
     'encryptwallet',
     'estimatefee',
@@ -178,6 +190,15 @@ function createWindow () {
     server.get('/' + endpoint, function(req, res) {
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify({ endpoint: endpoint }));
+    });
+  });
+
+  server.get('/dumpprivkey', function(req, res) {
+    store.get('addresses').forEach(function(address, index) {
+      let tmp = BitcoinCash.fromWIF(address.privateKeyWIF).getAddress();
+      if(tmp === BitcoinCash.toLegacyAddress(req.query.address)) {
+        res.send(address.privateKeyWIF);
+      }
     });
   });
 
