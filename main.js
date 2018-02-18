@@ -92,7 +92,6 @@ function createWindow () {
     'clearbanned',
     'createmultisig',
     'createrawtransaction',
-    'decoderawtransaction',
     'decodescript',
     'disconnectnode',
     'encryptwallet',
@@ -190,6 +189,44 @@ function createWindow () {
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify({ endpoint: endpoint }));
     });
+  });
+
+  server.get('/decoderawtransaction', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+
+    let t = BitcoinCash.transaction();
+    let decodedTx = t.fromHex(req.query.rawHex);
+
+    let a = BitcoinCash.address();
+    let s = BitcoinCash.script();
+    let ins = [];
+    let ecpair = BitcoinCash.ECPair();
+    decodedTx.ins.forEach((input, index) => {
+      let chunksIn = s.decompile(input.script);
+      let inputPubKey = ecpair.fromPublicKeyBuffer(chunksIn[1]).getAddress();
+      ins.push({
+        inputPubKey: inputPubKey,
+        hex: input.script.toString('hex'),
+        script: s.toASM(chunksIn)
+      });
+    })
+    decodedTx.ins = ins;
+
+    let outs = [];
+    let value = 0;
+    decodedTx.outs.forEach((output, index) => {
+      value += output.value;
+      let chunksIn = s.decompile(output.script);
+      let outputPubKey = a.fromOutputScript(output.script);
+      outs.push({
+        outputPubKey: outputPubKey,
+        hex: output.script.toString('hex'),
+        script: s.toASM(chunksIn)
+      });
+    })
+    decodedTx.outs = outs;
+
+    res.send(decodedTx);
   });
 
   server.get('/dumpprivkey', function(req, res) {
