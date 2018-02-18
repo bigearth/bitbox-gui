@@ -95,7 +95,6 @@ function createWindow () {
     'decoderawtransaction',
     'decodescript',
     'disconnectnode',
-    'dumpwallet',
     'encryptwallet',
     'estimatefee',
     'estimatepriority',
@@ -194,12 +193,22 @@ function createWindow () {
   });
 
   server.get('/dumpprivkey', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
     store.get('addresses').forEach(function(address, index) {
       let tmp = BitcoinCash.fromWIF(address.privateKeyWIF).getAddress();
       if(tmp === BitcoinCash.toLegacyAddress(req.query.address)) {
         res.send(address.privateKeyWIF);
       }
     });
+  });
+
+  server.get('/dumpwallet', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    let addresses = [];
+    store.get('addresses').forEach(function(address, index) {
+      addresses.push(address.privateKeyWIF);
+    });
+    res.send(addresses);
   });
 
   server.get('/help', function(req, res) {
