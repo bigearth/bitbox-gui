@@ -141,7 +141,7 @@ class BitcoinCash {
       config.mnemonic = BitcoinCash.entropyToMnemonic(config.entropy);
     }
 
-    // create 512 byte HMAC-SHA512 root seed
+    // create 512 bit HMAC-SHA512 root seed
     let rootSeed = BitcoinCash.mnemonicToSeed(config.mnemonic, config.password);
 
     // create master private key
