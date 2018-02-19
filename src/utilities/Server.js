@@ -8,13 +8,6 @@ const express = require('express');
 class Server {
   constructor() {
     const server = express();
-
-    server.get('/abandontransaction', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify({ result: null }));
-    });
-
     server.get('/addmultisigaddress', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
@@ -27,12 +20,6 @@ class Server {
       res.send(JSON.stringify({ result: null }));
     });
 
-    server.get('/addwitnessaddress', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(BitcoinCash.fromWIF(store.get('addresses')[0].privateKeyWIF).getAddress());
-    });
-
     server.get('/backupwallet', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
@@ -41,17 +28,6 @@ class Server {
         addresses.push(address.privateKeyWIF);
       });
       res.send(addresses);
-    });
-
-    server.get('/bumpfee', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify({
-      	"txid": "37a55ce49636977k79bcb04ee1143573b570b1743e09660e79e7ec3320968ca54",
-      	"origfee": 0.00002450,
-      	"fee": 0.00004000,
-      	"errors": ""
-      }));
     });
 
     server.get('/clearbanned', (req, res) => {
@@ -604,7 +580,7 @@ class Server {
 
       res.send(JSON.stringify({
         "version": 130100,
-        "subversion": "/Satoshi:0.13.1/",
+        "subversion": "/Bitcoin ABC:0.16.2(EB8.0)/",
         "protocolversion": 70014,
         "localservices": "000000000000000d",
         "localrelay": true,
@@ -1178,7 +1154,7 @@ class Server {
       res.send(true);
     });
 
-    server.get('/ping-rpc', (req, res) => {
+    server.get('/ping', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({ result: null }));
