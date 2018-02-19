@@ -143,6 +143,18 @@ class Server {
       res.send("0.00162556");
     });
 
+    server.get('/estimatesmartfee', (req, res) => {
+      res.setHeader('Content-Type', 'application/json');
+
+      res.send("success");
+    });
+
+    server.get('/estimatesmartpriority', (req, res) => {
+      res.setHeader('Content-Type', 'application/json');
+
+      res.send("success");
+    });
+
     server.get('/estimatepriority', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
@@ -378,6 +390,12 @@ class Server {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(0);
+    });
+
+    server.get('/getexcessiveblock', (req, res) => {
+      res.setHeader('Content-Type', 'application/json');
+
+      res.send('success');
     });
 
     server.get('/getinfo', (req, res) => {
@@ -1218,6 +1236,12 @@ class Server {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({ result: null }));
+    });
+
+    server.get('/setexcessiveblock', (req, res) => {
+      res.setHeader('Content-Type', 'application/json');
+
+      res.send('success');
     });
 
     server.get('/setnetworkactive', (req, res) => {
