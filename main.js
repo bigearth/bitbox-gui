@@ -82,113 +82,65 @@ function createWindow () {
   })
 
   const server = express();
-  let endpoints = [
-    'abandonTransaction',
-    'addmultisigaddress',
-    'addnode',
-    'addwitnessaddress',
-    'backupWallet',
-    'bumpfee',
-    'clearbanned',
-    'createmultisig',
-    'createrawtransaction',
-    'decodescript',
-    'disconnectnode',
-    'encryptwallet',
-    'estimatefee',
-    'estimatepriority',
-    'fundrawtransaction',
-    'generate',
-    'generatetoaddress',
-    'getaccountaddress',
-    'getaccount',
-    'getaddednodeinfo',
-    'getaddressesbyaccount',
-    'getbalance',
-    'getbestblockhash',
-    'getblock',
-    'getblockchaininfo',
-    'getblockcount',
-    'getblockhash',
-    'getblockheader',
-    'getblocktemplate',
-    'getchaintips',
-    'getconnectioncount',
-    'getdifficulty',
-    'getgenerate',
-    'gethashespersec',
-    'getinfo',
-    'getmemoryinfo',
-    'getmempoolancestors',
-    'getmempooldescendants',
-    'getmempoolentry',
-    'getmempoolinfo',
-    'getmininginfo',
-    'getnettotals',
-    'getnetworkhashps',
-    'getnetworkinfo',
-    'getpeerinfo',
-    'getrawchangeaddress',
-    'getrawmempool',
-    'getrawtransaction',
-    'getreceivedbyaccount',
-    'getreceivedbyaddress',
-    'gettransaction',
-    'gettxout',
-    'gettxoutproof',
-    'gettxoutsetinfo',
-    'getunconfirmedbalance',
-    'getwalletinfo',
-    'getwork',
-    'importaddress',
-    'importmulti',
-    'importprivkey',
-    'importprunedfunds',
-    'importwallet',
-    'keypoolrefill',
-    'listaccounts',
-    'listaddressgroupings',
-    'listbanned',
-    'listlockunspent',
-    'listreceivedbyaccount',
-    'listreceivedbyaddress',
-    'listsinceblock',
-    'listtransactions',
-    'listunspent',
-    'lockunspent',
-    'move',
-    'ping-rpc',
-    'preciousblock',
-    'prioritisetransaction',
-    'pruneblockchain',
-    'removeprunedfunds',
-    'sendfrom',
-    'sendmany',
-    'sendrawtransaction',
-    'sendtoaddress',
-    'setaccount',
-    'setban',
-    'setgenerate',
-    'setnetworkactive',
-    'settxfee',
-    'signmessage',
-    'signmessagewithprivkey',
-    'signrawtransaction',
-    'stop',
-    'submitblock',
-    'validateaddress',
-    'verifychain',
-    'verifymessage',
-    'verifytxoutproof',
-    'walletlock',
-    'walletpassphrase',
-    'walletpassphrasechange'
-  ];
-  endpoints.forEach(function(endpoint, index) {
-    server.get('/' + endpoint, function(req, res) {
-      res.setHeader('Content-Type', 'application/json');
-      res.send(JSON.stringify({ endpoint: endpoint }));
-    });
+
+  server.get('/abandontransaction', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ status: req.query.txid }));
+  });
+
+  server.get('/addmultisigaddress', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(BitcoinCash.fromWIF(store.get('addresses')[0].privateKeyWIF).getAddress());
+  });
+
+  server.get('/addnode', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ node: req.query.node }));
+  });
+
+  server.get('/addwitnessaddress', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ address: req.query.address }));
+  });
+
+  server.get('/backupWallet', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ destination: req.query.destination }));
+  });
+
+  server.get('/bumpfee', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ txid: req.query.txid }));
+  });
+
+  server.get('/clearbanned', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ status: 'success' }));
+  });
+
+  server.get('/createmultisig', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(
+      {
+        "address" : "2MyVxxgNBk5zHRPRY2iVjGRJHYZEp1pMCSq",
+        "redeemScript" : "522103ede722780d27b05f0b1169efc90fa15a601a32fc6c3295114500c586831b6aaf2102ecd2d250a76d204011de6bc365a56033b9b3a149f679bc17205555d3c2b2854f21022d609d2f0d359e5bc0e5d0ea20ff9f5d3396cb5b1906aa9c56a0e7b5edc0c5d553ae"
+      }
+    ));
+  });
+
+  server.get('/createrawtransaction', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(
+      {
+        "address" : "2MyVxxgNBk5zHRPRY2iVjGRJHYZEp1pMCSq",
+        "redeemScript" : "522103ede722780d27b05f0b1169efc90fa15a601a32fc6c3295114500c586831b6aaf2102ecd2d250a76d204011de6bc365a56033b9b3a149f679bc17205555d3c2b2854f21022d609d2f0d359e5bc0e5d0ea20ff9f5d3396cb5b1906aa9c56a0e7b5edc0c5d553ae"
+      }
+    ));
+  });
+
+  server.get('/decodescript', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ redeemScript: req.query.redeemScript }));
   });
 
   server.get('/decoderawtransaction', function(req, res) {
@@ -229,6 +181,11 @@ function createWindow () {
     res.send(decodedTx);
   });
 
+  server.get('/disconnectnode', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ address: req.query.address }));
+  });
+
   server.get('/dumpprivkey', function(req, res) {
     res.setHeader('Content-Type', 'application/json');
     store.get('addresses').forEach(function(address, index) {
@@ -248,6 +205,61 @@ function createWindow () {
     res.send(addresses);
   });
 
+  server.get('/encryptwallet', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/estimatefee', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/estimatepriority', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/fundrawtransaction', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/generate', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/generatetoaddress', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getaccountaddress', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getaccount', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getaddednodeinfo', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getaddressesbyaccount', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getbalance', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
   server.get('/help', function(req, res) {
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify({ endpoints: endpoints.push('help') }));
@@ -257,6 +269,392 @@ function createWindow () {
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify({ endpoints: endpoints.push('help') }));
   });
+
+  server.get('/getbestblockhash', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getblock', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getblockchaininfo', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getblockcount', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getblockhash', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getblockheader', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getblocktemplate', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getchaintips', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getconnectioncount', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getdifficulty', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getgenerate', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/gethashespersec', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getinfo', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getmemoryinfo', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getmempooldescendants', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getmempoolentry', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getmempoolinfo', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getmininginfo', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getnettotals', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getnetworkhashps', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getnetworkinfo', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getpeerinfo', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getrawchangeaddress', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getrawmempool', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getrawtransaction', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getreceivedbyaccount', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getreceivedbyaddress', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/gettransaction', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/gettxout', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/gettxoutproof', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/gettxoutsetinfo', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getunconfirmedbalance', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getwalletinfo', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/getwork', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/importaddress', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/importmulti', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/importprivkey', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/importprunedfunds', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/importwallet', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/keypoolrefill', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/listaccounts', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/listaddressgroupings', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/listbanned', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/listlockunspent', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/listreceivedbyaccount', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/listreceivedbyaddress', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/listsinceblock', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/listtransactions', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/listunspent', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/lockunspent', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/move', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/ping-rpc', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/preciousblock', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/prioritisetransaction', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/pruneblockchain', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/removeprunedfunds', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/sendfrom', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/sendmany', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/sendrawtransaction', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/sendtoaddress', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/setaccount', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/setban', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/setgenerate', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/setnetworkactive', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/settxfee', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/signmessage', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/signmessagewithprivkey', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+
+  server.get('/signrawtransaction', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/stop', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/submitblock', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/validateaddress', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/verifychain', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/verifymessage', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/verifytxoutproof', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/walletlock', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
+  server.get('/walletpassphrase', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+  server.get('/walletpassphrasechange', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+  });
+
   server.listen(8332, function() {console.log('listening on port 8332,')});
 }
 
