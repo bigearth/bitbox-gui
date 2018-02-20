@@ -152,6 +152,7 @@ class BitcoinCash {
 
     if(config.autogeneratePath) {
       // create BIP 44 HD path
+      // more info: https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
       // m / purpose' / coin_type' / account' / change / address_index
 
       // purpose is always 44' to show the wallet is BIP 44 compliant
@@ -159,6 +160,7 @@ class BitcoinCash {
 
       // BCH's coin code is 145'
       let coin = "145'";
+
       let path = `m/${purpose}/${coin}`;
       config.path = path;
     }
@@ -168,17 +170,9 @@ class BitcoinCash {
     let tmpPath;
     for (let i = 0; i < config.totalAccounts; i++) {
       // create accounts
-      account = masterkey.derivePath(`${config.path.replace(/\/$/, "")}/${i}'`);
-
-      // var keyhash = Bitcoin.crypto.hash160(account.getPublicKeyBuffer())
-      // var scriptSig = Bitcoin.script.witnessPubKeyHash.output.encode(keyhash)
-      // var addressBytes = Bitcoin.crypto.hash160(scriptSig)
-      // var outputScript = Bitcoin.script.scriptHash.output.encode(addressBytes)
-      // var address = Bitcoin.address.fromOutputScript(outputScript, Bitcoin.networks.testnet)
-      // console.log(address.derive(0));
-
-      // get 1st receiving address of account i
-      addresses.push(new Address(account.derive(0).keyPair.toWIF()));
+      // follow BIP 44 account discovery algo https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#account-discovery
+      account = masterkey.derivePath(`${config.path.replace(/\/$/, "")}/${i}'/0/0`);
+      addresses.push(new Address(account.keyPair.toWIF()));
       // addresses.push(new Address(BitcoinCash.toCashAddress(account.derive(i).getAddress()), account.derive(i).keyPair.toWIF()));
     };
 
