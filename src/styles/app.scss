@@ -420,6 +420,16 @@ a.pure-button-primary {
   font-size: 1.3em;
 }
 
+.AddressDisplay {
+  .danger {
+    font-size: .6em;
+  }
+  .danger:first-of-type {
+    font-size: 1em;
+  }
+
+}
+
 .pure-button {
   background-color: $medBlue;
 }

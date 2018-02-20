@@ -148,6 +148,8 @@ class BitcoinCash {
     // create master private key
     let masterkey = BitcoinCash.fromSeedBuffer(rootSeed, config.network);
 
+
+
     // let tmpkey = BitcoinCash.fromSeedBuffer(rootSeed);
 
     if(config.autogeneratePath) {
@@ -168,11 +170,20 @@ class BitcoinCash {
     let addresses = [];
     let account;
     let tmpPath;
+
     for (let i = 0; i < config.totalAccounts; i++) {
       // create accounts
       // follow BIP 44 account discovery algo https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#account-discovery
+      let tmp = masterkey.derivePath(`${config.path.replace(/\/$/, "")}/${i}'`);
+      let xpriv = tmp.toBase58();
+      let xpub = tmp.neutered().toBase58();
       account = masterkey.derivePath(`${config.path.replace(/\/$/, "")}/${i}'/0/0`);
-      addresses.push(new Address(account.keyPair.toWIF()));
+
+      addresses.push(new Address({
+        privateKeyWIF: account.keyPair.toWIF(),
+        xpriv: xpriv,
+        xpub: xpub
+      }));
       // addresses.push(new Address(BitcoinCash.toCashAddress(account.derive(i).getAddress()), account.derive(i).keyPair.toWIF()));
     };
 

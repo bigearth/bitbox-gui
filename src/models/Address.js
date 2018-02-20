@@ -1,7 +1,9 @@
 
 class Address {
-  constructor(privateKeyWIF) {
-    this.privateKeyWIF = privateKeyWIF;
+  constructor(config) {
+    this.privateKeyWIF = config.privateKeyWIF;
+    this.xpriv = config.xpriv;
+    this.xpub = config.xpub;
   }
 }
 

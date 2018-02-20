@@ -33,7 +33,9 @@ class AddressDisplay extends Component {
     if(this.state.showPrivKey) {
 
       btn = <td><button className="pure-button danger-background" onClick={this.hideKey.bind(this, BitcoinCash.fromWIF(this.state.address, this.props.wallet.network).getAddress())}><i className="fas fa-key" /></button></td>;
-      address = <span className='danger'>{this.state.address}</span>;
+      address = <span><span className='danger'>{this.state.address}</span><br />
+                <span className='danger'>{this.props.address.xpriv}</span><br />
+                <span className='danger'>{this.props.address.xpub}</span></span>;
     } else {
       btn = <td><button className="pure-button" onClick={this.showKey.bind(this, this.props.address.privateKeyWIF)}><i className="fas fa-key" /></button></td>;
 
