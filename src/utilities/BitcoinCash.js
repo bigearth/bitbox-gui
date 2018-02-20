@@ -5,6 +5,7 @@ import Bitcoin from 'bitcoinjs-lib';
 import BIP39 from 'bip39';
 import bchaddr from 'bchaddrjs';
 import sb from 'satoshi-bitcoin';
+import bitcoinMessage from 'bitcoinjs-message';
 
 class BitcoinCash {
   // Utility class to wrap the following bitcoin related npm packages
@@ -182,6 +183,14 @@ class BitcoinCash {
     };
 
     return [config.mnemonic, config.path, addresses];
+  }
+
+  static signMessage(message, privateKey, keyPair) {
+    return bitcoinMessage.sign(message, privateKey, keyPair.compressed);
+  }
+
+  static verifyMessage(message, address, signature) {
+    return bitcoinMessage.verify(message, address, signature);
   }
 }
 

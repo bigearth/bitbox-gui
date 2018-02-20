@@ -26,6 +26,7 @@ import BlockDetails from './components/BlockDetails';
 // import AddressDisplay from './components/AddressDisplay';
 import TransactionsDisplay from './components/TransactionsDisplay';
 import ConvertDisplay from './components/ConvertDisplay';
+import MessageDisplay from './components/MessageDisplay';
 import ConfigurationDisplay from './components/ConfigurationDisplay';
 
 // utilities
@@ -308,6 +309,14 @@ class App extends Component {
       );
     };
 
+    const MessagePage = (props) => {
+      return (
+        <MessageDisplay
+          addresses={this.state.addresses}
+        />
+      );
+    };
+
     const ConfigurationPage = (props) => {
       return (
         <ConfigurationDisplay
@@ -363,6 +372,15 @@ class App extends Component {
                   <i className="fas fa-calculator"></i> Convert
                 </NavLink>
               </li>
+              <li className="pure-menu-item">
+                <NavLink
+                  isActive={pathMatch}
+                  activeClassName="pure-menu-selected"
+                  className="pure-menu-link"
+                  to="/message">
+                  <i className="far fa-check-circle"></i> Sign &amp; Verify
+                </NavLink>
+              </li>
             </ul>
             <ul className="pure-menu-list right">
               <li className="pure-menu-item">
@@ -396,6 +414,7 @@ class App extends Component {
             <Route path="/blocks/:block_id" component={BlockPage}/>
             <Route path="/transactions/:transaction_id" component={TransactionsPage}/>
             <Route path="/convert" component={ConvertPage}/>
+            <Route path="/message" component={MessagePage}/>
             <Route path="/configuration" component={ConfigurationPage}/>
             <Route exact path="/" component={WalletPage}/>
             <Redirect from='*' to='/' />

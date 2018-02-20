@@ -368,7 +368,7 @@ a.pure-button-primary {
   padding: 1em 0;
 }
 
-.WalletDisplay.content, .Blocks, .WrapperBlockDetails, .ConfigurationDisplay, .Transaction, .ConvertDisplay {
+.WalletDisplay.content, .Blocks, .WrapperBlockDetails, .ConfigurationDisplay, .Transaction, .ConvertDisplay, .MessageDisplay {
   background: $white;
 }
 
@@ -545,7 +545,7 @@ a.pure-button-primary {
 .tableFormatting {
   .coinbase {background-color: $danger;}
 }
-.success {background-color: #4CAF50;}
+.success {color: #4CAF50;}
 .info {background-color: #2196F3;}
 .warning {background-color: #ff9800;}
 .danger {color: $danger;}
@@ -563,6 +563,11 @@ a.pure-button-primary {
 
 .Transaction .coinbase {
   width: 10%;
+}
+
+.MessageDisplay {
+  padding-top: 15px;
+  margin-top: 0;
 }
 
 .ConvertDisplay {
@@ -584,4 +589,18 @@ a.pure-button-primary {
     text-align: right;
     padding-right: 2em;
   }
+}
+
+.MessageDisplay {
+  textarea, input {
+    width: 100%;
+  }
+
+  button {
+    margin-right: 10px;
+  }
+}
+
+#signature1 {
+  color: darkGrey;
 }

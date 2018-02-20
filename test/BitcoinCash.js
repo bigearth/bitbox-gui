@@ -160,3 +160,33 @@ describe('create master private key', () => {
     assert.equal(masterkey.chainCode.byteLength, 32);
   });
 });
+
+describe('sign and verify messages', () => {
+  it('should sign a message and produce an 88 character signature in base64 encoding', () => {
+
+    var keyPair = BitcoinCash.fromWIF('5KYZdUEo39z3FPrtuX2QbbwGnNP5zTd7yyr2SC1j299sBCnWjss')
+    var privateKey = keyPair.d.toBuffer(32)
+    var message = 'This is an example of a signed message.'
+
+    var signature = BitcoinCash.signMessage(message, privateKey, keyPair.compressed)
+    assert.equal(signature.toString('base64').length, 88);
+  });
+
+  it('should verify a valid signed message', () => {
+
+    var address = '1HZwkjkeaoZfTSaJxDw6aKkxp45agDiEzN'
+    var signature = 'HJLQlDWLyb1Ef8bQKEISzFbDAKctIlaqOpGbrk3YVtRsjmC61lpE5ErkPRUFtDKtx98vHFGUWlFhsh3DiW6N0rE'
+    var message = 'This is an example of a signed message.'
+
+    assert.equal(BitcoinCash.verifyMessage(message, address, signature), true);
+  });
+
+  it('should not verify a invalid signed message', () => {
+
+    var address = '1HZwkjkeaoZfTSaJxDw6aKkxp45agDiEzN'
+    var signature = 'HJLQlDWLyb1Ef8bQKEISzFbDAKctIlaqOpGbrk3YVtRsjmC61lpE5ErkPRUFtDKtx98vHFGUWlFhsh3DiW6N0rE'
+    var message = 'This is an example of an invalid message.'
+
+    assert.equal(BitcoinCash.verifyMessage(message, address, signature), false);
+  });
+});
