@@ -179,12 +179,52 @@ class BitcoinCash {
     return [config.mnemonic, config.path, addresses];
   }
 
-  static signMessage(message, privateKey, keyPair) {
+  static signMessage(message, privateKeyWIF) {
+
+    let keyPair;
+    let errorMsg = '';
+    try {
+      keyPair = BitcoinCash.fromWIF(privateKeyWIF);
+    } catch (e) {
+      errorMsg = e.message;
+    }
+
+    if(errorMsg !== '') {
+      return errorMsg;
+    }
+
+    let privateKey = keyPair.d.toBuffer(32);
+    let signature = BitcoinCash.sign(message, privateKey, keyPair);
+    let signature1 = signature.toString('base64')
+    return signature1;
+  }
+
+  static sign(message, privateKey, keyPair) {
     return bitcoinMessage.sign(message, privateKey, keyPair.compressed);
   }
 
   static verifyMessage(message, address, signature) {
     return bitcoinMessage.verify(message, address, signature);
+  }
+
+  static returnPrivateKeyWIF(pubAddress, addresses) {
+    let privateKeyWIF;
+    let errorMsg = '';
+    try {
+      addresses.forEach((address, index) => {
+        if(BitcoinCash.toLegacyAddress(pubAddress) === BitcoinCash.fromWIF(address.privateKeyWIF).getAddress()) {
+          privateKeyWIF = address.privateKeyWIF;
+        }
+      });
+    } catch (e) {
+      errorMsg = e.message;
+    }
+
+    if(errorMsg !== '') {
+      return errorMsg;
+    } else {
+      return privateKeyWIF;
+    }
   }
 }
 

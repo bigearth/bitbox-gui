@@ -52,57 +52,18 @@ class MessageDisplay extends Component {
       message1Error: ''
     })
 
-    let error = false;
-    let keyPair;
-    let pubAddress;
-
-    try {
-      pubAddress = BitcoinCash.toLegacyAddress(this.state.address1);
-    } catch (e) {
-      error = true;
+    let privateKeyWIF = BitcoinCash.returnPrivateKeyWIF(this.state.address1, this.props.addresses);
+    if(privateKeyWIF === 'Received an invalid Bitcoin Cash address as input.') {
       this.setState({
         message1Success: '',
-        message1Error: e.message
+        message1Error: privateKeyWIF
       });
+      return false;
     }
-
-    this.props.addresses.forEach((address, index) => {
-      let tmp = BitcoinCash.fromWIF(address.privateKeyWIF).getAddress();
-      if(tmp === pubAddress) {
-        try {
-          keyPair = BitcoinCash.fromWIF(address.privateKeyWIF);
-        } catch (e) {
-          error = true;
-          this.setState({
-            message1Success: '',
-            message1Error: e.message
-          });
-        }
-      }
-    });
-
-    if(!error) {
-
-      let privateKey = keyPair.d.toBuffer(32);
-      let message = this.state.message1;
-
-      let signature;
-      try {
-        signature = BitcoinCash.signMessage(message, privateKey, keyPair);
-      } catch (e) {
-        error = true;
-        this.setState({
-          message1Success: '',
-          message1Error: e.message
-        })
-      }
-
-      if(!error) {
-        this.setState({
-          signature1: signature.toString('base64')
-        })
-      }
-    }
+    let signature = BitcoinCash.signMessage(this.state.message1, privateKeyWIF);
+    this.setState({
+      signature1: signature.toString('base64')
+    })
   }
 
   verifyMessage() {

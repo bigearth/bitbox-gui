@@ -168,7 +168,7 @@ describe('sign and verify messages', () => {
     var privateKey = keyPair.d.toBuffer(32)
     var message = 'This is an example of a signed message.'
 
-    var signature = BitcoinCash.signMessage(message, privateKey, keyPair.compressed)
+    var signature = BitcoinCash.sign(message, privateKey, keyPair.compressed)
     assert.equal(signature.toString('base64').length, 88);
   });
 

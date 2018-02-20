@@ -1259,13 +1259,26 @@ class Server {
     server.get('/signmessage', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      res.send('ILypRih424AWRYXK1goB6mskx99aelWcVCTEKolaW7U4VPnwj6Khf+vJSED7pMtPQd3KnXuqq1JvavrQdPMFFB0=');
+      let privateKeyWIF = BitcoinCash.returnPrivateKeyWIF(req.query.address, store.get('addresses'));
+
+      if(privateKeyWIF === undefined) {
+        res.send("BITBOX doesn't have the private key for that address");
+        return false;
+      } else if(privateKeyWIF === 'Received an invalid Bitcoin Cash address as input.') {
+        res.send(privateKeyWIF);
+        return false;
+      }
+
+      let signature = BitcoinCash.signMessage(req.query.message, privateKeyWIF);
+      res.send(signature.toString('base64'));
     });
 
     server.get('/signmessagewithprivkey', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      res.send('G+ZauMFgQExAJRKZSldbAVEaZo4i0p2AVivbFASo50PkUnynAMDUiNMVdXDlpYMWvatxCmYmLn8C9zygPRn3Y1c=');
+      let privateKeyWIF = req.query.privkey;
+      let signature = BitcoinCash.signMessage(req.query.message, privateKeyWIF);
+      res.send(signature.toString('base64'));
     });
 
 
@@ -1314,8 +1327,26 @@ class Server {
 
     server.get('/verifymessage', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
+      let address;
+      let verified;
+      try {
+        address = BitcoinCash.toLegacyAddress(req.query.address);
+      }
+      catch (e) {
+        address = e.message;
+      }
+      if(address === 'Received an invalid Bitcoin Cash address as input.') {
+        res.send(address);
+        return false;
+      }
 
-      res.send(true);
+      try {
+        verified = BitcoinCash.verifyMessage(req.query.message, address, req.query.signature)
+      }
+      catch (e) {
+        verified = e.message;
+      }
+      res.send(verified);
     });
 
     server.get('/verifytxoutproof', (req, res) => {
