@@ -23,6 +23,7 @@
   "license": "MIT",
   "devDependencies": {},
   "dependencies": {
+    "axios": "^0.18.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-es2015": "^6.24.1",
@@ -32,6 +33,7 @@
     "bip39": "^2.5.0",
     "bitcoinjs-lib": "^3.3.2",
     "bitcoinjs-message": "^2.0.0",
+    "body-parser": "^1.18.2",
     "chai": "^4.1.2",
     "css-loader": "^0.28.9",
     "electron": "^1.7.12",

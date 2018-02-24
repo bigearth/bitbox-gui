@@ -4,23 +4,40 @@ let Store = require('electron-store');
 const store = new Store();
 
 const express = require('express');
+import axios from 'axios';
+let bodyParser = require('body-parser');
 
 class Server {
   constructor() {
     const server = express();
-    server.get('/addmultisigaddress', (req, res) => {
+    server.use(bodyParser.json()); // support json encoded bodies
+    server.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+    server.post('/', (req, res) => {
+      res.setHeader('Content-Type', 'application/json');
+      axios.post(`http://127.0.0.1:8332/${req.body.method}`, req.body)
+      .then((response) => {
+        res.send({
+          result: response.data
+        });
+      })
+      .catch((error) => {
+        res.send(error);
+      });
+    });
+
+    server.post('/addmultisigaddress', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(BitcoinCash.fromWIF(store.get('addresses')[0].privateKeyWIF).getAddress());
     });
 
-    server.get('/addnode', (req, res) => {
+    server.post('/addnode', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({ result: null }));
     });
 
-    server.get('/backupwallet', (req, res) => {
+    server.post('/backupwallet', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       let addresses = [];
@@ -30,13 +47,13 @@ class Server {
       res.send(addresses);
     });
 
-    server.get('/clearbanned', (req, res) => {
+    server.post('/clearbanned', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({ result: null }));
     });
 
-    server.get('/createmultisig', (req, res) => {
+    server.post('/createmultisig', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify(
         {
@@ -46,16 +63,16 @@ class Server {
       ));
     });
 
-    server.get('/createrawtransaction', (req, res) => {
+    server.post('/createrawtransaction', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
       res.send('01000000011da9283b4ddf8d89eb996988b89ead56cecdc44041ab38bf787f1206cd90b51e0000000000ffffffff01405dc600000000001976a9140dfc8bafc8419853b34d5e072ad37d1a5159f58488ac00000000');
     });
 
-    server.get('/decoderawtransaction', (req, res) => {
+    server.post('/decoderawtransaction', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       let t = BitcoinCash.transaction();
-      let decodedTx = t.fromHex(req.query.rawHex);
+      let decodedTx = t.fromHex(req.body.params[0]);
 
       let a = BitcoinCash.address();
       let s = BitcoinCash.script();
@@ -89,7 +106,7 @@ class Server {
       res.send(decodedTx);
     });
 
-    server.get('/decodescript', (req, res) => {
+    server.post('/decodescript', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify({
         "asm" : "2 03ede722780d27b05f0b1169efc90fa15a601a32fc6c3295114500c586831b6aaf 02ecd2d250a76d204011de6bc365a56033b9b3a149f679bc17205555d3c2b2854f 022d609d2f0d359e5bc0e5d0ea20ff9f5d3396cb5b1906aa9c56a0e7b5edc0c5d5 3 OP_CHECKMULTISIG",
@@ -104,24 +121,24 @@ class Server {
       }));
     });
 
-    server.get('/disconnectnode', (req, res) => {
+    server.post('/disconnectnode', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({ result: null }));
     });
 
-    server.get('/dumpprivkey', (req, res) =>{
+    server.post('/dumpprivkey', (req, res) =>{
       res.setHeader('Content-Type', 'application/json');
 
-      store.get('addresses').forEach(function(address, index) {
+      store.get('addresses').forEach((address, index) => {
         let tmp = BitcoinCash.fromWIF(address.privateKeyWIF).getAddress();
-        if(tmp === BitcoinCash.toLegacyAddress(req.query.address)) {
+        if(tmp === BitcoinCash.toLegacyAddress(req.body.params[0])) {
           res.send(address.privateKeyWIF);
         }
       });
     });
 
-    server.get('/dumpwallet', (req, res) =>{
+    server.post('/dumpwallet', (req, res) =>{
       res.setHeader('Content-Type', 'application/json');
 
       let addresses = [];
@@ -131,37 +148,37 @@ class Server {
       res.send(addresses);
     });
 
-    server.get('/encryptwallet', (req, res) => {
+    server.post('/encryptwallet', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send("wallet encrypted; Bitcoin server stopping, restart to run with encrypted wallet. The keypool has been flushed, you need to make a new backup.");
     });
 
-    server.get('/estimatefee', (req, res) => {
+    server.post('/estimatefee', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send("0.00162556");
     });
 
-    server.get('/estimatesmartfee', (req, res) => {
+    server.post('/estimatesmartfee', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send("success");
     });
 
-    server.get('/estimatesmartpriority', (req, res) => {
+    server.post('/estimatesmartpriority', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send("success");
     });
 
-    server.get('/estimatepriority', (req, res) => {
+    server.post('/estimatepriority', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send('718158904.10958910');
     });
 
-    server.get('/fundrawtransaction', (req, res) => {
+    server.post('/fundrawtransaction', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -171,7 +188,7 @@ class Server {
       }));
     });
 
-    server.get('/generate', (req, res) => {
+    server.post('/generate', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify([
@@ -180,7 +197,7 @@ class Server {
       ]));
     });
 
-    server.get('/generatetoaddress', (req, res) => {
+    server.post('/generatetoaddress', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify([
@@ -189,19 +206,19 @@ class Server {
       ]));
     });
 
-    server.get('/getaccountaddress', (req, res) => {
+    server.post('/getaccountaddress', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify('msQyFNYHkFUo4PG3puJBbpesvRCyRQax7r'));
     });
 
-    server.get('/getaccount', (req, res) => {
+    server.post('/getaccount', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify('doc test'));
     });
 
-    server.get('/getaddednodeinfo', (req, res) => {
+    server.post('/getaddednodeinfo', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify([
@@ -218,7 +235,7 @@ class Server {
       ]));
     });
 
-    server.get('/getaddressesbyaccount', (req, res) => {
+    server.post('/getaddressesbyaccount', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify([
@@ -228,19 +245,19 @@ class Server {
       ]));
     });
 
-    server.get('/getbalance', (req, res) => {
+    server.post('/getbalance', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify('1.99900000'));
     });
 
-    server.get('/getbestblockhash', (req, res) => {
+    server.post('/getbestblockhash', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify('0000000000075c58ed39c3e50f99b32183d090aefa0cf8c324a82eea9b01a887'));
     });
 
-    server.get('/getblock', (req, res) => {
+    server.post('/getblock', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -267,7 +284,7 @@ class Server {
       }));
     });
 
-    server.get('/getblockchaininfo', (req, res) => {
+    server.post('/getblockchaininfo', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -321,17 +338,17 @@ class Server {
       }));
     });
 
-    server.get('/getblockcount', (req, res) => {
+    server.post('/getblockcount', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
       res.send('0');
     });
 
-    server.get('/getblockhash', (req, res) => {
+    server.post('/getblockhash', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
       res.send('00000000a0faf83ab5799354ae9c11da2a2bd6db44058e03c528851dee0a3fff');
     });
 
-    server.get('/getblockheader', (req, res) => {
+    server.post('/getblockheader', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify({
         "hash": "00000000c937983704a73af28acdec37b049d214adbda81d7e2a3dd146f6ed09",
@@ -351,12 +368,12 @@ class Server {
       }));
     });
 
-    server.get('/getblocktemplate', (req, res) => {
+    server.post('/getblocktemplate', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
-      res.send(JSON.stringify({ passphrase: req.query.passphrase }));
+      res.send(JSON.stringify({ template_request: req.body.params[0] }));
     });
 
-    server.get('/getchaintips', (req, res) => {
+    server.post('/getchaintips', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify([
         {
@@ -380,28 +397,28 @@ class Server {
       ]));
     });
 
-    server.get('/getconnectioncount', (req, res) => {
+    server.post('/getconnectioncount', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(0);
     });
 
-    server.get('/getdifficulty', (req, res) => {
+    server.post('/getdifficulty', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(0);
     });
 
-    server.get('/getexcessiveblock', (req, res) => {
+    server.post('/getexcessiveblock', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send('success');
     });
 
-    server.get('/getinfo', (req, res) => {
+    server.post('/getinfo', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      res.send(JSON.stringify({
+      res.send({
         "version" : 100000,
         "protocolversion" : 70002,
         "walletversion" : 60000,
@@ -417,10 +434,10 @@ class Server {
         "paytxfee" : 0.00000000,
         "relayfee" : 0.00001000,
         "errors" : ""
-      }));
+      });
     });
 
-    server.get('/getmemoryinfo', (req, res) => {
+    server.post('/getmemoryinfo', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -435,7 +452,7 @@ class Server {
       }));
     });
 
-    server.get('/getmempoolancestors', (req, res) => {
+    server.post('/getmempoolancestors', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -477,7 +494,7 @@ class Server {
     });
 
 
-    server.get('/getmempooldescendants', (req, res) => {
+    server.post('/getmempooldescendants', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -519,7 +536,7 @@ class Server {
       ));
     });
 
-    server.get('/getmempoolentry', (req, res) => {
+    server.post('/getmempoolentry', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -541,7 +558,7 @@ class Server {
       }));
     });
 
-    server.get('/getmempoolinfo', (req, res) => {
+    server.post('/getmempoolinfo', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -553,7 +570,7 @@ class Server {
       }));
     });
 
-    server.get('/getmininginfo', (req, res) => {
+    server.post('/getmininginfo', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -569,7 +586,7 @@ class Server {
       }));
     });
 
-    server.get('/getnettotals', (req, res) => {
+    server.post('/getnettotals', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -587,13 +604,13 @@ class Server {
       }));
     });
 
-    server.get('/getnetworkhashps', (req, res) => {
+    server.post('/getnetworkhashps', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send('79510076167');
     });
 
-    server.get('/getnetworkinfo', (req, res) => {
+    server.post('/getnetworkinfo', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -645,7 +662,7 @@ class Server {
       res.send(BitcoinCash.fromWIF(store.get('addresses')[0].privateKeyWIF).getAddress());
     });
 
-    server.get('/getpeerinfo', (req, res) => {
+    server.post('/getpeerinfo', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify([
@@ -693,13 +710,13 @@ class Server {
       ]));
     });
 
-    server.get('/getrawchangeaddress', (req, res) => {
+    server.post('/getrawchangeaddress', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send('mnycUc8FRjJodfKhaj9QBZs2PwxxYoWqaK');
     });
 
-    server.get('/getrawmempool', (req, res) => {
+    server.post('/getrawmempool', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -740,7 +757,7 @@ class Server {
       }));
     });
 
-    server.get('/getrawtransaction', (req, res) => {
+    server.post('/getrawtransaction', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -784,19 +801,19 @@ class Server {
       }));
     });
 
-    server.get('/getreceivedbyaccount', (req, res) => {
+    server.post('/getreceivedbyaccount', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send('0.30000000');
     });
 
-    server.get('/getreceivedbyaddress', (req, res) => {
+    server.post('/getreceivedbyaddress', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send('0.30000000');
     });
 
-    server.get('/gettransaction', (req, res) => {
+    server.post('/gettransaction', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -833,7 +850,7 @@ class Server {
       }));
     });
 
-    server.get('/gettxout', (req, res) => {
+    server.post('/gettxout', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -854,7 +871,7 @@ class Server {
       }));
     });
 
-    server.get('/gettxoutproof', (req, res) => {
+    server.post('/gettxoutproof', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send("03000000394ab3f08f712aa0f1d26c5daa4040b50e96d31d4e8e3c130000000000000000\
@@ -874,7 +891,7 @@ class Server {
       0600");
     });
 
-    server.get('/gettxoutsetinfo', (req, res) => {
+    server.post('/gettxoutsetinfo', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -888,13 +905,13 @@ class Server {
       }));
     });
 
-    server.get('/getunconfirmedbalance', (req, res) => {
+    server.post('/getunconfirmedbalance', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send('0.00000000');
     });
 
-    server.get('/getwalletinfo', (req, res) => {
+    server.post('/getwalletinfo', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -907,19 +924,19 @@ class Server {
       }));
     });
 
-    server.get('/help', (req, res) => {
+    server.post('/help', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({ endpoints: endpoints.push('help') }));
     });
 
-    server.get('/importaddress', (req, res) => {
+    server.post('/importaddress', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({ result: null }));
     });
 
-    server.get('/importmulti', (req, res) => {
+    server.post('/importmulti', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify([
@@ -936,31 +953,31 @@ class Server {
       ]));
     });
 
-    server.get('/importprivkey', (req, res) => {
+    server.post('/importprivkey', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({ result: null }));
     });
 
-    server.get('/importprunedfunds', (req, res) => {
+    server.post('/importprunedfunds', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({ result: null }));
     });
 
-    server.get('/importwallet', (req, res) => {
+    server.post('/importwallet', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({ result: null }));
     });
 
-    server.get('/keypoolrefill', (req, res) => {
+    server.post('/keypoolrefill', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({ result: null }));
     });
 
-    server.get('/listaccounts', (req, res) => {
+    server.post('/listaccounts', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -976,7 +993,7 @@ class Server {
       }));
     });
 
-    server.get('/listaddressgroupings', (req, res) => {
+    server.post('/listaddressgroupings', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify([
@@ -994,7 +1011,7 @@ class Server {
       ]));
     });
 
-    server.get('/listbanned', (req, res) => {
+    server.post('/listbanned', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify([
@@ -1013,7 +1030,7 @@ class Server {
       ]));
     });
 
-    server.get('/listlockunspent', (req, res) => {
+    server.post('/listlockunspent', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify([
@@ -1024,7 +1041,7 @@ class Server {
       ]));
     });
 
-    server.get('/listreceivedbyaccount', (req, res) => {
+    server.post('/listreceivedbyaccount', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify([
@@ -1041,7 +1058,7 @@ class Server {
       ]));
     });
 
-    server.get('/listreceivedbyaddress', (req, res) => {
+    server.post('/listreceivedbyaddress', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify([
@@ -1070,7 +1087,7 @@ class Server {
       ]));
     });
 
-    server.get('/listsinceblock', (req, res) => {
+    server.post('/listsinceblock', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -1115,7 +1132,7 @@ class Server {
       }));
     });
 
-    server.get('/listtransactions', (req, res) => {
+    server.post('/listtransactions', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify([
@@ -1142,7 +1159,7 @@ class Server {
       ]));
     });
 
-    server.get('/listunspent', (req, res) => {
+    server.post('/listunspent', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify([
@@ -1160,106 +1177,107 @@ class Server {
       ]));
     });
 
-    server.get('/lockunspent', (req, res) => {
+    server.post('/lockunspent', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(true);
     });
 
-    server.get('/move', (req, res) => {
+    server.post('/move', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(true);
     });
 
-    server.get('/ping', (req, res) => {
+    server.post('/ping', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({ result: null }));
     });
 
-    server.get('/preciousblock', (req, res) => {
+    server.post('/preciousblock', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({ result: null }));
     });
 
-    server.get('/prioritisetransaction', (req, res) => {
+    server.post('/prioritisetransaction', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(true);
     });
 
-    server.get('/pruneblockchain', (req, res) => {
+    server.post('/pruneblockchain', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(0);
     });
 
-    server.get('/removeprunedfunds', (req, res) => {
+    server.post('/removeprunedfunds', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({ result: null }));
     });
 
-    server.get('/sendfrom', (req, res) => {
+    server.post('/sendfrom', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send('f14ee5368c339644d3037d929bbe1f1544a532f8826c7b7288cb994b0b0ff5d8');
     });
 
-    server.get('/sendmany', (req, res) => {
+    server.post('/sendmany', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send('ec259ab74ddff199e61caa67a26e29b13b5688dc60f509ce0df4d044e8f4d63d');
     });
 
-    server.get('/sendrawtransaction', (req, res) => {
+    server.post('/sendrawtransaction', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send('f5a5ce5988cc72b9b90e8d1d6c910cda53c88d2175177357cc2f2cf0899fbaad');
     });
 
-    server.get('/sendtoaddress', (req, res) => {
+    server.post('/sendtoaddress', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send('a2a2eb18cb051b5fe896a32b1cb20b179d981554b6bd7c5a956e56a0eecb04f0');
     });
 
-    server.get('/setaccount', (req, res) => {
+    server.post('/setaccount', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({ result: null }));
     });
 
-    server.get('/setban', (req, res) => {
+    server.post('/setban', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({ result: null }));
     });
 
-    server.get('/setexcessiveblock', (req, res) => {
+    server.post('/setexcessiveblock', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send('success');
     });
 
-    server.get('/setnetworkactive', (req, res) => {
+    server.post('/setnetworkactive', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({ result: null }));
     });
 
-    server.get('/settxfee', (req, res) => {
+    server.post('/settxfee', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(true);
     });
 
-    server.get('/signmessage', (req, res) => {
+    server.post('/signmessage', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
+      let address = req.body.params[0];
 
-      let privateKeyWIF = BitcoinCash.returnPrivateKeyWIF(req.query.address, store.get('addresses'));
+      let privateKeyWIF = BitcoinCash.returnPrivateKeyWIF(address, store.get('addresses'));
 
       if(privateKeyWIF === undefined) {
         res.send("BITBOX doesn't have the private key for that address");
@@ -1269,20 +1287,21 @@ class Server {
         return false;
       }
 
-      let signature = BitcoinCash.signMessage(req.query.message, privateKeyWIF);
+      let message = req.body.params[1];
+      let signature = BitcoinCash.signMessage(message, privateKeyWIF);
       res.send(signature.toString('base64'));
     });
 
-    server.get('/signmessagewithprivkey', (req, res) => {
+    server.post('/signmessagewithprivkey', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      let privateKeyWIF = req.query.privkey;
-      let signature = BitcoinCash.signMessage(req.query.message, privateKeyWIF);
+      let privateKeyWIF = req.body.params[0];
+      let signature = BitcoinCash.signMessage(req.body.params[1], privateKeyWIF);
       res.send(signature.toString('base64'));
     });
 
 
-    server.get('/signrawtransaction', (req, res) => {
+    server.post('/signrawtransaction', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -1291,19 +1310,19 @@ class Server {
       }));
     });
 
-    server.get('/stop', (req, res) => {
+    server.post('/stop', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send('Bitcoin server stopping');
     });
 
-    server.get('/submitblock', (req, res) => {
+    server.post('/submitblock', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({ result: null }));
     });
 
-    server.get('/validateaddress', (req, res) => {
+    server.post('/validateaddress', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -1319,18 +1338,18 @@ class Server {
       }));
     });
 
-    server.get('/verifychain', (req, res) => {
+    server.post('/verifychain', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(true);
     });
 
-    server.get('/verifymessage', (req, res) => {
+    server.post('/verifymessage', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
       let address;
       let verified;
       try {
-        address = BitcoinCash.toLegacyAddress(req.query.address);
+        address = BitcoinCash.toLegacyAddress(req.body.params[0]);
       }
       catch (e) {
         address = e.message;
@@ -1341,7 +1360,7 @@ class Server {
       }
 
       try {
-        verified = BitcoinCash.verifyMessage(req.query.message, address, req.query.signature)
+        verified = BitcoinCash.verifyMessage(req.body.params[2], address, req.body.params[1])
       }
       catch (e) {
         verified = e.message;
@@ -1349,7 +1368,7 @@ class Server {
       res.send(verified);
     });
 
-    server.get('/verifytxoutproof', (req, res) => {
+    server.post('/verifytxoutproof', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify([
@@ -1357,18 +1376,18 @@ class Server {
       ]));
     });
 
-    server.get('/walletlock', (req, res) => {
+    server.post('/walletlock', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({ result: null }));
     });
 
-    server.get('/walletpassphrase', (req, res) => {
+    server.post('/walletpassphrase', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({ result: null }));
     });
-    server.get('/walletpassphrasechange', (req, res) => {
+    server.post('/walletpassphrasechange', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({ result: null }));
