@@ -41,7 +41,7 @@ class Server {
     server.post('/addnode', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      res.send(JSON.stringify({ result: null }));
+      res.send();
     });
 
     server.post('/backupwallet', (req, res) => {
@@ -57,7 +57,7 @@ class Server {
     server.post('/clearbanned', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      res.send(JSON.stringify({ result: null }));
+      res.send();
     });
 
     server.post('/createmultisig', (req, res) => {
@@ -121,6 +121,14 @@ class Server {
 
     server.post('/decodescript', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
+      // let params = req.body.params;
+      // let redeemScript = params[0];
+      // let rd = Bitcoin.script.multisig.output.decode(new Buffer(redeemScript, "hex"))
+      // console.log(rd);
+      // let me = Bitcoin.script.decompile(new Buffer(redeemScript, "hex"));
+      // console.log(me);
+      // console.log(JSON.parse(JSON.stringify(rd)));
+
       res.send(JSON.stringify({
         "asm" : "2 03ede722780d27b05f0b1169efc90fa15a601a32fc6c3295114500c586831b6aaf 02ecd2d250a76d204011de6bc365a56033b9b3a149f679bc17205555d3c2b2854f 022d609d2f0d359e5bc0e5d0ea20ff9f5d3396cb5b1906aa9c56a0e7b5edc0c5d5 3 OP_CHECKMULTISIG",
         "reqSigs" : 2,
@@ -137,7 +145,7 @@ class Server {
     server.post('/disconnectnode', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      res.send(JSON.stringify({ result: null }));
+      res.send("Node not found in connected nodes");
     });
 
     server.post('/dumpprivkey', (req, res) =>{
@@ -170,25 +178,48 @@ class Server {
     server.post('/estimatefee', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      res.send("0.00162556");
+      let fee;
+      if(req.body.params[0] === 1) {
+        fee = -1;
+      } else {
+        fee = '0.00000002';
+      }
+
+      res.send(JSON.stringify(fee));
     });
 
     server.post('/estimatesmartfee', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      res.send("success");
+      let fee;
+      if(req.body.params[0] === 0) {
+        fee = {
+          "feerate": -1,
+          "blocks": 0
+        };
+      } else {
+        fee = {
+          "feerate": '0.00000002',
+          "blocks": req.body.params[0]
+        };
+      }
+
+      res.send(JSON.stringify(fee));
     });
 
     server.post('/estimatesmartpriority', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      res.send("success");
+      res.send({
+          "priority": '-1',
+          "blocks": req.body.params[0]
+        });
     });
 
     server.post('/estimatepriority', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      res.send('718158904.10958910');
+      res.send('-1');
     });
 
     server.post('/fundrawtransaction', (req, res) => {
@@ -204,25 +235,19 @@ class Server {
     server.post('/generate', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      res.send(JSON.stringify([
-        "36252b5852a5921bdfca8701f936b39edeb1f8c39fffe73b0d8437921401f9af",
-        "5f2956817db1e386759aa5794285977c70596b39ea093b9eab0aa4ba8cd50c06"
-      ]));
+      res.send(JSON.stringify([]));
     });
 
     server.post('/generatetoaddress', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      res.send(JSON.stringify([
-        "36252b5852a5921bdfca8701f936b39edeb1f8c39fffe73b0d8437921401f9af",
-        "5f2956817db1e386759aa5794285977c70596b39ea093b9eab0aa4ba8cd50c06"
-      ]));
+      res.send(JSON.stringify([]));
     });
 
     server.post('/getaccountaddress', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      res.send(JSON.stringify('msQyFNYHkFUo4PG3puJBbpesvRCyRQax7r'));
+      res.send(BitcoinCash.toCashAddress(BitcoinCash.fromWIF(store.get('addresses')[0].privateKeyWIF).getAddress()));
     });
 
     server.post('/getaccount', (req, res) => {
