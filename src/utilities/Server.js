@@ -1,4 +1,5 @@
 import BitcoinCash from './BitcoinCash'
+import Bitcoin from 'bitcoinjs-lib';
 
 let Store = require('electron-store');
 const store = new Store();
@@ -10,11 +11,12 @@ let bodyParser = require('body-parser');
 class Server {
   constructor() {
     const server = express();
+    let port = 8332;
     server.use(bodyParser.json()); // support json encoded bodies
     server.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
     server.post('/', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
-      axios.post(`http://127.0.0.1:8332/${req.body.method}`, req.body)
+      axios.post(`http://127.0.0.1:${port}/${req.body.method}`, req.body)
       .then((response) => {
         res.send({
           result: response.data
@@ -27,8 +29,26 @@ class Server {
 
     server.post('/addmultisigaddress', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
+      let params = req.body.params;
+      let nrequired = params[0];
+      let keys = params[1];
+      let addresses = store.get('addresses');
 
-      res.send(BitcoinCash.fromWIF(store.get('addresses')[0].privateKeyWIF).getAddress());
+      let keyPairs = [];
+      keys.forEach((key, index) => {
+        keyPairs.push(BitcoinCash.fromWIF(BitcoinCash.returnPrivateKeyWIF(key, addresses), 'bitcoin'))
+      })
+
+      let pubKeys = [];
+      keyPairs.forEach((key, index) => {
+        pubKeys.push(key.getPublicKeyBuffer());
+      })
+      pubKeys.map(function (hex) { return Buffer.from(hex, 'hex') })
+
+      let redeemScript = Bitcoin.script.multisig.output.encode(nrequired, pubKeys) // 2 of 3
+      let scriptPubKey = Bitcoin.script.scriptHash.output.encode(Bitcoin.crypto.hash160(redeemScript))
+      let address = Bitcoin.address.fromOutputScript(scriptPubKey)
+      res.send(address);
     });
 
     server.post('/addnode', (req, res) => {
@@ -1393,7 +1413,7 @@ class Server {
       res.send(JSON.stringify({ result: null }));
     });
 
-    server.listen(8332, () => {console.log('listening on port 8332,')});
+    server.listen(port, () => {console.log('listening on port 8332,')});
   }
 }
 
