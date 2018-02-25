@@ -237,6 +237,33 @@ class BitcoinCash {
       return privateKeyWIF;
     }
   }
+
+  static createMultiSig(nrequired, keys, addresses, wallet) {
+    let keyPairs = [];
+    let pubKeys = [];
+    keys.forEach((key, index) => {
+      if(key.toString('hex').length === 66) {
+        pubKeys.push(key);
+      } else {
+        let privkeyWIF = BitcoinCash.returnPrivateKeyWIF(key, addresses);
+        keyPairs.push(BitcoinCash.fromWIF(privkeyWIF, wallet.network))
+      }
+    })
+
+    keyPairs.forEach((key, index) => {
+      pubKeys.push(key.getPublicKeyBuffer());
+    })
+    pubKeys.map((hex) => { return Buffer.from(hex, 'hex') })
+
+    let redeemScript = Bitcoin.script.multisig.output.encode(nrequired, pubKeys)
+    let scriptPubKey = Bitcoin.script.scriptHash.output.encode(Bitcoin.crypto.hash160(redeemScript))
+    let address = Bitcoin.address.fromOutputScript(scriptPubKey)
+
+    return {
+      address: address,
+      redeemScript: redeemScript
+    };
+  }
 }
 
 export default BitcoinCash;

@@ -34,27 +34,8 @@ class Server {
       let keys = params[1];
       let addresses = store.get('addresses');
       let wallet = store.get('wallet');
-
-      let keyPairs = [];
-      let pubKeys = [];
-      keys.forEach((key, index) => {
-        if(key.toString('hex').length === 66) {
-          pubKeys.push(key);
-        } else {
-          let privkeyWIF = BitcoinCash.returnPrivateKeyWIF(key, addresses);
-          keyPairs.push(BitcoinCash.fromWIF(privkeyWIF, wallet.network))
-        }
-      })
-
-      keyPairs.forEach((key, index) => {
-        pubKeys.push(key.getPublicKeyBuffer());
-      })
-      pubKeys.map((hex) => { return Buffer.from(hex, 'hex') })
-
-      let redeemScript = Bitcoin.script.multisig.output.encode(nrequired, pubKeys)
-      let scriptPubKey = Bitcoin.script.scriptHash.output.encode(Bitcoin.crypto.hash160(redeemScript))
-      let address = Bitcoin.address.fromOutputScript(scriptPubKey)
-      res.send(address);
+      let resp = BitcoinCash.createMultiSig(nrequired, keys, addresses, wallet);
+      res.send(resp.address);
     });
 
     server.post('/addnode', (req, res) => {
@@ -86,30 +67,11 @@ class Server {
       let keys = params[1];
       let addresses = store.get('addresses');
       let wallet = store.get('wallet');
-
-      let keyPairs = [];
-      let pubKeys = [];
-      keys.forEach((key, index) => {
-        if(key.toString('hex').length === 66) {
-          pubKeys.push(key);
-        } else {
-          let privkeyWIF = BitcoinCash.returnPrivateKeyWIF(key, addresses);
-          keyPairs.push(BitcoinCash.fromWIF(privkeyWIF, wallet.network))
-        }
-      })
-
-      keyPairs.forEach((key, index) => {
-        pubKeys.push(key.getPublicKeyBuffer());
-      })
-      pubKeys.map((hex) => { return Buffer.from(hex, 'hex') })
-
-      let redeemScript = Bitcoin.script.multisig.output.encode(nrequired, pubKeys)
-      let scriptPubKey = Bitcoin.script.scriptHash.output.encode(Bitcoin.crypto.hash160(redeemScript))
-      let address = Bitcoin.address.fromOutputScript(scriptPubKey)
+      let resp = BitcoinCash.createMultiSig(nrequired, keys, addresses, wallet);
       res.send(JSON.stringify(
         {
-          "address" : address,
-          "redeemScript" : redeemScript.toString('hex')
+          "address" : resp.address,
+          "redeemScript" : resp.redeemScript.toString('hex')
         }
       ));
     });
