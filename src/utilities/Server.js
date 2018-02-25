@@ -33,17 +33,23 @@ class Server {
       let nrequired = params[0];
       let keys = params[1];
       let addresses = store.get('addresses');
+      let wallet = store.get('wallet');
 
       let keyPairs = [];
+      let pubKeys = [];
       keys.forEach((key, index) => {
-        keyPairs.push(BitcoinCash.fromWIF(BitcoinCash.returnPrivateKeyWIF(key, addresses), 'bitcoin'))
+        if(key.toString('hex').length === 66) {
+          pubKeys.push(key);
+        } else {
+          let privkeyWIF = BitcoinCash.returnPrivateKeyWIF(key, addresses);
+          keyPairs.push(BitcoinCash.fromWIF(privkeyWIF, wallet.network))
+        }
       })
 
-      let pubKeys = [];
       keyPairs.forEach((key, index) => {
         pubKeys.push(key.getPublicKeyBuffer());
       })
-      pubKeys.map(function (hex) { return Buffer.from(hex, 'hex') })
+      pubKeys.map((hex) => { return Buffer.from(hex, 'hex') })
 
       let redeemScript = Bitcoin.script.multisig.output.encode(nrequired, pubKeys) // 2 of 3
       let scriptPubKey = Bitcoin.script.scriptHash.output.encode(Bitcoin.crypto.hash160(redeemScript))

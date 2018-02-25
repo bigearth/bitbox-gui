@@ -56,6 +56,7 @@ class App extends Component {
       usePassword: false,
       displayTestnet: false
     });
+    store.set('wallet', this.wallet);
 
     this.blockchain = new Blockchain();
 
@@ -120,6 +121,7 @@ class App extends Component {
     this.miner = new Miner(this.blockchain, this.utxoSet, this.wallet.network);
 
     let [mnemonic, path, addresses] = BitcoinCash.createHDWallet(this.wallet);
+    store.set('addresses', addresses);
     this.setState({
       mnemonic: mnemonic,
       path: path,
@@ -163,6 +165,7 @@ class App extends Component {
     } else if (id === 'totalAccounts') {
       this.wallet.totalAccounts = value;
     }
+    store.set('wallet', this.wallet);
   }
 
   handleConfigToggle(value, id) {
@@ -186,6 +189,7 @@ class App extends Component {
 
       this.wallet.usePassword = value;
     }
+    store.set('wallet', this.wallet);
   }
 
   createBlock() {
