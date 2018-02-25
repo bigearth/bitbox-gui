@@ -51,7 +51,7 @@ class Server {
       })
       pubKeys.map((hex) => { return Buffer.from(hex, 'hex') })
 
-      let redeemScript = Bitcoin.script.multisig.output.encode(nrequired, pubKeys) // 2 of 3
+      let redeemScript = Bitcoin.script.multisig.output.encode(nrequired, pubKeys)
       let scriptPubKey = Bitcoin.script.scriptHash.output.encode(Bitcoin.crypto.hash160(redeemScript))
       let address = Bitcoin.address.fromOutputScript(scriptPubKey)
       res.send(address);
@@ -81,10 +81,35 @@ class Server {
 
     server.post('/createmultisig', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
+      let params = req.body.params;
+      let nrequired = params[0];
+      let keys = params[1];
+      let addresses = store.get('addresses');
+      let wallet = store.get('wallet');
+
+      let keyPairs = [];
+      let pubKeys = [];
+      keys.forEach((key, index) => {
+        if(key.toString('hex').length === 66) {
+          pubKeys.push(key);
+        } else {
+          let privkeyWIF = BitcoinCash.returnPrivateKeyWIF(key, addresses);
+          keyPairs.push(BitcoinCash.fromWIF(privkeyWIF, wallet.network))
+        }
+      })
+
+      keyPairs.forEach((key, index) => {
+        pubKeys.push(key.getPublicKeyBuffer());
+      })
+      pubKeys.map((hex) => { return Buffer.from(hex, 'hex') })
+
+      let redeemScript = Bitcoin.script.multisig.output.encode(nrequired, pubKeys)
+      let scriptPubKey = Bitcoin.script.scriptHash.output.encode(Bitcoin.crypto.hash160(redeemScript))
+      let address = Bitcoin.address.fromOutputScript(scriptPubKey)
       res.send(JSON.stringify(
         {
-          "address" : "2MyVxxgNBk5zHRPRY2iVjGRJHYZEp1pMCSq",
-          "redeemScript" : "522103ede722780d27b05f0b1169efc90fa15a601a32fc6c3295114500c586831b6aaf2102ecd2d250a76d204011de6bc365a56033b9b3a149f679bc17205555d3c2b2854f21022d609d2f0d359e5bc0e5d0ea20ff9f5d3396cb5b1906aa9c56a0e7b5edc0c5d553ae"
+          "address" : address,
+          "redeemScript" : redeemScript.toString('hex')
         }
       ));
     });
