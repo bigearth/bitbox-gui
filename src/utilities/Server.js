@@ -1,17 +1,20 @@
 import BitcoinCash from './BitcoinCash'
 import Bitcoin from 'bitcoinjs-lib';
 
-let Store = require('electron-store');
+import Store from 'electron-store';
 const store = new Store();
 
-const express = require('express');
+import express from 'express';
+import cors from 'cors';
+
 import axios from 'axios';
-let bodyParser = require('body-parser');
+import bodyParser from 'body-parser';
 
 class Server {
   constructor() {
     const server = express();
     let port = 8332;
+    server.use(cors());
     server.use(bodyParser.json()); // support json encoded bodies
     server.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
     server.post('/', (req, res) => {
