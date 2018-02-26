@@ -6,7 +6,7 @@
   "productName": "BITBOX",
   "scripts": {
     "start": "electron .",
-    "dev": "webpack",
+    "build": "webpack",
     "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
     "create-installer-mac": "electron-installer-dmg ./release-builds/BITBOX-darwin-x64/BITBOX.app BITBOX --out=release-builds --overwrite --icon=assets/icons/mac/icon.icns",
     "test": "mocha --compilers js:babel-core/register"
