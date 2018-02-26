@@ -8,42 +8,23 @@ class AddressDisplay extends Component {
     let privateKeyWIF = this.props.address.privateKeyWIF;
     let address = BitcoinCash.fromWIF(privateKeyWIF, this.props.wallet.network).getAddress();
     this.state = {
-      address: address,
-      showPrivKey: false
+      address: address
     }
   }
 
-  showKey(key) {
-    this.setState({
-      address: key,
-      showPrivKey: true
-    });
-  }
-
-  hideKey(key) {
-    this.setState({
-      showPrivKey: false,
-      address: key
-    });
+  showKey(address, privateKeyWIF, xpriv, xpub) {
+    this.props.showKey(address, privateKeyWIF, xpriv, xpub);
   }
 
   render() {
     let btn;
     let address;
-    if(this.state.showPrivKey) {
+    btn = <td><button className="pure-button" onClick={this.showKey.bind(this, this.state.address, this.props.address.privateKeyWIF, this.props.address.xpriv, this.props.address.xpub)}><i className="fas fa-key" /></button></td>;
 
-      btn = <td><button className="pure-button danger-background" onClick={this.hideKey.bind(this, BitcoinCash.fromWIF(this.state.address, this.props.wallet.network).getAddress())}><i className="fas fa-key" /></button></td>;
-      address = <span><span className='danger'>{this.state.address}</span><br />
-                <span className='danger'>{this.props.address.xpriv}</span><br />
-                <span className='danger'>{this.props.address.xpub}</span></span>;
+    if(this.props.wallet.displayCashaddr) {
+      address = <span>{BitcoinCash.toCashAddress(this.state.address)}</span>;
     } else {
-      btn = <td><button className="pure-button" onClick={this.showKey.bind(this, this.props.address.privateKeyWIF)}><i className="fas fa-key" /></button></td>;
-
-      if(this.props.wallet.displayCashaddr) {
-        address = <span>{BitcoinCash.toCashAddress(this.state.address)}</span>;
-      } else {
-        address = <span>{this.state.address}</span>;
-      }
+      address = <span>{this.state.address}</span>;
     }
 
     let coinbase;

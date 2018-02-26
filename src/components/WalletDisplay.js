@@ -3,9 +3,37 @@ import BitcoinCash from '../utilities/BitcoinCash';
 import Crypto from '../utilities/Crypto';
 import Bitcoin from 'bitcoinjs-lib';
 import AddressDisplay from './AddressDisplay';
+import ModalDisplay from './ModalDisplay';
 import underscore from 'underscore';
 
 class WalletDisplay extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showModal: false,
+      address: '',
+      privateKeyWIF: '',
+      xpriv: '',
+      xpub: ''
+    };
+  }
+
+  showKey(address, privateKeyWIF, xpriv, xpub) {
+    this.setState({
+      showModal: true,
+      address: address,
+      privateKeyWIF: privateKeyWIF,
+      xpriv: xpriv,
+      xpub: xpub
+    })
+  }
+
+  hideKey() {
+    this.setState({
+      showModal: false
+    })
+  }
+
   render() {
     let list = [];
     if (this.props.addresses.length) {
@@ -74,14 +102,29 @@ class WalletDisplay extends Component {
             transactionsCount={transactionsCount}
             displayCashaddr={this.props.displayCashaddr}
             wallet={this.props.wallet}
+            showKey={this.showKey.bind(this)}
           />
         );
       });
     }
 
+    let modal;
+    if(this.state.showModal === true) {
+      modal = <ModalDisplay
+        address={this.state.address}
+        privateKeyWIF={this.state.privateKeyWIF}
+        xpriv={this.state.xpriv}
+        xpub={this.state.xpub}
+        hideKey={this.hideKey.bind(this)}
+        wallet={this.props.wallet}
+      />;
+    }
+
     return (
       <div className="WalletDisplay content pure-g">
         <div className="pure-u-1-1">
+          {modal}
+
           <ul className='subheader'>
             <li className=''>MNEMONIC</li>
             <li className='right'>HD PATH</li>

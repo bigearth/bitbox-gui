@@ -373,7 +373,7 @@ class App extends Component {
                   activeClassName="pure-menu-selected"
                   className="pure-menu-link"
                   to="/convert">
-                  <i className="fas fa-calculator"></i> Convert
+                  <i className="fas fa-qrcode" /> Convert
                 </NavLink>
               </li>
               <li className="pure-menu-item">
