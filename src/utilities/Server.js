@@ -470,7 +470,7 @@ class Server {
         connections: 14,
         proxy: '',
         difficulty: 363501276434.3268,
-        testnet: false,
+        testnet: 'false',
         keypoololdest: 1519061617,
         keypoolsize: 100,
         paytxfee: 0,

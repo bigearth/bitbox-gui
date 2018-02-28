@@ -17,9 +17,7 @@ class AddressDisplay extends Component {
   }
 
   render() {
-    let btn;
     let address;
-    btn = <td><button className="pure-button" onClick={this.showKey.bind(this, this.state.address, this.props.address.privateKeyWIF, this.props.address.xpriv, this.props.address.xpub)}><i className="fas fa-key" /></button></td>;
 
     if(this.props.wallet.displayCashaddr) {
       address = <span>{BitcoinCash.toCashAddress(this.state.address)}</span>;
@@ -38,7 +36,7 @@ class AddressDisplay extends Component {
         <td className='important'><span className='subheader'>BALANCE</span> <br />{BitcoinCash.toBitcoinCash(this.props.balance)} BCH</td>
         <td><span className='subheader'>TX COUNT</span> <br />{this.props.transactionsCount}</td>
         <td><span className='subheader'>INDEX</span> <br />{this.props.index}</td>
-        {btn}
+        <td><button className="pure-button" onClick={this.showKey.bind(this, this.state.address, this.props.address.privateKeyWIF, this.props.address.xpriv, this.props.address.xpub)}><i className="fas fa-key" /></button></td>
       </tr>
     );
   }
