@@ -42,9 +42,7 @@ import { createStore } from 'redux'
 import bitbox from './reducers/bitbox'
 
 import {
-  createConfig,
-  toggleWalletConfig,
-  updateWalletConfig
+  createConfig
 } from './actions/ConfigurationActions';
 
 import {
@@ -63,20 +61,6 @@ const unsubscribe = reduxStore.subscribe(() =>{
 })
 
 // dispatch some actions
-let mnemonic = 'business antique staff gap chief harbor federal answer bright icon badge polar';
-reduxStore.dispatch(createConfig())
-// reduxStore.dispatch(toggleWalletConfig(false, 'autogenerateHDMnemonic'))
-// reduxStore.dispatch(toggleWalletConfig(false, 'autogenerateHDPath'))
-// reduxStore.dispatch(toggleWalletConfig(false, 'displayCashaddr'))
-// reduxStore.dispatch(toggleWalletConfig(false, 'displayTestnet'))
-// reduxStore.dispatch(toggleWalletConfig(false, 'usePassword'))
-//
-// reduxStore.dispatch(updateWalletConfig(32, 'entropy'))
-// reduxStore.dispatch(updateWalletConfig('test', 'network'))
-// reduxStore.dispatch(updateWalletConfig(mnemonic, 'mnemonic'))
-// reduxStore.dispatch(updateWalletConfig(25, 'totalAccounts'))
-// reduxStore.dispatch(updateWalletConfig("m/1'/2'/3'", 'HDPath'))
-// reduxStore.dispatch(updateWalletConfig('l337', 'password'))
 
 // stop listening to state updates
 // unsubscribe()
@@ -86,6 +70,21 @@ class App extends Component {
 
   constructor(props) {
     super(props);
+    // let mnemonic = 'business antique staff gap chief harbor federal answer bright icon badge polar';
+    // Write default config top reduxStore
+    reduxStore.dispatch(createConfig())
+    // reduxStore.dispatch(toggleWalletConfig(false, 'autogenerateHDMnemonic'))
+    // reduxStore.dispatch(toggleWalletConfig(false, 'autogenerateHDPath'))
+    // reduxStore.dispatch(toggleWalletConfig(false, 'displayCashaddr'))
+    // reduxStore.dispatch(toggleWalletConfig(false, 'displayTestnet'))
+    // reduxStore.dispatch(toggleWalletConfig(false, 'usePassword'))
+    //
+    // reduxStore.dispatch(updateWalletConfig(32, 'entropy'))
+    // reduxStore.dispatch(updateWalletConfig('test', 'network'))
+    // reduxStore.dispatch(updateWalletConfig(mnemonic, 'mnemonic'))
+    // reduxStore.dispatch(updateWalletConfig(25, 'totalAccounts'))
+    // reduxStore.dispatch(updateWalletConfig("m/1'/2'/3'", 'HDPath'))
+    // reduxStore.dispatch(updateWalletConfig('l337', 'password'))
 
     // Create HD wallet w/ default configuration
     reduxStore.dispatch(createWallet())

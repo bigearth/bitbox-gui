@@ -14,10 +14,10 @@ export function createConfig() {
   return { type: CREATE_CONFIG }
 }
 
-export function toggleWalletConfig(toggle, prop) {
-  return { type: TOGGLE_WALLET_CONFIG, toggle, prop }
+export function toggleWalletConfig(prop, checked) {
+  return { type: TOGGLE_WALLET_CONFIG, prop, checked }
 }
 
-export function updateWalletConfig(update, prop) {
-  return { type: UPDATE_WALLET_CONFIG, update, prop }
+export function updateWalletConfig(prop, value) {
+  return { type: UPDATE_WALLET_CONFIG, prop, value }
 }

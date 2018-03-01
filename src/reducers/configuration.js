@@ -14,12 +14,15 @@ export default function configuration(state = {}, action) {
     case TOGGLE_WALLET_CONFIG:
       walletConfig = state;
 
-      walletConfig.wallet[action.prop] = action.toggle;
+      walletConfig.wallet[action.prop] = action.checked;
       return Object.assign({}, state, walletConfig)
     case UPDATE_WALLET_CONFIG:
       walletConfig = state;
 
-      walletConfig.wallet[action.prop] = action.update;
+      if(isNaN(action.value) === false) {
+        action.value = +action.value;
+      }
+      walletConfig.wallet[action.prop] = action.value;
       return Object.assign({}, state, walletConfig)
     default:
       return state

@@ -1,34 +1,28 @@
 import { connect } from 'react-redux'
 import WalletConfiguration from '../components/WalletConfiguration'
+import {
+  toggleWalletConfig,
+  updateWalletConfig
+} from '../actions/ConfigurationActions';
 
-// const toggleTodo = id => {
-//   return {
-//     type: 'TOGGLE_TODO',
-//     id
-//   }
-// }
-//
-// const getVisibleTodos = (todos, filter) => {
-//   switch (filter) {
-//     case 'SHOW_ALL':
-//       return todos
-//     case 'SHOW_COMPLETED':
-//       return todos.filter(t => t.completed)
-//     case 'SHOW_ACTIVE':
-//       return todos.filter(t => !t.completed)
-//   }
-// }
- 
 const mapStateToProps = state => {
   return {
     config: state.configuration
   }
 }
  
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    onConfigClick: id => {
-      // dispatch(toggleTodo(id))
+    handleConfigToggle: (e) => {
+      let prop = e.target.id;
+      let checked = e.target.checked;
+
+      dispatch(toggleWalletConfig(prop, checked))
+    },
+    handleConfigChange: (e) => {
+      let prop = e.target.id;
+      let value = e.target.value;
+      dispatch(updateWalletConfig(prop, value))
     }
   }
 }
