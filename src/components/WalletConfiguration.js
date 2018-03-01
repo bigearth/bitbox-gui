@@ -9,8 +9,6 @@ class WalletConfiguration extends Component {
     this.state = {};
   }
 
-  handleEntropySliderChange() {
-  }
   render() {
     // <button className="pure-button" onClick={this.props.resetBitbox.bind(this)}><i className="fas fa-redo" /> Restart</button>
     let customMnemonicLabel;
@@ -42,7 +40,7 @@ class WalletConfiguration extends Component {
           max={32}
           step={4}
           value={this.props.config.wallet.entropy}
-          onChange={this.handleEntropySliderChange.bind(this)}
+          onChange={this.props.handleEntropySliderChange.bind(this)}
         />
         <div className='value'>{this.props.config.wallet.entropy} bytes/{this.props.config.wallet.entropy * 8} bits</div></div>;
     }

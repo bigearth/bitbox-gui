@@ -23,6 +23,9 @@ const mapDispatchToProps = (dispatch) => {
       let prop = e.target.id;
       let value = e.target.value;
       dispatch(updateWalletConfig(prop, value))
+    },
+    handleEntropySliderChange: (value) => {
+      dispatch(updateWalletConfig('entropy', value))
     }
   }
 }
