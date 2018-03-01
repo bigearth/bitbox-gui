@@ -36,7 +36,7 @@ class WalletDisplay extends Component {
 
   render() {
     let list = [];
-    if (this.props.addresses.length) {
+    if(this.props.addresses.length) {
       this.props.addresses.forEach((address, index) => {
         // get balances
         let publicKey = BitcoinCash.fromWIF(address.privateKeyWIF, this.props.wallet.network).getAddress();
@@ -119,6 +119,10 @@ class WalletDisplay extends Component {
         wallet={this.props.wallet}
       />;
     }
+          // <ul className='subheader'>
+          //   <li className='content-head'>{this.props.mnemonic}</li>
+          //   <li className='content-head right'>{this.props.path.replace(/\/$/, "")}/account_index&rsquo;/0/0</li>
+          // </ul>
 
     return (
       <div className="WalletDisplay content pure-g">
@@ -128,10 +132,6 @@ class WalletDisplay extends Component {
           <ul className='subheader'>
             <li className=''>MNEMONIC</li>
             <li className='right'>HD PATH</li>
-          </ul>
-          <ul className='subheader'>
-            <li className='content-head'>{this.props.mnemonic}</li>
-            <li className='content-head right'>{this.props.path.replace(/\/$/, "")}/account_index&rsquo;/0/0</li>
           </ul>
           <table className="pure-table">
             <tbody>
