@@ -57,7 +57,7 @@ let reduxStore = createStore(bitbox)
 
 const unsubscribe = reduxStore.subscribe(() =>{
   console.log(JSON.stringify(reduxStore.getState(), null, 2))
-  console.log('**');
+  console.log('*********************************************');
 })
 
 // dispatch some actions
@@ -88,17 +88,17 @@ class App extends Component {
 
     // Create HD wallet w/ default configuration
     reduxStore.dispatch(createWallet())
-    reduxStore.dispatch(addRootSeed('root seed'))
-    reduxStore.dispatch(addMasterPrivateKey('master private key'))
-    reduxStore.dispatch(createAccount({
-      title: '',
-      index: 1,
-      privatekeywif: 'cuapfdjmeuy1y8brprntvkzcvyten5bmiq4zjotjkatlhle1pomg',
-      xpriv: 'tprv8fr6gny9ysnhpjpoaur7jnuwfmgynvckqqgokgpkdv1phpnsa2pt7zuwihztmwbfmh5jqqmqrjywlkfclo5hjewfrr3vxfignzdaktn4nch',
-      xpub: 'tpubdcy8rd1pgptxgmrbu8wi8na4ennuyfoeyihabns44bonxt3ecre3jv6otqujdgax6mtlburtnlh45gwotjyuwwq69j4nvqqjwts9syhgqai'
-    }))
-    reduxStore.dispatch(toggleDisplayAccount(1))
-    reduxStore.dispatch(toggleDisplayAccount(1))
+    // reduxStore.dispatch(addRootSeed('root seed'))
+    // reduxStore.dispatch(addMasterPrivateKey('master private key'))
+    // reduxStore.dispatch(createAccount({
+    //   title: '',
+    //   index: 1,
+    //   privatekeywif: 'cuapfdjmeuy1y8brprntvkzcvyten5bmiq4zjotjkatlhle1pomg',
+    //   xpriv: 'tprv8fr6gny9ysnhpjpoaur7jnuwfmgynvckqqgokgpkdv1phpnsa2pt7zuwihztmwbfmh5jqqmqrjywlkfclo5hjewfrr3vxfignzdaktn4nch',
+    //   xpub: 'tpubdcy8rd1pgptxgmrbu8wi8na4ennuyfoeyihabns44bonxt3ecre3jv6otqujdgax6mtlburtnlh45gwotjyuwwq69j4nvqqjwts9syhgqai'
+    // }))
+    // reduxStore.dispatch(toggleDisplayAccount(1))
+    // reduxStore.dispatch(toggleDisplayAccount(1))
     this.wallet = new Wallet({
       entropy: 16,
       network: 'bitcoin',
@@ -209,43 +209,6 @@ class App extends Component {
 
   handleEntropySliderChange(value) {
     this.wallet.entropy = value;
-  }
-
-  handleConfigChange(value, id) {
-    if(id === 'mnemonic') {
-      this.wallet.mnemonic = value;
-    } else if (id === 'path') {
-      this.wallet.path = value;
-    } else if (id === 'password') {
-      this.wallet.password = value;
-    } else if (id === 'totalAccounts') {
-      this.wallet.totalAccounts = value;
-    }
-    store.set('wallet', this.wallet);
-  }
-
-  handleConfigToggle(value, id) {
-    if(id === 'displayTestnet') {
-      if(value) {
-        this.wallet.network = 'testnet';
-      } else {
-        this.wallet.network = 'bitcoin';
-      }
-      this.wallet.displayTestnet = value;
-    } else if(id === 'displayCashaddr') {
-
-      this.wallet.displayCashaddr = value;
-    } else if(id === 'autogenerateMnemonic') {
-
-      this.wallet.autogenerateMnemonic = value;
-    } else if(id === 'autogeneratePath') {
-
-      this.wallet.autogeneratePath = value;
-    } else if(id === 'usePassword') {
-
-      this.wallet.usePassword = value;
-    }
-    store.set('wallet', this.wallet);
   }
 
   createBlock() {
@@ -384,8 +347,6 @@ class App extends Component {
           resetBitbox={this.resetBitbox.bind(this)}
           handleEntropySliderChange={this.handleEntropySliderChange.bind(this)}
           wallet={this.wallet}
-          handleConfigToggle={this.handleConfigToggle.bind(this)}
-          handleConfigChange={this.handleConfigChange.bind(this)}
         />
       );
     };
