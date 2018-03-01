@@ -17,10 +17,9 @@ import Transaction from './models/Transaction';
 import Output from './models/Output';
 import Input from './models/Input';
 import Utxo from './models/Utxo';
-import Wallet from './models/Wallet';
 
 // custom components
-import WalletDisplay from './components/WalletDisplay';
+import Wallet from './components/Wallet';
 import Blocks from './components/Blocks';
 import BlockDetails from './components/BlockDetails';
 // import AddressDisplay from './components/AddressDisplay';
@@ -88,15 +87,6 @@ class App extends Component {
 
     // Create HD wallet w/ default configuration
     reduxStore.dispatch(createWallet())
-    // reduxStore.dispatch(addRootSeed('root seed'))
-    // reduxStore.dispatch(addMasterPrivateKey('master private key'))
-    // reduxStore.dispatch(createAccount({
-    //   title: '',
-    //   index: 1,
-    //   privatekeywif: 'cuapfdjmeuy1y8brprntvkzcvyten5bmiq4zjotjkatlhle1pomg',
-    //   xpriv: 'tprv8fr6gny9ysnhpjpoaur7jnuwfmgynvckqqgokgpkdv1phpnsa2pt7zuwihztmwbfmh5jqqmqrjywlkfclo5hjewfrr3vxfignzdaktn4nch',
-    //   xpub: 'tpubdcy8rd1pgptxgmrbu8wi8na4ennuyfoeyihabns44bonxt3ecre3jv6otqujdgax6mtlburtnlh45gwotjyuwwq69j4nvqqjwts9syhgqai'
-    // }))
     // reduxStore.dispatch(toggleDisplayAccount(1))
     // reduxStore.dispatch(toggleDisplayAccount(1))
     // store.set('wallet', this.wallet);
@@ -113,9 +103,19 @@ class App extends Component {
   }
 
   componentDidMount() {
-    let reduxState = reduxStore.getState();
-    let [mnemonic, path, addresses] = BitcoinCash.createHDWallet(reduxState.configuration.wallet);
-    console.log(mnemonic, path, addresses);
+    let [rootSeed, masterPrivateKey, mnemonic, path, accounts] = BitcoinCash.createHDWallet(reduxStore.getState().configuration.wallet);
+    reduxStore.dispatch(addRootSeed(rootSeed))
+    reduxStore.dispatch(addMasterPrivateKey(masterPrivateKey.chainCode))
+
+    accounts.forEach((account, index) => {
+      reduxStore.dispatch(createAccount({
+        title: account.title,
+        index: account.index,
+        privateKeyWIF: account.privateKeyWIF,
+        xpriv: account.xpriv,
+        xpub: account.xpub
+      }))
+    });
   //   store.set('addresses', addresses);
   //
   //   this.createBlockchain(addresses);
@@ -244,7 +244,7 @@ class App extends Component {
 
     const WalletPage = (props) => {
       return (
-        <WalletDisplay
+        <Wallet
           mnemonic={this.state.mnemonic}
           path={this.state.path}
           blockchainInstance={this.state.blockchainInstance}

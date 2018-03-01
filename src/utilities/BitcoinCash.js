@@ -146,7 +146,7 @@ class BitcoinCash {
     let rootSeed = BitcoinCash.mnemonicToSeed(config.mnemonic, config.password);
 
     // create master private key
-    let masterkey = BitcoinCash.fromSeedBuffer(rootSeed, config.network);
+    let masterPrivateKey = BitcoinCash.fromSeedBuffer(rootSeed, config.network);
 
 
 
@@ -167,27 +167,27 @@ class BitcoinCash {
       config.HDPath = path;
     }
 
-    let addresses = [];
-    let account;
-    let tmpPath;
+    let accounts = [];
 
     for (let i = 0; i < config.totalAccounts; i++) {
       // create accounts
       // follow BIP 44 account discovery algo https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#account-discovery
-      let tmp = masterkey.derivePath(`${config.HDPath.replace(/\/$/, "")}/${i}'`);
-      let xpriv = tmp.toBase58();
-      let xpub = tmp.neutered().toBase58();
-      account = masterkey.derivePath(`${config.HDPath.replace(/\/$/, "")}/${i}'/0/0`);
+      let account = masterPrivateKey.derivePath(`${config.HDPath.replace(/\/$/, "")}/${i}'`);
+      let xpriv = account.toBase58();
+      let xpub = account.neutered().toBase58();
+      let address = masterPrivateKey.derivePath(`${config.HDPath.replace(/\/$/, "")}/${i}'/0/0`);
 
-      addresses.push(new Address({
-        privateKeyWIF: account.keyPair.toWIF(),
+      accounts.push({
+        title: '',
+        privateKeyWIF: address.keyPair.toWIF(),
         xpriv: xpriv,
-        xpub: xpub
-      }));
+        xpub: xpub,
+        index: i
+      });
       // addresses.push(new Address(BitcoinCash.toCashAddress(account.derive(i).getAddress()), account.derive(i).keyPair.toWIF()));
     };
 
-    return [config.mnemonic, config.HDPath, addresses];
+    return [rootSeed, masterPrivateKey, config.mnemonic, config.HDPath, accounts];
   }
 
   static signMessage(message, privateKeyWIF) {

@@ -348,31 +348,31 @@ a.pure-button-primary {
   color: $slate;
 }
 
-.WalletDisplay ul {
+.Wallet ul {
   list-style-type: none;
   color: $darkGrey;
   padding-left: 1em;
   padding-right: 1em;
 }
 
-.WalletDisplay ul.subheader li {
+.Wallet ul.subheader li {
   display: inline;
 }
 
-.WalletDisplay ul.subheader {
+.Wallet ul.subheader {
   font-size: 0.8em;
   margin: 0;
 }
 
-.WalletDisplay.content {
+.Wallet.content {
   padding: 1em 0;
 }
 
-.WalletDisplay.content, .Blocks, .WrapperBlockDetails, .Configuration, .Transaction, .ConvertDisplay, .MessageDisplay {
+.Wallet.content, .Blocks, .WrapperBlockDetails, .Configuration, .Transaction, .ConvertDisplay, .MessageDisplay {
   background: $white;
 }
 
-.WalletDisplay td {
+.Wallet td {
   padding: 1.2em;
 }
 

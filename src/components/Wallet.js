@@ -6,7 +6,7 @@ import AddressDisplay from './AddressDisplay';
 import ModalDisplay from './ModalDisplay';
 import underscore from 'underscore';
 
-class WalletDisplay extends Component {
+class Wallet extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,23 +17,7 @@ class WalletDisplay extends Component {
       xpub: ''
     };
   }
-
-  showKey(address, privateKeyWIF, xpriv, xpub) {
-    this.setState({
-      showModal: true,
-      address: address,
-      privateKeyWIF: privateKeyWIF,
-      xpriv: xpriv,
-      xpub: xpub
-    })
-  }
-
-  hideKey() {
-    this.setState({
-      showModal: false
-    })
-  }
-
+  
   render() {
     let list = [];
     if(this.props.addresses.length) {
@@ -102,7 +86,7 @@ class WalletDisplay extends Component {
             transactionsCount={transactionsCount}
             displayCashaddr={this.props.displayCashaddr}
             wallet={this.props.wallet}
-            showKey={this.showKey.bind(this)}
+            showKey={this.props.showKey.bind(this)}
           />
         );
       });
@@ -115,7 +99,7 @@ class WalletDisplay extends Component {
         privateKeyWIF={this.state.privateKeyWIF}
         xpriv={this.state.xpriv}
         xpub={this.state.xpub}
-        hideKey={this.hideKey.bind(this)}
+        hideKey={this.props.hideKey.bind(this)}
         wallet={this.props.wallet}
       />;
     }
@@ -125,7 +109,7 @@ class WalletDisplay extends Component {
           // </ul>
 
     return (
-      <div className="WalletDisplay content pure-g">
+      <div className="Wallet content pure-g">
         <div className="pure-u-1-1">
           {modal}
 
@@ -144,4 +128,4 @@ class WalletDisplay extends Component {
   }
 }
 
-export default WalletDisplay;
+export default Wallet;
