@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import AccountsAndKeysDisplay from './AccountsAndKeysDisplay';
 import {
   Route,
   Redirect
 } from 'react-router-dom';
+
+import AccountsAndKeysDisplay from './AccountsAndKeysDisplay';
+import WalletConfigurationContainer from '../containers/WalletConfigurationContainer'
 
 class ConfigurationDisplay extends Component {
   constructor(props) {
@@ -55,7 +57,7 @@ class ConfigurationDisplay extends Component {
     return (
       <div className="ConfigurationDisplay">
         <div className="content">
-          <Route path={`${this.props.match.url}/accounts-and-keys`} component={AccountsAndKeysPage}/>
+          <Route path={`${this.props.match.url}/accounts-and-keys`} component={WalletConfigurationContainer}/>
         </div>
       </div>
     );

@@ -6,11 +6,11 @@ class Configuration {
       displayCashaddr: true,
       displayTestnet: false,
       usePassword: false,
-      entropy: null,
-      network: '',
+      entropy: 16,
+      network: 'bitcoin',
       mnemonic: '',
-      totalAccounts: 0,
-      HDPath: '',
+      totalAccounts: 10,
+      HDPath: "m/44'/145'/0'/0/0",
       password: ''
     };
   }

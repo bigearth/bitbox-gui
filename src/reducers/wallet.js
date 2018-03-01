@@ -13,7 +13,8 @@ export default function wallet(state = {}, action) {
   let tmpState = state;
   switch (action.type) {
     case CREATE_WALLET:
-      return Object.assign({}, state,  new Wallet())
+      let newWallet = new Wallet();
+      return Object.assign({}, state, newWallet)
     case ADD_ROOT_SEED:
       tmpState.rootSeed = action.rootSeed;
       return Object.assign({}, state, tmpState)

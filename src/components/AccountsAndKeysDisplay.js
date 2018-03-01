@@ -81,7 +81,6 @@ class AccountsAndKeys extends Component {
   }
 
   render() {
-        // <p id='newRobotName'>Name: <input type='text' placeholder="Robot Name" value={this.state.robotName} onChange={this.handleRobotNameChange.bind(this)} /></p>
     let customMnemonicLabel;
     let customMnemonic;
     if(!this.state.autogenerateMnemonic) {

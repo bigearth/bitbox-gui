@@ -37,12 +37,69 @@ import Miner from './utilities/Miner';
 // css
 import './styles/app.scss';
 
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import bitbox from './reducers/bitbox'
+
+import {
+  createConfig,
+  toggleWalletConfig,
+  updateWalletConfig
+} from './actions/ConfigurationActions';
+
+import {
+  createWallet,
+  addRootSeed,
+  addMasterPrivateKey,
+  createAccount,
+  toggleDisplayAccount
+} from './actions/WalletActions';
+
+let reduxStore = createStore(bitbox)
+
+const unsubscribe = reduxStore.subscribe(() =>{
+  console.log(JSON.stringify(reduxStore.getState(), null, 2))
+  console.log('**');
+})
+
+// dispatch some actions
+let mnemonic = 'business antique staff gap chief harbor federal answer bright icon badge polar';
+reduxStore.dispatch(createConfig())
+// reduxStore.dispatch(toggleWalletConfig(false, 'autogenerateHDMnemonic'))
+// reduxStore.dispatch(toggleWalletConfig(false, 'autogenerateHDPath'))
+// reduxStore.dispatch(toggleWalletConfig(false, 'displayCashaddr'))
+// reduxStore.dispatch(toggleWalletConfig(false, 'displayTestnet'))
+// reduxStore.dispatch(toggleWalletConfig(false, 'usePassword'))
+//
+// reduxStore.dispatch(updateWalletConfig(32, 'entropy'))
+// reduxStore.dispatch(updateWalletConfig('test', 'network'))
+// reduxStore.dispatch(updateWalletConfig(mnemonic, 'mnemonic'))
+// reduxStore.dispatch(updateWalletConfig(25, 'totalAccounts'))
+// reduxStore.dispatch(updateWalletConfig("m/1'/2'/3'", 'HDPath'))
+// reduxStore.dispatch(updateWalletConfig('l337', 'password'))
+
+// stop listening to state updates
+// unsubscribe()
+
+
 class App extends Component {
 
   constructor(props) {
     super(props);
 
     // Create HD wallet w/ default configuration
+    reduxStore.dispatch(createWallet())
+    reduxStore.dispatch(addRootSeed('root seed'))
+    reduxStore.dispatch(addMasterPrivateKey('master private key'))
+    reduxStore.dispatch(createAccount({
+      title: '',
+      index: 1,
+      privatekeywif: 'cuapfdjmeuy1y8brprntvkzcvyten5bmiq4zjotjkatlhle1pomg',
+      xpriv: 'tprv8fr6gny9ysnhpjpoaur7jnuwfmgynvckqqgokgpkdv1phpnsa2pt7zuwihztmwbfmh5jqqmqrjywlkfclo5hjewfrr3vxfignzdaktn4nch',
+      xpub: 'tpubdcy8rd1pgptxgmrbu8wi8na4ennuyfoeyihabns44bonxt3ecre3jv6otqujdgax6mtlburtnlh45gwotjyuwwq69j4nvqqjwts9syhgqai'
+    }))
+    reduxStore.dispatch(toggleDisplayAccount(1))
+    reduxStore.dispatch(toggleDisplayAccount(1))
     this.wallet = new Wallet({
       entropy: 16,
       network: 'bitcoin',
@@ -343,88 +400,90 @@ class App extends Component {
               // </li>
 
     return (
-      <Router>
-        <div className="header main-header">
-          <div className="pure-menu pure-menu-horizontal">
-            <Link className="pure-menu-heading" to="/">BitBox</Link>
-            <ul className="pure-menu-list">
+      <Provider store={reduxStore}>
+        <Router>
+          <div className="header main-header">
+            <div className="pure-menu pure-menu-horizontal">
+              <Link className="pure-menu-heading" to="/">BitBox</Link>
+              <ul className="pure-menu-list">
 
-              <li className="pure-menu-item">
-                <NavLink
-                  isActive={pathMatch}
-                  activeClassName="pure-menu-selected"
-                  className="pure-menu-link"
-                  to="/">
-                  <i className="fas fa-user"></i> Wallet
-                </NavLink>
-              </li>
-              <li className="pure-menu-item">
-                <NavLink
-                  isActive={pathMatch}
-                  activeClassName="pure-menu-selected"
-                  className="pure-menu-link"
-                  to="/blocks">
-                  <i className="fas fa-cubes"></i> Blocks
-                </NavLink>
-              </li>
-              <li className="pure-menu-item">
-                <NavLink
-                  isActive={pathMatch}
-                  activeClassName="pure-menu-selected"
-                  className="pure-menu-link"
-                  to="/convert">
-                  <i className="fas fa-qrcode" /> Convert
-                </NavLink>
-              </li>
-              <li className="pure-menu-item">
-                <NavLink
-                  isActive={pathMatch}
-                  activeClassName="pure-menu-selected"
-                  className="pure-menu-link"
-                  to="/message">
-                  <i className="far fa-check-circle"></i> Sign &amp; Verify
-                </NavLink>
-              </li>
-            </ul>
-            <ul className="pure-menu-list right">
-              <li className="pure-menu-item">
-                <NavLink
-                  isActive={pathMatch}
-                  activeClassName="pure-menu-selected"
-                  className="pure-menu-link"
-                  to="/configuration/accounts-and-keys">
-                  <i className="fas fa-cog" />
-                </NavLink>
-              </li>
-            </ul>
-          </div>
-          <div className="pure-menu pure-menu-horizontal networkInfo">
-            <ul className="pure-menu-list">
+                <li className="pure-menu-item">
+                  <NavLink
+                    isActive={pathMatch}
+                    activeClassName="pure-menu-selected"
+                    className="pure-menu-link"
+                    to="/">
+                    <i className="fas fa-user"></i> Wallet
+                  </NavLink>
+                </li>
+                <li className="pure-menu-item">
+                  <NavLink
+                    isActive={pathMatch}
+                    activeClassName="pure-menu-selected"
+                    className="pure-menu-link"
+                    to="/blocks">
+                    <i className="fas fa-cubes"></i> Blocks
+                  </NavLink>
+                </li>
+                <li className="pure-menu-item">
+                  <NavLink
+                    isActive={pathMatch}
+                    activeClassName="pure-menu-selected"
+                    className="pure-menu-link"
+                    to="/convert">
+                    <i className="fas fa-qrcode" /> Convert
+                  </NavLink>
+                </li>
+                <li className="pure-menu-item">
+                  <NavLink
+                    isActive={pathMatch}
+                    activeClassName="pure-menu-selected"
+                    className="pure-menu-link"
+                    to="/message">
+                    <i className="far fa-check-circle"></i> Sign &amp; Verify
+                  </NavLink>
+                </li>
+              </ul>
+              <ul className="pure-menu-list right">
+                <li className="pure-menu-item">
+                  <NavLink
+                    isActive={pathMatch}
+                    activeClassName="pure-menu-selected"
+                    className="pure-menu-link"
+                    to="/configuration/accounts-and-keys">
+                    <i className="fas fa-cog" />
+                  </NavLink>
+                </li>
+              </ul>
+            </div>
+            <div className="pure-menu pure-menu-horizontal networkInfo">
+              <ul className="pure-menu-list">
 
-              <li className="pure-menu-item">
-                CURRENT BLOCK <br />
-                {chainlength}
-              </li>
-              <li className="pure-menu-item">
-                RPC SERVER <br /> http://127.0.0.1:8332
-              </li>
-              <li className="pure-menu-item">
-                MINING STATUS <br /> AUTOMINING <i className="fas fa-spinner fa-spin" />
-              </li>
-            </ul>
+                <li className="pure-menu-item">
+                  CURRENT BLOCK <br />
+                  {chainlength}
+                </li>
+                <li className="pure-menu-item">
+                  RPC SERVER <br /> http://127.0.0.1:8332
+                </li>
+                <li className="pure-menu-item">
+                  MINING STATUS <br /> AUTOMINING <i className="fas fa-spinner fa-spin" />
+                </li>
+              </ul>
+            </div>
+            <Switch>
+              <Route exact path="/blocks" component={BlocksPage}/>
+              <Route path="/blocks/:block_id" component={BlockPage}/>
+              <Route path="/transactions/:transaction_id" component={TransactionsPage}/>
+              <Route path="/convert" component={ConvertPage}/>
+              <Route path="/message" component={MessagePage}/>
+              <Route path="/configuration" component={ConfigurationPage}/>
+              <Route exact path="/" component={WalletPage}/>
+              <Redirect from='*' to='/' />
+            </Switch>
           </div>
-          <Switch>
-            <Route exact path="/blocks" component={BlocksPage}/>
-            <Route path="/blocks/:block_id" component={BlockPage}/>
-            <Route path="/transactions/:transaction_id" component={TransactionsPage}/>
-            <Route path="/convert" component={ConvertPage}/>
-            <Route path="/message" component={MessagePage}/>
-            <Route path="/configuration" component={ConfigurationPage}/>
-            <Route exact path="/" component={WalletPage}/>
-            <Redirect from='*' to='/' />
-          </Switch>
-        </div>
-      </Router>
+        </Router>
+      </Provider>
     );
   }
 }
