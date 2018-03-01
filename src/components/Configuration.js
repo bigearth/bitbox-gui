@@ -6,7 +6,7 @@ import {
 
 import WalletConfigurationContainer from '../containers/WalletConfigurationContainer'
 
-class ConfigurationDisplay extends Component {
+class Configuration extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -20,10 +20,6 @@ class ConfigurationDisplay extends Component {
     })
   }
 
-  handleEntropySliderChange(value) {
-    this.props.handleEntropySliderChange(value);
-  };
-
   render() {
 
     if (this.state.redirect) {
@@ -34,7 +30,7 @@ class ConfigurationDisplay extends Component {
             // <li><Link to={`${this.props.match.url}/server`}>Server</Link></li>
           // <Route path={`${this.props.match.url}/server`} component={Server}/>
     return (
-      <div className="ConfigurationDisplay">
+      <div className="Configuration">
         <div className="content">
           <Route path={`${this.props.match.url}/accounts-and-keys`} component={WalletConfigurationContainer}/>
         </div>
@@ -43,4 +39,4 @@ class ConfigurationDisplay extends Component {
   }
 }
 
-export default ConfigurationDisplay;
+export default Configuration;

@@ -27,7 +27,7 @@ import BlockDetails from './components/BlockDetails';
 import TransactionsDisplay from './components/TransactionsDisplay';
 import ConvertDisplay from './components/ConvertDisplay';
 import MessageDisplay from './components/MessageDisplay';
-import ConfigurationDisplay from './components/ConfigurationDisplay';
+import Configuration from './components/Configuration';
 
 // utilities
 import Crypto from './utilities/Crypto';
@@ -99,48 +99,26 @@ class App extends Component {
     // }))
     // reduxStore.dispatch(toggleDisplayAccount(1))
     // reduxStore.dispatch(toggleDisplayAccount(1))
-    this.wallet = new Wallet({
-      entropy: 16,
-      network: 'bitcoin',
-      mnemonic: '',
-      totalAccounts: 10,
-      autogenerateMnemonic: true,
-      autogeneratePath: true,
-      path: '',
-      displayCashaddr: true,
-      password: '',
-      usePassword: false,
-      displayTestnet: false
-    });
-    store.set('wallet', this.wallet);
+    // store.set('wallet', this.wallet);
 
-    this.blockchain = new Blockchain();
-
-    this.utxoSet = new Utxo();
-    // Miner Utility for handling txs and blocks
-
+    // this.blockchain = new Blockchain();
+    //
+    // this.utxoSet = new Utxo();
+    // // Miner Utility for handling txs and blocks
+    // this.miner = new Miner(this.blockchain, this.utxoSet, this.wallet.network);
     this.state = {
-      mnemonic: this.wallet.mnemonic,
       addresses: [],
-      blockchainInstance: this.blockchain,
-      utxoSet: this.utxoSet,
-      password: '',
-      showCreateBtn: false
+      blockchainInstance: ''
     };
-    this.miner = new Miner(this.blockchain, this.utxoSet, this.wallet.network);
   }
 
   componentDidMount() {
-    let [mnemonic, path, addresses] = BitcoinCash.createHDWallet(this.wallet);
-    store.set('addresses', addresses);
-
-    this.setState({
-      mnemonic: mnemonic,
-      path: path,
-      addresses: addresses
-    });
-
-    this.createBlockchain(addresses);
+    let reduxState = reduxStore.getState();
+    let [mnemonic, path, addresses] = BitcoinCash.createHDWallet(reduxState.configuration.wallet);
+    console.log(mnemonic, path, addresses);
+  //   store.set('addresses', addresses);
+  //
+  //   this.createBlockchain(addresses);
   }
 
   createBlockchain(addresses) {
@@ -205,10 +183,6 @@ class App extends Component {
     this.setState({
       utxoSet: utxoSet
     })
-  }
-
-  handleEntropySliderChange(value) {
-    this.wallet.entropy = value;
   }
 
   createBlock() {
@@ -342,17 +316,15 @@ class App extends Component {
 
     const ConfigurationPage = (props) => {
       return (
-        <ConfigurationDisplay
+        <Configuration
           match={props.match}
           resetBitbox={this.resetBitbox.bind(this)}
-          handleEntropySliderChange={this.handleEntropySliderChange.bind(this)}
-          wallet={this.wallet}
         />
       );
     };
 
     let chainlength = 0;
-    if(this.state.blockchainInstance.chain) {
+    if(this.state.blockchainInstance && this.state.blockchainInstance.chain) {
       chainlength = this.state.blockchainInstance.chain.length - 1;
     }
               // <li className="pure-menu-item">

@@ -137,7 +137,7 @@ class BitcoinCash {
   static createHDWallet(config) {
     // nore info: https://github.com/bitcoinbook/bitcoinbook/blob/develop/ch05.asciidoc
 
-    if(config.autogenerateMnemonic) {
+    if(config.autogenerateHDMnemonic) {
       // create a random mnemonic w/ user provided entropy size
       config.mnemonic = BitcoinCash.entropyToMnemonic(config.entropy);
     }
@@ -164,7 +164,7 @@ class BitcoinCash {
       let coin = "145'";
 
       let path = `m/${purpose}/${coin}`;
-      config.path = path;
+      config.HDPath = path;
     }
 
     let addresses = [];
@@ -174,10 +174,10 @@ class BitcoinCash {
     for (let i = 0; i < config.totalAccounts; i++) {
       // create accounts
       // follow BIP 44 account discovery algo https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#account-discovery
-      let tmp = masterkey.derivePath(`${config.path.replace(/\/$/, "")}/${i}'`);
+      let tmp = masterkey.derivePath(`${config.HDPath.replace(/\/$/, "")}/${i}'`);
       let xpriv = tmp.toBase58();
       let xpub = tmp.neutered().toBase58();
-      account = masterkey.derivePath(`${config.path.replace(/\/$/, "")}/${i}'/0/0`);
+      account = masterkey.derivePath(`${config.HDPath.replace(/\/$/, "")}/${i}'/0/0`);
 
       addresses.push(new Address({
         privateKeyWIF: account.keyPair.toWIF(),
@@ -187,7 +187,7 @@ class BitcoinCash {
       // addresses.push(new Address(BitcoinCash.toCashAddress(account.derive(i).getAddress()), account.derive(i).keyPair.toWIF()));
     };
 
-    return [config.mnemonic, config.path, addresses];
+    return [config.mnemonic, config.HDPath, addresses];
   }
 
   static signMessage(message, privateKeyWIF) {
