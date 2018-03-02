@@ -26,7 +26,7 @@ import Blocks from './components/Blocks';
 import BlockDetails from './components/BlockDetails';
 // import Account from './components/Account';
 import TransactionsDisplay from './components/TransactionsDisplay';
-import ConvertDisplay from './components/ConvertDisplay';
+import Convert from './components/Convert';
 import SignAndVerify from './components/SignAndVerify';
 import Configuration from './components/Configuration';
 
@@ -283,7 +283,7 @@ class App extends Component {
 
     const ConvertPage = (props) => {
       return (
-        <ConvertDisplay
+        <Convert
           wallet={this.wallet}
         />
       );
