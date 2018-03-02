@@ -368,7 +368,7 @@ a.pure-button-primary {
   padding: 1em 0;
 }
 
-.Wallet.content, .Blocks, .WrapperBlockDetails, .Configuration, .Transaction, .ConvertDisplay, .MessageDisplay {
+.Wallet.content, .Blocks, .WrapperBlockDetails, .Configuration, .Transaction, .ConvertDisplay, .SignAndVerify {
   background: $white;
 }
 
@@ -574,7 +574,7 @@ a.pure-button-primary {
   width: 10%;
 }
 
-.MessageDisplay {
+.SignAndVerify {
   padding-top: 15px;
   margin-top: 0;
 }
@@ -600,7 +600,7 @@ a.pure-button-primary {
   }
 }
 
-.MessageDisplay {
+.SignAndVerify {
   textarea, input {
     width: 100%;
   }

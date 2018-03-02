@@ -19,13 +19,15 @@ import Input from './models/Input';
 import Utxo from './models/Utxo';
 
 import WalletContainer from './containers/WalletContainer'
+import SignAndVerifyContainer from './containers/SignAndVerifyContainer'
+
 // custom components
 import Blocks from './components/Blocks';
 import BlockDetails from './components/BlockDetails';
 // import Account from './components/Account';
 import TransactionsDisplay from './components/TransactionsDisplay';
 import ConvertDisplay from './components/ConvertDisplay';
-import MessageDisplay from './components/MessageDisplay';
+import SignAndVerify from './components/SignAndVerify';
 import Configuration from './components/Configuration';
 
 // utilities
@@ -118,7 +120,7 @@ class App extends Component {
         cashAddr: BitcoinCash.toCashAddress(address)
       }))
     });
-  //   store.set('addresses', addresses);
+    // store.set('accounts', accounts);
   //
   //   this.createBlockchain(addresses);
   }
@@ -289,7 +291,7 @@ class App extends Component {
 
     const MessagePage = (props) => {
       return (
-        <MessageDisplay
+        <SignAndVerify
           addresses={this.state.addresses}
         />
       );
@@ -352,7 +354,7 @@ class App extends Component {
                     isActive={pathMatch}
                     activeClassName="pure-menu-selected"
                     className="pure-menu-link"
-                    to="/message">
+                    to="/signandverify">
                     <i className="far fa-check-circle"></i> Sign &amp; Verify
                   </NavLink>
                 </li>
@@ -389,7 +391,7 @@ class App extends Component {
               <Route path="/blocks/:block_id" component={BlockPage}/>
               <Route path="/transactions/:transaction_id" component={TransactionsPage}/>
               <Route path="/convert" component={ConvertPage}/>
-              <Route path="/message" component={MessagePage}/>
+              <Route path="/signandverify" component={SignAndVerifyContainer}/>
               <Route path="/configuration" component={ConfigurationPage}/>
               <Route exact path="/" component={WalletContainer}/>
 
