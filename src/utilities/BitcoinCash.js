@@ -137,21 +137,19 @@ class BitcoinCash {
   static createHDWallet(config) {
     // nore info: https://github.com/bitcoinbook/bitcoinbook/blob/develop/ch05.asciidoc
 
+    let mnemonic = config.mnemonic;
     if(config.autogenerateHDMnemonic) {
       // create a random mnemonic w/ user provided entropy size
-      config.mnemonic = BitcoinCash.entropyToMnemonic(config.entropy);
+      mnemonic = BitcoinCash.entropyToMnemonic(config.entropy);
     }
 
     // create 512 bit HMAC-SHA512 root seed
-    let rootSeed = BitcoinCash.mnemonicToSeed(config.mnemonic, config.password);
+    let rootSeed = BitcoinCash.mnemonicToSeed(mnemonic, config.password);
 
     // create master private key
     let masterPrivateKey = BitcoinCash.fromSeedBuffer(rootSeed, config.network);
 
-
-
-    // let tmpkey = BitcoinCash.fromSeedBuffer(rootSeed);
-
+    let HDPath = config.HDPath;
     if(config.autogeneratePath) {
       // create BIP 44 HD path
       // more info: https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
@@ -164,7 +162,7 @@ class BitcoinCash {
       let coin = "145'";
 
       let path = `m/${purpose}/${coin}`;
-      config.HDPath = path;
+      HDPath = path;
     }
 
     let accounts = [];
@@ -187,7 +185,7 @@ class BitcoinCash {
       // addresses.push(new Address(BitcoinCash.toCashAddress(account.derive(i).getAddress()), account.derive(i).keyPair.toWIF()));
     };
 
-    return [rootSeed, masterPrivateKey, config.mnemonic, config.HDPath, accounts];
+    return [rootSeed, masterPrivateKey, mnemonic, HDPath, accounts];
   }
 
   static signMessage(message, privateKeyWIF) {

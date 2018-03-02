@@ -1,4 +1,9 @@
 import React, { Component } from 'react';
+import {
+  Route,
+  Redirect
+} from 'react-router-dom';
+
 import PropTypes from 'prop-types'
 import Slider from 'react-rangeslider'
 import 'react-rangeslider/lib/index.css'
@@ -6,11 +11,23 @@ import 'react-rangeslider/lib/index.css'
 class WalletConfiguration extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      redirect: false
+    };
+  }
+
+  resetBitbox(configuration) {
+    this.props.resetBitbox(configuration);
+    this.setState({
+      redirect: true
+    })
   }
 
   render() {
-    // <button className="pure-button" onClick={this.props.resetBitbox.bind(this)}><i className="fas fa-redo" /> Restart</button>
+    if (this.state.redirect) {
+      return <Redirect to='/'/>;
+    }
+
     let customMnemonicLabel;
     let customMnemonic;
     if(!this.props.configuration.wallet.autogenerateHDMnemonic) {
@@ -44,6 +61,7 @@ class WalletConfiguration extends Component {
         />
         <div className='value'>{this.props.configuration.wallet.entropy} bytes/{this.props.configuration.wallet.entropy * 8} bits</div></div>;
     }
+
     return (
       <div className="AccountsAndKeys">
         <h2 className="content-head is-center">Accounts & Keys</h2>
@@ -51,6 +69,7 @@ class WalletConfiguration extends Component {
           <div className="l-box-lrg pure-u-1-2">
             <form className="pure-form pure-form-stacked">
               <fieldset>
+                <button className="pure-button" onClick={this.resetBitbox.bind(this, this.props.configuration.wallet)}><i className="fas fa-redo" /> Restart</button>
 
                 <label>Total number of accounts to generate</label>
                 <input id='totalAccounts' type='number' placeholder="Number of accounts" value={this.props.configuration.wallet.totalAccounts} onChange={this.props.handleConfigChange.bind(this)} />

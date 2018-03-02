@@ -1,5 +1,6 @@
 import {
   CREATE_WALLET,
+  RESET_WALLET,
   ADD_ROOT_SEED,
   ADD_MASTER_PRIVATE_KEY,
   CREATE_ACCOUNT,
@@ -13,6 +14,9 @@ export default function wallet(state = {}, action) {
   let tmpState = state;
   switch (action.type) {
     case CREATE_WALLET:
+      tmpState = new Wallet();
+      return Object.assign({}, state, tmpState)
+    case RESET_WALLET:
       tmpState = new Wallet();
       return Object.assign({}, state, tmpState)
     case ADD_ROOT_SEED:

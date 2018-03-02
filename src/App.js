@@ -44,7 +44,8 @@ import bitbox from './reducers/bitbox'
 
 import {
   createConfig,
-  toggleWalletConfig
+  toggleWalletConfig,
+  updateWalletConfig
 } from './actions/ConfigurationActions';
 
 import {
@@ -56,10 +57,10 @@ import {
 
 let reduxStore = createStore(bitbox)
 
-const unsubscribe = reduxStore.subscribe(() =>{
-  console.log(JSON.stringify(reduxStore.getState(), null, 2))
-  console.log('*********************************************');
-})
+// const unsubscribe = reduxStore.subscribe(() =>{
+//   console.log(JSON.stringify(reduxStore.getState(), null, 2))
+//   console.log('*********************************************');
+// })
 
 // stop listening to state updates
 // unsubscribe()
@@ -80,9 +81,7 @@ class App extends Component {
     //
     // reduxStore.dispatch(updateWalletConfig(32, 'entropy'))
     // reduxStore.dispatch(updateWalletConfig('test', 'network'))
-    // reduxStore.dispatch(updateWalletConfig(mnemonic, 'mnemonic'))
     // reduxStore.dispatch(updateWalletConfig(25, 'totalAccounts'))
-    // reduxStore.dispatch(updateWalletConfig("m/1'/2'/3'", 'HDPath'))
     // reduxStore.dispatch(updateWalletConfig('l337', 'password'))
 
     // Create HD wallet w/ default configuration
@@ -100,11 +99,20 @@ class App extends Component {
   }
 
   componentDidMount() {
+    this.createHDWallet();
+    // store.set('accounts', accounts);
+  //
+  //   this.createBlockchain(addresses);
+  }
+
+  createHDWallet() {
     let walletConfig = reduxStore.getState().configuration.wallet;
-    let [rootSeed, masterPrivateKey, mnemonic, path, accounts] = BitcoinCash.createHDWallet(walletConfig);
-    reduxStore.dispatch(createWallet())
-    reduxStore.dispatch(addRootSeed(rootSeed))
-    reduxStore.dispatch(addMasterPrivateKey(masterPrivateKey.chainCode))
+    let [rootSeed, masterPrivateKey, mnemonic, HDPath, accounts] = BitcoinCash.createHDWallet(walletConfig);
+    reduxStore.dispatch(createWallet());
+    reduxStore.dispatch(addRootSeed(rootSeed));
+    reduxStore.dispatch(addMasterPrivateKey(masterPrivateKey.chainCode));
+    reduxStore.dispatch(updateWalletConfig('mnemonic', mnemonic));
+    reduxStore.dispatch(updateWalletConfig('HDPath', HDPath));
 
     accounts.forEach((account, index) => {
 
@@ -120,9 +128,6 @@ class App extends Component {
         cashAddr: BitcoinCash.toCashAddress(address)
       }))
     });
-    // store.set('accounts', accounts);
-  //
-  //   this.createBlockchain(addresses);
   }
 
   createBlockchain(addresses) {
@@ -152,25 +157,8 @@ class App extends Component {
     this.miner.pushGenesisBlock(genesisBlock);
   }
 
-  resetBitbox() {
-    this.blockchain = new Blockchain();
-
-    // Miner Utility for handling txs and blocks
-    this.miner = new Miner(this.blockchain, this.utxoSet, this.wallet.network);
-
-    let [mnemonic, path, addresses] = BitcoinCash.createHDWallet(this.wallet);
-    store.set('addresses', addresses);
-    this.setState({
-      mnemonic: mnemonic,
-      path: path,
-      addresses: addresses
-    });
-    this.createBlockchain(addresses);
-    this.handleBlockchainUpdate(this.blockchain);
-  }
-
   handlePathMatch(path) {
-    if(path === '/' || path === '/blocks' || path === '/transactions' || path === '/configuration/accounts-and-keys') {
+    if(path === '/' || path === '/blocks' || path === '/transactions' || path === '/configuration/wallet') {
       return true;
     } else {
       return false;
@@ -301,7 +289,6 @@ class App extends Component {
       return (
         <Configuration
           match={props.match}
-          resetBitbox={this.resetBitbox.bind(this)}
         />
       );
     };
@@ -365,7 +352,7 @@ class App extends Component {
                     isActive={pathMatch}
                     activeClassName="pure-menu-selected"
                     className="pure-menu-link"
-                    to="/configuration/accounts-and-keys">
+                    to="/configuration/wallet">
                     <i className="fas fa-cog" />
                   </NavLink>
                 </li>
