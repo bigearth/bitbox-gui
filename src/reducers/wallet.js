@@ -13,8 +13,8 @@ export default function wallet(state = {}, action) {
   let tmpState = state;
   switch (action.type) {
     case CREATE_WALLET:
-      let newWallet = new Wallet();
-      return Object.assign({}, state, newWallet)
+      tmpState = new Wallet();
+      return Object.assign({}, state, tmpState)
     case ADD_ROOT_SEED:
       tmpState.rootSeed = action.rootSeed;
       return Object.assign({}, state, tmpState)
@@ -26,8 +26,8 @@ export default function wallet(state = {}, action) {
       return Object.assign({}, state, tmpState)
     case TOGGLE_DISPLAY_ACCOUNT:
       tmpState.accounts.forEach((account) => {
-        if(account.index === action.index) {
-          account.toggleDisplayAccount = !account.toggleDisplayAccount;
+        if(account.index === action.account.index) {
+          account.displayAccount = !account.displayAccount;
         }
       })
       return Object.assign({}, state, tmpState)

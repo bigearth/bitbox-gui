@@ -28,6 +28,6 @@ export function createAccount(account) {
   return { type: CREATE_ACCOUNT, account }
 }
 
-export function toggleDisplayAccount(index) {
-  return { type: TOGGLE_DISPLAY_ACCOUNT, index }
+export function toggleDisplayAccount(account) {
+  return { type: TOGGLE_DISPLAY_ACCOUNT, account }
 }

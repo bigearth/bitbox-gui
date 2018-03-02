@@ -5,7 +5,9 @@ class Account {
     this.privateKeyWIF = config.privateKeyWIF;
     this.xpriv = config.xpriv;
     this.xpub = config.xpub;
-    this.toggleDisplayAccount = false;
+    this.displayAccount = false;
+    this.legacy = config.legacy;
+    this.cashAddr = config.cashAddr;
   }
 }
 

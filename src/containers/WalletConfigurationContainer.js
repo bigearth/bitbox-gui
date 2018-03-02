@@ -7,7 +7,7 @@ import {
 
 const mapStateToProps = state => {
   return {
-    config: state.configuration
+    configuration: state.configuration
   }
 }
  

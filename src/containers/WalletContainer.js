@@ -9,26 +9,15 @@ import {
 
 const mapStateToProps = state => {
   return {
-    config: state.configuration
+    wallet: state.wallet,
+    configuration: state.configuration.wallet
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    showKey: (e) => {
-      // showKey(address, privateKeyWIF, xpriv, xpub) {
-      // let prop = e.target.id;
-      // let checked = e.target.checked;
-
-      dispatch(toggleWalletConfig(prop, checked))
-    },
-    hideKey: (e) => {
-      // let prop = e.target.id;
-      // let value = e.target.value;
-      dispatch(updateWalletConfig(prop, value))
-    },
-    handleEntropySliderChange: (value) => {
-      dispatch(updateWalletConfig('entropy', value))
+    toggleDisplayAccount: (account) => {
+      dispatch(toggleDisplayAccount(account))
     }
   }
 }
@@ -38,4 +27,4 @@ const WalletContainer = connect(
   mapDispatchToProps
 )(Wallet)
  
-export default WalletConfigurationContainer
+export default WalletContainer

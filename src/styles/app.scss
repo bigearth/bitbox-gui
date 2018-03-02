@@ -408,19 +408,19 @@ a.pure-button-primary {
   font-weight: normal;
 }
 
-.AddressDisplay td, .Blocks td {
+.Account td, .Blocks td {
   padding: 1.25em 1em;
 }
 
-.AddressDisplay td.important .subheader, .Blocks td.important .subheader {
+.Account td.important .subheader, .Blocks td.important .subheader {
   font-size: 0.6em;
 }
 
-.AddressDisplay td.important, .Blocks td.important {
+.Account td.important, .Blocks td.important {
   font-size: 1.3em;
 }
 
-.AddressDisplay {
+.Account {
   .danger {
     font-size: .6em;
   }
@@ -453,7 +453,7 @@ a.pure-button-primary {
   padding-right: 10px;
 }
 
-.AddressDisplay .danger {
+.Account .danger {
   color: $danger;
 }
 

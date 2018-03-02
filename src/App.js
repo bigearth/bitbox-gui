@@ -18,11 +18,11 @@ import Output from './models/Output';
 import Input from './models/Input';
 import Utxo from './models/Utxo';
 
+import WalletContainer from './containers/WalletContainer'
 // custom components
-import Wallet from './components/Wallet';
 import Blocks from './components/Blocks';
 import BlockDetails from './components/BlockDetails';
-// import AddressDisplay from './components/AddressDisplay';
+// import Account from './components/Account';
 import TransactionsDisplay from './components/TransactionsDisplay';
 import ConvertDisplay from './components/ConvertDisplay';
 import MessageDisplay from './components/MessageDisplay';
@@ -41,15 +41,15 @@ import { createStore } from 'redux'
 import bitbox from './reducers/bitbox'
 
 import {
-  createConfig
+  createConfig,
+  toggleWalletConfig
 } from './actions/ConfigurationActions';
 
 import {
   createWallet,
   addRootSeed,
   addMasterPrivateKey,
-  createAccount,
-  toggleDisplayAccount
+  createAccount
 } from './actions/WalletActions';
 
 let reduxStore = createStore(bitbox)
@@ -58,8 +58,6 @@ const unsubscribe = reduxStore.subscribe(() =>{
   console.log(JSON.stringify(reduxStore.getState(), null, 2))
   console.log('*********************************************');
 })
-
-// dispatch some actions
 
 // stop listening to state updates
 // unsubscribe()
@@ -74,7 +72,7 @@ class App extends Component {
     reduxStore.dispatch(createConfig())
     // reduxStore.dispatch(toggleWalletConfig(false, 'autogenerateHDMnemonic'))
     // reduxStore.dispatch(toggleWalletConfig(false, 'autogenerateHDPath'))
-    // reduxStore.dispatch(toggleWalletConfig(false, 'displayCashaddr'))
+    // reduxStore.dispatch(toggleWalletConfig('displayCashaddr', false))
     // reduxStore.dispatch(toggleWalletConfig(false, 'displayTestnet'))
     // reduxStore.dispatch(toggleWalletConfig(false, 'usePassword'))
     //
@@ -86,9 +84,6 @@ class App extends Component {
     // reduxStore.dispatch(updateWalletConfig('l337', 'password'))
 
     // Create HD wallet w/ default configuration
-    reduxStore.dispatch(createWallet())
-    // reduxStore.dispatch(toggleDisplayAccount(1))
-    // reduxStore.dispatch(toggleDisplayAccount(1))
     // store.set('wallet', this.wallet);
 
     // this.blockchain = new Blockchain();
@@ -103,17 +98,24 @@ class App extends Component {
   }
 
   componentDidMount() {
-    let [rootSeed, masterPrivateKey, mnemonic, path, accounts] = BitcoinCash.createHDWallet(reduxStore.getState().configuration.wallet);
+    let walletConfig = reduxStore.getState().configuration.wallet;
+    let [rootSeed, masterPrivateKey, mnemonic, path, accounts] = BitcoinCash.createHDWallet(walletConfig);
+    reduxStore.dispatch(createWallet())
     reduxStore.dispatch(addRootSeed(rootSeed))
     reduxStore.dispatch(addMasterPrivateKey(masterPrivateKey.chainCode))
 
     accounts.forEach((account, index) => {
+
+      let address = BitcoinCash.fromWIF(account.privateKeyWIF, walletConfig.network).getAddress();
+
       reduxStore.dispatch(createAccount({
         title: account.title,
         index: account.index,
         privateKeyWIF: account.privateKeyWIF,
         xpriv: account.xpriv,
-        xpub: account.xpub
+        xpub: account.xpub,
+        legacy: address,
+        cashAddr: BitcoinCash.toCashAddress(address)
       }))
     });
   //   store.set('addresses', addresses);
@@ -235,27 +237,6 @@ class App extends Component {
       return this.handlePathMatch(match.path);
     }
 
-    let list = []
-    if (this.state.addresses.length) {
-      this.state.addresses.forEach(address => {
-        list.push(<li>Address: {address} | Balance: 0 | TX Count: 0 |</li>);
-      });
-    }
-
-    const WalletPage = (props) => {
-      return (
-        <Wallet
-          mnemonic={this.state.mnemonic}
-          path={this.state.path}
-          blockchainInstance={this.state.blockchainInstance}
-          addresses={this.state.addresses}
-          utxoSet={this.state.utxoSet}
-          displayCashaddr={this.state.displayCashaddr}
-          wallet={this.wallet}
-        />
-      );
-    };
-
     const BlocksPage = (props) => {
       return (
         <Blocks
@@ -281,7 +262,7 @@ class App extends Component {
 
     const AddressPage = (props) => {
       return (
-        <AddressDisplay
+        <Account
           blockchainInstance={this.state.blockchainInstance}
           match={props.match}
         />
@@ -330,6 +311,15 @@ class App extends Component {
               // <li className="pure-menu-item">
               //   <button className='pure-button danger-background' onClick={this.createBlock.bind(this)}><i className="fas fa-cube"></i> Create block</button>
               // </li>
+                // <li className="pure-menu-item">
+                //   <NavLink
+                //     isActive={pathMatch}
+                //     activeClassName="pure-menu-selected"
+                //     className="pure-menu-link"
+                //     to="/blocks">
+                //     <i className="fas fa-cubes"></i> Blocks
+                //   </NavLink>
+                // </li>
 
     return (
       <Provider store={reduxStore}>
@@ -346,15 +336,6 @@ class App extends Component {
                     className="pure-menu-link"
                     to="/">
                     <i className="fas fa-user"></i> Wallet
-                  </NavLink>
-                </li>
-                <li className="pure-menu-item">
-                  <NavLink
-                    isActive={pathMatch}
-                    activeClassName="pure-menu-selected"
-                    className="pure-menu-link"
-                    to="/blocks">
-                    <i className="fas fa-cubes"></i> Blocks
                   </NavLink>
                 </li>
                 <li className="pure-menu-item">
@@ -410,7 +391,8 @@ class App extends Component {
               <Route path="/convert" component={ConvertPage}/>
               <Route path="/message" component={MessagePage}/>
               <Route path="/configuration" component={ConfigurationPage}/>
-              <Route exact path="/" component={WalletPage}/>
+              <Route exact path="/" component={WalletContainer}/>
+
               <Redirect from='*' to='/' />
             </Switch>
           </div>
