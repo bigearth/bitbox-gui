@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import BitcoinCash from '../utilities/BitcoinCash';
 
-class Modal extends Component {
+class AccountModal extends Component {
   hideAccountModal(account) {
     this.props.hideAccountModal(account);
   }
@@ -9,7 +9,7 @@ class Modal extends Component {
   render() {
 
     return (
-      <div id="keyModal" className="modal">
+      <div id="keyAccountModal" className="modal">
         <div className="modal-content">
           <div className="modal-header">
             <span onClick={this.hideAccountModal.bind(this, this.props.account)} className="close">&times;</span>
@@ -29,4 +29,4 @@ class Modal extends Component {
   }
 }
 
-export default Modal;
+export default AccountModal;

@@ -21,6 +21,8 @@ import Utxo from './models/Utxo';
 import WalletContainer from './containers/WalletContainer'
 import SignAndVerifyContainer from './containers/SignAndVerifyContainer'
 
+import ImportAndExportModal from './components/ImportAndExportModal'
+
 // custom components
 import Blocks from './components/Blocks';
 import BlockDetails from './components/BlockDetails';
@@ -55,12 +57,16 @@ import {
   createAccount
 } from './actions/WalletActions';
 
+import {
+  toggleExportCopied
+} from './actions/ImportAndExportActions';
+
 let reduxStore = createStore(bitbox)
 
-// const unsubscribe = reduxStore.subscribe(() =>{
-//   console.log(JSON.stringify(reduxStore.getState(), null, 2))
-//   console.log('*********************************************');
-// })
+const unsubscribe = reduxStore.subscribe(() =>{
+  console.log(JSON.stringify(reduxStore.getState(), null, 2))
+  console.log('*********************************************');
+})
 
 // stop listening to state updates
 // unsubscribe()
@@ -94,7 +100,8 @@ class App extends Component {
     // this.miner = new Miner(this.blockchain, this.utxoSet, this.wallet.network);
     this.state = {
       addresses: [],
-      blockchainInstance: ''
+      blockchainInstance: '',
+      showImportExport: false
     };
   }
 
@@ -218,6 +225,19 @@ class App extends Component {
     this.handleUtxoUpdate(utxoSet);
   }
 
+  showImportExport() {
+    this.setState({
+      showImportExport: true
+    });
+  }
+
+  hideImportAndExportModal() {
+    reduxStore.dispatch(toggleExportCopied(false));
+    this.setState({
+      showImportExport: false
+    });
+  }
+
   render() {
 
     const pathMatch = (match, location) => {
@@ -293,6 +313,14 @@ class App extends Component {
       );
     };
 
+    const ImportAndExportModalPage = (props) => {
+      return (
+        <ImportAndExportModal
+          hideImportAndExportModal={this.hideImportAndExportModal.bind(this)}
+        />
+      );
+    };
+
     let chainlength = 0;
     if(this.state.blockchainInstance && this.state.blockchainInstance.chain) {
       chainlength = this.state.blockchainInstance.chain.length - 1;
@@ -309,6 +337,11 @@ class App extends Component {
                 //     <i className="fas fa-cubes"></i> Blocks
                 //   </NavLink>
                 // </li>
+
+    let importAndExport;
+    if(this.state.showImportExport) {
+      importAndExport = <ImportAndExportModalPage />;
+    }
 
     return (
       <Provider store={reduxStore}>
@@ -348,6 +381,11 @@ class App extends Component {
               </ul>
               <ul className="pure-menu-list right">
                 <li className="pure-menu-item">
+                  <button className="importAndExportBtn" onClick={this.showImportExport.bind(this)}>
+                    <i className="far fa-file-alt" />
+                  </button>
+                </li>
+                <li className="pure-menu-item">
                   <NavLink
                     isActive={pathMatch}
                     activeClassName="pure-menu-selected"
@@ -360,7 +398,6 @@ class App extends Component {
             </div>
             <div className="pure-menu pure-menu-horizontal networkInfo">
               <ul className="pure-menu-list">
-
                 <li className="pure-menu-item">
                   CURRENT BLOCK <br />
                   {chainlength}
@@ -373,6 +410,7 @@ class App extends Component {
                 </li>
               </ul>
             </div>
+            {importAndExport}
             <Switch>
               <Route exact path="/blocks" component={BlocksPage}/>
               <Route path="/blocks/:block_id" component={BlockPage}/>
@@ -381,7 +419,6 @@ class App extends Component {
               <Route path="/signandverify" component={SignAndVerifyContainer}/>
               <Route path="/configuration" component={ConfigurationPage}/>
               <Route exact path="/" component={WalletContainer}/>
-
               <Redirect from='*' to='/' />
             </Switch>
           </div>

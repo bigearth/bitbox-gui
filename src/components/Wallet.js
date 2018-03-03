@@ -3,7 +3,7 @@ import BitcoinCash from '../utilities/BitcoinCash';
 import Crypto from '../utilities/Crypto';
 import Bitcoin from 'bitcoinjs-lib';
 import Account from './Account';
-import Modal from './Modal';
+import AccountModal from './AccountModal';
 import underscore from 'underscore';
 
 class Wallet extends Component {
@@ -11,7 +11,7 @@ class Wallet extends Component {
     super(props);
 
     this.state = {
-      showModal: false,
+      showAccountModal: false,
       account: {}
     }
   }
@@ -19,7 +19,7 @@ class Wallet extends Component {
   showAccountModal(account) {
     this.props.toggleDisplayAccount(account);
     this.setState({
-      showModal: true,
+      showAccountModal: true,
       account: account
     });
   }
@@ -27,7 +27,7 @@ class Wallet extends Component {
   hideAccountModal(account) {
     this.props.toggleDisplayAccount(account);
     this.setState({
-      showModal: false,
+      showAccountModal: false,
       account: {}
     });
   }
@@ -103,8 +103,8 @@ class Wallet extends Component {
     }
 
     let modal;
-    if(this.state.showModal === true) {
-      modal = <Modal
+    if(this.state.showAccountModal === true) {
+      modal = <AccountModal
         account={this.state.account}
         hideAccountModal={this.hideAccountModal.bind(this)}
         configuration={this.props.configuration}

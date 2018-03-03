@@ -2,10 +2,19 @@ import { combineReducers } from 'redux'
 
 import configuration from './configuration';
 import wallet from './wallet';
+import importAndExport from './importAndExport';
  
 const bitbox = combineReducers({
   configuration,
-  wallet
+  wallet,
+  importAndExport
 })
+
+const rootReducer = (state, action) => {
+  if (action.type === 'IMPORT_STORE') {
+    state = JSON.parse(action.store)
+  }
+  return bitbox(state, action)
+}
  
-export default bitbox
+export default rootReducer
