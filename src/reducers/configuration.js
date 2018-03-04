@@ -13,6 +13,26 @@ export default function configuration(state = {}, action) {
       return Object.assign({}, state, walletConfig)
     case TOGGLE_WALLET_CONFIG:
       walletConfig = state;
+      if(action.prop === 'autogenerateHDPath' && action.checked) {
+        walletConfig.wallet.HDPath = {
+          masterKey: "m",
+          purpose: "44'",
+          coinCode: "145'",
+          account: "0'",
+          change: "0",
+          address_index: "0"
+        };
+      }
+
+      if(action.prop === 'usePassword' && !action.checked) {
+        walletConfig.wallet.password = "";
+      }
+
+      if(action.prop === 'displayTestnet' && action.checked) {
+        walletConfig.wallet.network = 'testnet';
+      } else if(action.prop === 'displayTestnet' && !action.checked) {
+        walletConfig.wallet.network = 'bitcoin';
+      }
 
       walletConfig.wallet[action.prop] = action.checked;
       return Object.assign({}, state, walletConfig)
