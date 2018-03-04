@@ -675,6 +675,16 @@ a.pure-button-primary {
   color: $medBlue;
 }
 
+.importAndExportBtn:hover{
+  border: none;
+  background: none;
+}
+
+.importAndExportBtn:focus{
+  border: none;
+  background: none;
+}
+
 #keyImportAndExportModal {
   .modal-body {
 

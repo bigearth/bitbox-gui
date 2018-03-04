@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import ImportAndExport from '../components/ImportAndExport';
 import {
-  createImportAndExport,
+  toggleVisibility,
   toggleExportCopied,
   importStore
 } from '../actions/ImportAndExportActions';
@@ -14,8 +14,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    createImportAndExport: (configuration) => {
-      dispatch(createImportAndExport());
+    toggleVisibility: () => {
+      dispatch(toggleExportCopied(false));
+      dispatch(toggleVisibility());
     },
     toggleExportCopied: (val) => {
       dispatch(toggleExportCopied(val));
