@@ -108,8 +108,6 @@ class App extends Component {
 
   componentDidMount() {
     this.createHDWallet();
-    // store.set('accounts', accounts);
-  //
   //   this.createBlockchain(addresses);
   }
 
@@ -125,8 +123,7 @@ class App extends Component {
     accounts.forEach((account, index) => {
 
       let address = BitcoinCash.fromWIF(account.privateKeyWIF, walletConfig.network).getAddress();
-
-      reduxStore.dispatch(createAccount({
+      let formattedAccount = {
         title: account.title,
         index: account.index,
         privateKeyWIF: account.privateKeyWIF,
@@ -134,8 +131,11 @@ class App extends Component {
         xpub: account.xpub,
         legacy: address,
         cashAddr: BitcoinCash.toCashAddress(address)
-      }))
+      };
+
+      reduxStore.dispatch(createAccount(formattedAccount));
     });
+    store.set('state', reduxStore.getState());
   }
 
   createBlockchain(addresses) {
