@@ -3,7 +3,8 @@ import WalletConfiguration from '../components/WalletConfiguration'
 import BitcoinCash from '../utilities/BitcoinCash';
 import {
   toggleWalletConfig,
-  updateWalletConfig
+  updateWalletConfig,
+  updateStore
 } from '../actions/ConfigurationActions';
 
 import {
@@ -58,6 +59,7 @@ const mapDispatchToProps = (dispatch) => {
           cashAddr: BitcoinCash.toCashAddress(address)
         }))
       });
+      dispatch(updateStore());
     }
   }
 }

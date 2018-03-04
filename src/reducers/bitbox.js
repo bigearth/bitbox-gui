@@ -15,7 +15,10 @@ const rootReducer = (state, action) => {
     state = JSON.parse(action.store)
     state.importAndExport.importState = true;
     state.importAndExport.activePane = 'import';
+  } else if(action.type === 'UPDATE_STORE') {
+    store.set('state', state);
   }
+
   return bitbox(state, action)
 }
  

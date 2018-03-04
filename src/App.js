@@ -46,7 +46,8 @@ import bitbox from './reducers/bitbox'
 import {
   createConfig,
   toggleWalletConfig,
-  updateWalletConfig
+  updateWalletConfig,
+  updateStore
 } from './actions/ConfigurationActions';
 
 import {
@@ -111,6 +112,7 @@ class App extends Component {
   //   this.createBlockchain(addresses);
   }
 
+
   createHDWallet() {
     let walletConfig = reduxStore.getState().configuration.wallet;
     let [rootSeed, masterPrivateKey, mnemonic, HDPath, accounts] = BitcoinCash.createHDWallet(walletConfig);
@@ -135,7 +137,7 @@ class App extends Component {
 
       reduxStore.dispatch(createAccount(formattedAccount));
     });
-    store.set('state', reduxStore.getState());
+    reduxStore.dispatch(updateStore());
   }
 
   createBlockchain(addresses) {
