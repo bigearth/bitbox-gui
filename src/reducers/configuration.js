@@ -22,6 +22,18 @@ export default function configuration(state = {}, action) {
       if(isNaN(action.value) === false) {
         action.value = +action.value;
       }
+      if(action.prop === 'HDPath' && !action.value.coinCode) {
+        let val = action.value.split('/');
+        action.value = {
+          masterKey: val.shift(),
+          purpose: val.shift(),
+          coinCode: val.join('/'),
+          account: "0'",
+          change: "0",
+          address_index: "0"
+        };
+      }
+
       walletConfig.wallet[action.prop] = action.value;
       return Object.assign({}, state, walletConfig)
     default:

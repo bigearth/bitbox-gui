@@ -111,6 +111,8 @@ class Wallet extends Component {
       />;
     }
 
+    let HDPath = `m/${this.props.configuration.HDPath.purpose}/${this.props.configuration.HDPath.coinCode}`;
+
     return (
       <div className="Wallet content pure-g">
         <div className="pure-u-1-1">
@@ -122,7 +124,7 @@ class Wallet extends Component {
           </ul>
           <ul className='subheader'>
             <li className='content-head'>{this.props.configuration.mnemonic}</li>
-            <li className='content-head right'>{this.props.configuration.HDPath.replace(/\/$/, "")}/account_index&rsquo;/0/0</li>
+            <li className='content-head right'>{HDPath}/account_index&rsquo;/0/0</li>
           </ul>
           <table className="pure-table">
             <tbody>

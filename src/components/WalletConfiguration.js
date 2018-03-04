@@ -39,7 +39,7 @@ class WalletConfiguration extends Component {
     let customPath;
     if(!this.props.configuration.wallet.autogenerateHDPath) {
       customPathLabel = <label>Enter the HD path you wish to use</label>;
-      customPath = <input id='path' type='text' placeholder={this.props.configuration.wallet.path} onChange={this.props.handleConfigChange.bind(this)} />;
+      customPath = <input id='HDPath' type='text' placeholder={this.props.configuration.wallet.path} onChange={this.props.handleConfigChange.bind(this)} />;
     }
 
     let customPasswordLabel;

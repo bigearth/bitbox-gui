@@ -149,23 +149,7 @@ class BitcoinCash {
     // create master private key
     let masterPrivateKey = BitcoinCash.fromSeedBuffer(rootSeed, config.network);
 
-    let HDPath;
-    if(config.autogeneratePath) {
-      // create BIP 44 HD path
-      // more info: https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
-      // m / purpose' / coin_type' / account' / change / address_index
-
-      // purpose is always 44' to show the wallet is BIP 44 compliant
-      let purpose = "44'";
-
-      // BCH's coin code is 145'
-      let coin = "145'";
-
-      let path = `m/${purpose}/${coin}`;
-      HDPath = path;
-    } else {
-      HDPath = `m/${config.HDPath.purpose}/${config.HDPath.coinCode}`
-    }
+    let HDPath = `m/${config.HDPath.purpose}/${config.HDPath.coinCode}`
 
     let accounts = [];
 
@@ -187,7 +171,7 @@ class BitcoinCash {
       // addresses.push(new Address(BitcoinCash.toCashAddress(account.derive(i).getAddress()), account.derive(i).keyPair.toWIF()));
     };
 
-    return [rootSeed, masterPrivateKey, mnemonic, HDPath, accounts];
+    return [rootSeed, masterPrivateKey, mnemonic, config.HDPath, accounts];
   }
 
   static signMessage(message, privateKeyWIF) {
