@@ -68,5 +68,3 @@ const WalletConfigurationContainer = connect(
 )(WalletConfiguration)
  
 export default WalletConfigurationContainer
-
-// bitcoincash:qp0cs8pldmefsjguhdhfnce745z0pxer0sth0z8dwk
