@@ -149,7 +149,7 @@ class BitcoinCash {
     // create master private key
     let masterPrivateKey = BitcoinCash.fromSeedBuffer(rootSeed, config.network);
 
-    let HDPath = config.HDPath;
+    let HDPath;
     if(config.autogeneratePath) {
       // create BIP 44 HD path
       // more info: https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
@@ -163,6 +163,8 @@ class BitcoinCash {
 
       let path = `m/${purpose}/${coin}`;
       HDPath = path;
+    } else {
+      HDPath = `m/${config.HDPath.purpose}/${config.HDPath.coinCode}`
     }
 
     let accounts = [];
@@ -170,10 +172,10 @@ class BitcoinCash {
     for (let i = 0; i < config.totalAccounts; i++) {
       // create accounts
       // follow BIP 44 account discovery algo https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#account-discovery
-      let account = masterPrivateKey.derivePath(`${config.HDPath.replace(/\/$/, "")}/${i}'`);
+      let account = masterPrivateKey.derivePath(`${HDPath.replace(/\/$/, "")}/${i}'`);
       let xpriv = account.toBase58();
       let xpub = account.neutered().toBase58();
-      let address = masterPrivateKey.derivePath(`${config.HDPath.replace(/\/$/, "")}/${i}'/0/0`);
+      let address = masterPrivateKey.derivePath(`${HDPath.replace(/\/$/, "")}/${i}'/${config.HDPath.change}/${config.HDPath.address_index}`);
 
       accounts.push({
         title: '',

@@ -10,7 +10,14 @@ class Configuration {
       network: 'bitcoin',
       mnemonic: '',
       totalAccounts: 10,
-      HDPath: "m/44'/145'/0'/0/0",
+      HDPath: {
+        masterKey: "m",
+        purpose: "44'",
+        coinCode: "145'",
+        account: "0'",
+        change: "0",
+        address_index: "0"
+      },
       password: ''
     };
   }
