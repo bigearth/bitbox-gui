@@ -49,7 +49,7 @@ class ImportAndExport extends Component {
           <span className={ importState ? 'hidden' : '' }>{ normalImportIcon } import</span>
           <span className={ importState ? '' : 'hidden' }>{ successfulImportIcon } imported</span>
         </button>
-        <textarea id="import" onChange={this.updateTmpStore.bind(this)} value={this.state.tmpStore}></textarea>
+        <textarea placeholder='Paste BITBOX state tree' id="import" onChange={this.updateTmpStore.bind(this)} value={this.state.tmpStore}></textarea>
       </div>;
     } else {
       textarea = <div>
