@@ -3,7 +3,7 @@ import BitcoinCash from '../utilities/BitcoinCash';
 var QRCode = require('qrcode.react');
 
 
-class ConvertDisplay extends Component {
+class Convert extends Component {
   constructor(props) {
     super(props);
 
@@ -94,7 +94,7 @@ class ConvertDisplay extends Component {
         </div>;
     }
     return (
-      <div className="ConvertDisplay">
+      <div className="Convert">
         <h2 className="content-head is-center">Converter</h2>
         <div className="pure-g">
           <div className="l-box-lrg pure-u-1-1">
@@ -112,4 +112,4 @@ class ConvertDisplay extends Component {
   }
 }
 
-export default ConvertDisplay;
+export default Convert;

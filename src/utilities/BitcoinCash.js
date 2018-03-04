@@ -137,57 +137,41 @@ class BitcoinCash {
   static createHDWallet(config) {
     // nore info: https://github.com/bitcoinbook/bitcoinbook/blob/develop/ch05.asciidoc
 
-    if(config.autogenerateMnemonic) {
+    let mnemonic = config.mnemonic;
+    if(config.autogenerateHDMnemonic) {
       // create a random mnemonic w/ user provided entropy size
-      config.mnemonic = BitcoinCash.entropyToMnemonic(config.entropy);
+      mnemonic = BitcoinCash.entropyToMnemonic(config.entropy);
     }
 
     // create 512 bit HMAC-SHA512 root seed
-    let rootSeed = BitcoinCash.mnemonicToSeed(config.mnemonic, config.password);
+    let rootSeed = BitcoinCash.mnemonicToSeed(mnemonic, config.password);
 
     // create master private key
-    let masterkey = BitcoinCash.fromSeedBuffer(rootSeed, config.network);
+    let masterPrivateKey = BitcoinCash.fromSeedBuffer(rootSeed, config.network);
 
+    let HDPath = `m/${config.HDPath.purpose}/${config.HDPath.coinCode}`
 
-
-    // let tmpkey = BitcoinCash.fromSeedBuffer(rootSeed);
-
-    if(config.autogeneratePath) {
-      // create BIP 44 HD path
-      // more info: https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
-      // m / purpose' / coin_type' / account' / change / address_index
-
-      // purpose is always 44' to show the wallet is BIP 44 compliant
-      let purpose = "44'";
-
-      // BCH's coin code is 145'
-      let coin = "145'";
-
-      let path = `m/${purpose}/${coin}`;
-      config.path = path;
-    }
-
-    let addresses = [];
-    let account;
-    let tmpPath;
+    let accounts = [];
 
     for (let i = 0; i < config.totalAccounts; i++) {
       // create accounts
       // follow BIP 44 account discovery algo https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#account-discovery
-      let tmp = masterkey.derivePath(`${config.path.replace(/\/$/, "")}/${i}'`);
-      let xpriv = tmp.toBase58();
-      let xpub = tmp.neutered().toBase58();
-      account = masterkey.derivePath(`${config.path.replace(/\/$/, "")}/${i}'/0/0`);
+      let account = masterPrivateKey.derivePath(`${HDPath.replace(/\/$/, "")}/${i}'`);
+      let xpriv = account.toBase58();
+      let xpub = account.neutered().toBase58();
+      let address = masterPrivateKey.derivePath(`${HDPath.replace(/\/$/, "")}/${i}'/${config.HDPath.change}/${config.HDPath.address_index}`);
 
-      addresses.push(new Address({
-        privateKeyWIF: account.keyPair.toWIF(),
+      accounts.push({
+        title: '',
+        privateKeyWIF: address.keyPair.toWIF(),
         xpriv: xpriv,
-        xpub: xpub
-      }));
+        xpub: xpub,
+        index: i
+      });
       // addresses.push(new Address(BitcoinCash.toCashAddress(account.derive(i).getAddress()), account.derive(i).keyPair.toWIF()));
     };
 
-    return [config.mnemonic, config.path, addresses];
+    return [rootSeed, masterPrivateKey, mnemonic, config.HDPath, accounts];
   }
 
   static signMessage(message, privateKeyWIF) {

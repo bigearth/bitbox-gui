@@ -17,17 +17,19 @@ import Transaction from './models/Transaction';
 import Output from './models/Output';
 import Input from './models/Input';
 import Utxo from './models/Utxo';
-import Wallet from './models/Wallet';
+
+import WalletContainer from './containers/WalletContainer'
+import SignAndVerifyContainer from './containers/SignAndVerifyContainer'
+import ImportAndExportContainer from './containers/ImportAndExportContainer'
 
 // custom components
-import WalletDisplay from './components/WalletDisplay';
 import Blocks from './components/Blocks';
 import BlockDetails from './components/BlockDetails';
-// import AddressDisplay from './components/AddressDisplay';
+// import Account from './components/Account';
 import TransactionsDisplay from './components/TransactionsDisplay';
-import ConvertDisplay from './components/ConvertDisplay';
-import MessageDisplay from './components/MessageDisplay';
-import ConfigurationDisplay from './components/ConfigurationDisplay';
+import Convert from './components/Convert';
+import SignAndVerify from './components/SignAndVerify';
+import Configuration from './components/Configuration';
 
 // utilities
 import Crypto from './utilities/Crypto';
@@ -37,54 +39,103 @@ import Miner from './utilities/Miner';
 // css
 import './styles/app.scss';
 
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import bitbox from './reducers/bitbox'
+
+import {
+  createConfig,
+  toggleWalletConfig,
+  updateWalletConfig
+} from './actions/ConfigurationActions';
+
+import {
+  createWallet,
+  addRootSeed,
+  addMasterPrivateKey,
+  createAccount
+} from './actions/WalletActions';
+
+import {
+  createImportAndExport,
+  toggleVisibility,
+  toggleExportCopied
+} from './actions/ImportAndExportActions';
+
+let reduxStore = createStore(bitbox)
+
+// const unsubscribe = reduxStore.subscribe(() =>{
+//   console.log(JSON.stringify(reduxStore.getState(), null, 2))
+//   console.log('*********************************************');
+// })
+//
+// stop listening to state updates
+// unsubscribe()
+
+
 class App extends Component {
 
   constructor(props) {
     super(props);
+    // let mnemonic = 'business antique staff gap chief harbor federal answer bright icon badge polar';
+    // Write default config top reduxStore
+    reduxStore.dispatch(createConfig());
+    reduxStore.dispatch(createImportAndExport());
+    // reduxStore.dispatch(toggleWalletConfig(false, 'autogenerateHDMnemonic'))
+    // reduxStore.dispatch(toggleWalletConfig(false, 'autogenerateHDPath'))
+    // reduxStore.dispatch(toggleWalletConfig('displayCashaddr', false))
+    // reduxStore.dispatch(toggleWalletConfig(false, 'displayTestnet'))
+    // reduxStore.dispatch(toggleWalletConfig(false, 'usePassword'))
+    //
+    // reduxStore.dispatch(updateWalletConfig(32, 'entropy'))
+    // reduxStore.dispatch(updateWalletConfig('test', 'network'))
+    // reduxStore.dispatch(updateWalletConfig(25, 'totalAccounts'))
+    // reduxStore.dispatch(updateWalletConfig('l337', 'password'))
 
     // Create HD wallet w/ default configuration
-    this.wallet = new Wallet({
-      entropy: 16,
-      network: 'bitcoin',
-      mnemonic: '',
-      totalAccounts: 10,
-      autogenerateMnemonic: true,
-      autogeneratePath: true,
-      path: '',
-      displayCashaddr: true,
-      password: '',
-      usePassword: false,
-      displayTestnet: false
-    });
-    store.set('wallet', this.wallet);
+    // store.set('wallet', this.wallet);
 
-    this.blockchain = new Blockchain();
-
-    this.utxoSet = new Utxo();
-    // Miner Utility for handling txs and blocks
-
+    // this.blockchain = new Blockchain();
+    //
+    // this.utxoSet = new Utxo();
+    // // Miner Utility for handling txs and blocks
+    // this.miner = new Miner(this.blockchain, this.utxoSet, this.wallet.network);
     this.state = {
-      mnemonic: this.wallet.mnemonic,
       addresses: [],
-      blockchainInstance: this.blockchain,
-      utxoSet: this.utxoSet,
-      password: '',
-      showCreateBtn: false
+      blockchainInstance: ''
     };
-    this.miner = new Miner(this.blockchain, this.utxoSet, this.wallet.network);
   }
 
   componentDidMount() {
-    let [mnemonic, path, addresses] = BitcoinCash.createHDWallet(this.wallet);
-    store.set('addresses', addresses);
+    this.createHDWallet();
+  //   this.createBlockchain(addresses);
+  }
 
-    this.setState({
-      mnemonic: mnemonic,
-      path: path,
-      addresses: addresses
+  createHDWallet() {
+    let walletConfig = reduxStore.getState().configuration.wallet;
+    let [rootSeed, masterPrivateKey, mnemonic, HDPath, accounts] = BitcoinCash.createHDWallet(walletConfig);
+    reduxStore.dispatch(createWallet());
+    reduxStore.dispatch(addRootSeed(rootSeed));
+    reduxStore.dispatch(addMasterPrivateKey(masterPrivateKey.chainCode));
+    reduxStore.dispatch(updateWalletConfig('mnemonic', mnemonic));
+    reduxStore.dispatch(updateWalletConfig('HDPath', HDPath));
+
+    accounts.forEach((account, index) => {
+
+      let address = BitcoinCash.fromWIF(account.privateKeyWIF, walletConfig.network).getAddress();
+      let formattedAccount = {
+        title: account.title,
+        index: account.index,
+        privateKeyWIF: account.privateKeyWIF,
+        xpriv: account.xpriv,
+        xpub: account.xpub,
+        legacy: address,
+        cashAddr: BitcoinCash.toCashAddress(address)
+      };
+
+      reduxStore.dispatch(createAccount(formattedAccount));
     });
-
-    this.createBlockchain(addresses);
+    store.set('state', reduxStore.getState());
   }
 
   createBlockchain(addresses) {
@@ -114,25 +165,8 @@ class App extends Component {
     this.miner.pushGenesisBlock(genesisBlock);
   }
 
-  resetBitbox() {
-    this.blockchain = new Blockchain();
-
-    // Miner Utility for handling txs and blocks
-    this.miner = new Miner(this.blockchain, this.utxoSet, this.wallet.network);
-
-    let [mnemonic, path, addresses] = BitcoinCash.createHDWallet(this.wallet);
-    store.set('addresses', addresses);
-    this.setState({
-      mnemonic: mnemonic,
-      path: path,
-      addresses: addresses
-    });
-    this.createBlockchain(addresses);
-    this.handleBlockchainUpdate(this.blockchain);
-  }
-
   handlePathMatch(path) {
-    if(path === '/' || path === '/blocks' || path === '/transactions' || path === '/configuration/accounts-and-keys') {
+    if(path === '/' || path === '/blocks' || path === '/transactions' || path === '/configuration/wallet') {
       return true;
     } else {
       return false;
@@ -149,47 +183,6 @@ class App extends Component {
     this.setState({
       utxoSet: utxoSet
     })
-  }
-
-  handleEntropySliderChange(value) {
-    this.wallet.entropy = value;
-  }
-
-  handleConfigChange(value, id) {
-    if(id === 'mnemonic') {
-      this.wallet.mnemonic = value;
-    } else if (id === 'path') {
-      this.wallet.path = value;
-    } else if (id === 'password') {
-      this.wallet.password = value;
-    } else if (id === 'totalAccounts') {
-      this.wallet.totalAccounts = value;
-    }
-    store.set('wallet', this.wallet);
-  }
-
-  handleConfigToggle(value, id) {
-    if(id === 'displayTestnet') {
-      if(value) {
-        this.wallet.network = 'testnet';
-      } else {
-        this.wallet.network = 'bitcoin';
-      }
-      this.wallet.displayTestnet = value;
-    } else if(id === 'displayCashaddr') {
-
-      this.wallet.displayCashaddr = value;
-    } else if(id === 'autogenerateMnemonic') {
-
-      this.wallet.autogenerateMnemonic = value;
-    } else if(id === 'autogeneratePath') {
-
-      this.wallet.autogeneratePath = value;
-    } else if(id === 'usePassword') {
-
-      this.wallet.usePassword = value;
-    }
-    store.set('wallet', this.wallet);
   }
 
   createBlock() {
@@ -233,6 +226,14 @@ class App extends Component {
     this.handleUtxoUpdate(utxoSet);
   }
 
+  showImport() {
+    reduxStore.dispatch(toggleVisibility('import'));
+  }
+
+  showExport() {
+    reduxStore.dispatch(toggleVisibility('export'));
+  }
+
   render() {
 
     const pathMatch = (match, location) => {
@@ -241,27 +242,6 @@ class App extends Component {
       }
       return this.handlePathMatch(match.path);
     }
-
-    let list = []
-    if (this.state.addresses.length) {
-      this.state.addresses.forEach(address => {
-        list.push(<li>Address: {address} | Balance: 0 | TX Count: 0 |</li>);
-      });
-    }
-
-    const WalletPage = (props) => {
-      return (
-        <WalletDisplay
-          mnemonic={this.state.mnemonic}
-          path={this.state.path}
-          blockchainInstance={this.state.blockchainInstance}
-          addresses={this.state.addresses}
-          utxoSet={this.state.utxoSet}
-          displayCashaddr={this.state.displayCashaddr}
-          wallet={this.wallet}
-        />
-      );
-    };
 
     const BlocksPage = (props) => {
       return (
@@ -288,7 +268,7 @@ class App extends Component {
 
     const AddressPage = (props) => {
       return (
-        <AddressDisplay
+        <Account
           blockchainInstance={this.state.blockchainInstance}
           match={props.match}
         />
@@ -307,7 +287,7 @@ class App extends Component {
 
     const ConvertPage = (props) => {
       return (
-        <ConvertDisplay
+        <Convert
           wallet={this.wallet}
         />
       );
@@ -315,7 +295,7 @@ class App extends Component {
 
     const MessagePage = (props) => {
       return (
-        <MessageDisplay
+        <SignAndVerify
           addresses={this.state.addresses}
         />
       );
@@ -323,108 +303,115 @@ class App extends Component {
 
     const ConfigurationPage = (props) => {
       return (
-        <ConfigurationDisplay
+        <Configuration
           match={props.match}
-          resetBitbox={this.resetBitbox.bind(this)}
-          handleEntropySliderChange={this.handleEntropySliderChange.bind(this)}
-          wallet={this.wallet}
-          handleConfigToggle={this.handleConfigToggle.bind(this)}
-          handleConfigChange={this.handleConfigChange.bind(this)}
         />
       );
     };
 
     let chainlength = 0;
-    if(this.state.blockchainInstance.chain) {
+    if(this.state.blockchainInstance && this.state.blockchainInstance.chain) {
       chainlength = this.state.blockchainInstance.chain.length - 1;
     }
               // <li className="pure-menu-item">
               //   <button className='pure-button danger-background' onClick={this.createBlock.bind(this)}><i className="fas fa-cube"></i> Create block</button>
               // </li>
+                // <li className="pure-menu-item">
+                //   <NavLink
+                //     isActive={pathMatch}
+                //     activeClassName="pure-menu-selected"
+                //     className="pure-menu-link"
+                //     to="/blocks">
+                //     <i className="fas fa-cubes"></i> Blocks
+                //   </NavLink>
+                // </li>
 
     return (
-      <Router>
-        <div className="header main-header">
-          <div className="pure-menu pure-menu-horizontal">
-            <Link className="pure-menu-heading" to="/">BitBox</Link>
-            <ul className="pure-menu-list">
+      <Provider store={reduxStore}>
+        <Router>
+          <div className="header main-header">
+            <div className="pure-menu pure-menu-horizontal">
+              <Link className="pure-menu-heading" to="/">BitBox</Link>
+              <ul className="pure-menu-list">
 
-              <li className="pure-menu-item">
-                <NavLink
-                  isActive={pathMatch}
-                  activeClassName="pure-menu-selected"
-                  className="pure-menu-link"
-                  to="/">
-                  <i className="fas fa-user"></i> Wallet
-                </NavLink>
-              </li>
-              <li className="pure-menu-item">
-                <NavLink
-                  isActive={pathMatch}
-                  activeClassName="pure-menu-selected"
-                  className="pure-menu-link"
-                  to="/blocks">
-                  <i className="fas fa-cubes"></i> Blocks
-                </NavLink>
-              </li>
-              <li className="pure-menu-item">
-                <NavLink
-                  isActive={pathMatch}
-                  activeClassName="pure-menu-selected"
-                  className="pure-menu-link"
-                  to="/convert">
-                  <i className="fas fa-qrcode" /> Convert
-                </NavLink>
-              </li>
-              <li className="pure-menu-item">
-                <NavLink
-                  isActive={pathMatch}
-                  activeClassName="pure-menu-selected"
-                  className="pure-menu-link"
-                  to="/message">
-                  <i className="far fa-check-circle"></i> Sign &amp; Verify
-                </NavLink>
-              </li>
-            </ul>
-            <ul className="pure-menu-list right">
-              <li className="pure-menu-item">
-                <NavLink
-                  isActive={pathMatch}
-                  activeClassName="pure-menu-selected"
-                  className="pure-menu-link"
-                  to="/configuration/accounts-and-keys">
-                  <i className="fas fa-cog" />
-                </NavLink>
-              </li>
-            </ul>
+                <li className="pure-menu-item">
+                  <NavLink
+                    isActive={pathMatch}
+                    activeClassName="pure-menu-selected"
+                    className="pure-menu-link"
+                    to="/">
+                    <i className="fas fa-user"></i> Wallet
+                  </NavLink>
+                </li>
+                <li className="pure-menu-item">
+                  <NavLink
+                    isActive={pathMatch}
+                    activeClassName="pure-menu-selected"
+                    className="pure-menu-link"
+                    to="/convert">
+                    <i className="fas fa-qrcode" /> Convert
+                  </NavLink>
+                </li>
+                <li className="pure-menu-item">
+                  <NavLink
+                    isActive={pathMatch}
+                    activeClassName="pure-menu-selected"
+                    className="pure-menu-link"
+                    to="/signandverify">
+                    <i className="far fa-check-circle"></i> Sign &amp; Verify
+                  </NavLink>
+                </li>
+              </ul>
+              <ul className="pure-menu-list right">
+                <li className="pure-menu-item">
+                  <button className="importAndExportBtn" onClick={this.showExport.bind(this)}>
+                    <i className="fas fa-upload" />
+                  </button>
+                </li>
+                <li className="pure-menu-item">
+                  <button className="importAndExportBtn" onClick={this.showImport.bind(this)}>
+                    <i className="fas fa-download" />
+                  </button>
+                </li>
+                <li className="pure-menu-item">
+                  <NavLink
+                    isActive={pathMatch}
+                    activeClassName="pure-menu-selected"
+                    className="pure-menu-link"
+                    to="/configuration/wallet">
+                    <i className="fas fa-cog" />
+                  </NavLink>
+                </li>
+              </ul>
+            </div>
+            <div className="pure-menu pure-menu-horizontal networkInfo">
+              <ul className="pure-menu-list">
+                <li className="pure-menu-item">
+                  CURRENT BLOCK <br />
+                  {chainlength}
+                </li>
+                <li className="pure-menu-item">
+                  RPC SERVER <br /> http://127.0.0.1:8332
+                </li>
+                <li className="pure-menu-item">
+                  MINING STATUS <br /> AUTOMINING <i className="fas fa-spinner fa-spin" />
+                </li>
+              </ul>
+            </div>
+            <ImportAndExportContainer />
+            <Switch>
+              <Route exact path="/blocks" component={BlocksPage}/>
+              <Route path="/blocks/:block_id" component={BlockPage}/>
+              <Route path="/transactions/:transaction_id" component={TransactionsPage}/>
+              <Route path="/convert" component={ConvertPage}/>
+              <Route path="/signandverify" component={SignAndVerifyContainer}/>
+              <Route path="/configuration" component={ConfigurationPage}/>
+              <Route exact path="/" component={WalletContainer}/>
+              <Redirect from='*' to='/' />
+            </Switch>
           </div>
-          <div className="pure-menu pure-menu-horizontal networkInfo">
-            <ul className="pure-menu-list">
-
-              <li className="pure-menu-item">
-                CURRENT BLOCK <br />
-                {chainlength}
-              </li>
-              <li className="pure-menu-item">
-                RPC SERVER <br /> http://127.0.0.1:8332
-              </li>
-              <li className="pure-menu-item">
-                MINING STATUS <br /> AUTOMINING <i className="fas fa-spinner fa-spin" />
-              </li>
-            </ul>
-          </div>
-          <Switch>
-            <Route exact path="/blocks" component={BlocksPage}/>
-            <Route path="/blocks/:block_id" component={BlockPage}/>
-            <Route path="/transactions/:transaction_id" component={TransactionsPage}/>
-            <Route path="/convert" component={ConvertPage}/>
-            <Route path="/message" component={MessagePage}/>
-            <Route path="/configuration" component={ConfigurationPage}/>
-            <Route exact path="/" component={WalletPage}/>
-            <Redirect from='*' to='/' />
-          </Switch>
-        </div>
-      </Router>
+        </Router>
+      </Provider>
     );
   }
 }

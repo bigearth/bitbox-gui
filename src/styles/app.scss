@@ -348,31 +348,31 @@ a.pure-button-primary {
   color: $slate;
 }
 
-.WalletDisplay ul {
+.Wallet ul {
   list-style-type: none;
   color: $darkGrey;
   padding-left: 1em;
   padding-right: 1em;
 }
 
-.WalletDisplay ul.subheader li {
+.Wallet ul.subheader li {
   display: inline;
 }
 
-.WalletDisplay ul.subheader {
+.Wallet ul.subheader {
   font-size: 0.8em;
   margin: 0;
 }
 
-.WalletDisplay.content {
+.Wallet.content {
   padding: 1em 0;
 }
 
-.WalletDisplay.content, .Blocks, .WrapperBlockDetails, .ConfigurationDisplay, .Transaction, .ConvertDisplay, .MessageDisplay {
+.Wallet.content, .Blocks, .WrapperBlockDetails, .Configuration, .Transaction, .Convert, .SignAndVerify {
   background: $white;
 }
 
-.WalletDisplay td {
+.Wallet td {
   padding: 1.2em;
 }
 
@@ -408,19 +408,19 @@ a.pure-button-primary {
   font-weight: normal;
 }
 
-.AddressDisplay td, .Blocks td {
+.Account td, .Blocks td {
   padding: 1.25em 1em;
 }
 
-.AddressDisplay td.important .subheader, .Blocks td.important .subheader {
+.Account td.important .subheader, .Blocks td.important .subheader {
   font-size: 0.6em;
 }
 
-.AddressDisplay td.important, .Blocks td.important {
+.Account td.important, .Blocks td.important {
   font-size: 1.3em;
 }
 
-.AddressDisplay {
+.Account {
   .danger {
     font-size: .6em;
   }
@@ -453,7 +453,7 @@ a.pure-button-primary {
   padding-right: 10px;
 }
 
-.AddressDisplay .danger {
+.Account .danger {
   color: $danger;
 }
 
@@ -574,12 +574,12 @@ a.pure-button-primary {
   width: 10%;
 }
 
-.MessageDisplay {
+.SignAndVerify {
   padding-top: 15px;
   margin-top: 0;
 }
 
-.ConvertDisplay {
+.Convert {
   padding-top: 15px;
   margin-top: 0;
   text-align: center;
@@ -600,7 +600,7 @@ a.pure-button-primary {
   }
 }
 
-.MessageDisplay {
+.SignAndVerify {
   textarea, input {
     width: 100%;
   }
@@ -614,7 +614,7 @@ a.pure-button-primary {
   color: darkGrey;
 }
 
-/* The Modal (background) */
+/* The AccountModal (background) */
 .modal {
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
@@ -628,7 +628,7 @@ a.pure-button-primary {
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
-/* Modal Content */
+/* AccountModal Content */
 .modal-content {
     background-color: #fefefe;
     margin: auto;
@@ -667,4 +667,39 @@ a.pure-button-primary {
     color: #000;
     text-decoration: none;
     cursor: pointer;
+}
+
+.importAndExportBtn {
+  border: none;
+  background: none;
+  color: $medBlue;
+}
+
+.importAndExportBtn:hover{
+  border: none;
+  background: none;
+}
+
+.importAndExportBtn:focus{
+  border: none;
+  background: none;
+}
+
+#keyImportAndExportModal {
+  .modal-body {
+
+    .ImportAndExport {
+      height: 400px;
+
+      textarea {
+        width: 100%;
+        height: 350px;
+        border: none;
+      }
+    }
+  }
+}
+
+.hide {
+  display: none;
 }

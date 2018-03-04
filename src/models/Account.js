@@ -1,9 +1,13 @@
-import Address from './Address';
-
 class Account {
-  constructor(name) {
-    name: string = name;
-    this.addresses: Array<Address> = [];
+  constructor(config) {
+    this.title = config.title;
+    this.index = config.index;
+    this.privateKeyWIF = config.privateKeyWIF;
+    this.xpriv = config.xpriv;
+    this.xpub = config.xpub;
+    this.displayAccount = false;
+    this.legacy = config.legacy;
+    this.cashAddr = config.cashAddr;
   }
 }
 

@@ -13,13 +13,15 @@ import bodyParser from 'body-parser';
 class Server {
   constructor() {
     const server = express();
+    let protocol = 'http';
+    let ipAddress = '127.0.0.1';
     let port = 8332;
     server.use(cors());
     server.use(bodyParser.json()); // support json encoded bodies
     server.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
     server.post('/', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
-      axios.post(`http://127.0.0.1:${port}/${req.body.method}`, req.body)
+      axios.post(`${protocol}://${ipAddress}:${port}/${req.body.method}`, req.body)
       .then((response) => {
         res.send({
           result: response.data
@@ -35,9 +37,10 @@ class Server {
       let params = req.body.params;
       let nrequired = params[0];
       let keys = params[1];
-      let addresses = store.get('addresses');
-      let wallet = store.get('wallet');
-      let resp = BitcoinCash.createMultiSig(nrequired, keys, addresses, wallet);
+      let state = store.get('state');
+      let accounts = state.wallet.accounts;
+      let wallet = state.configuration.wallet;
+      let resp = BitcoinCash.createMultiSig(nrequired, keys, accounts, wallet);
       res.send(resp.address);
     });
 
@@ -50,11 +53,7 @@ class Server {
     server.post('/backupwallet', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      let addresses = [];
-      store.get('addresses').forEach((address, index) => {
-        addresses.push(address.privateKeyWIF);
-      });
-      res.send(addresses);
+      res.send(store.get('state').wallet);
     });
 
     server.post('/clearbanned', (req, res) => {
@@ -68,9 +67,10 @@ class Server {
       let params = req.body.params;
       let nrequired = params[0];
       let keys = params[1];
-      let addresses = store.get('addresses');
-      let wallet = store.get('wallet');
-      let resp = BitcoinCash.createMultiSig(nrequired, keys, addresses, wallet);
+      let state = store.get('state');
+      let accounts = state.wallet.accounts;
+      let wallet = state.configuration.wallet;
+      let resp = BitcoinCash.createMultiSig(nrequired, keys, accounts, wallet);
       res.send(JSON.stringify(
         {
           "address" : resp.address,
@@ -153,11 +153,13 @@ class Server {
 
     server.post('/dumpprivkey', (req, res) =>{
       res.setHeader('Content-Type', 'application/json');
+      let state = store.get('state');
+      let accounts = state.wallet.accounts;
 
-      store.get('addresses').forEach((address, index) => {
-        let tmp = BitcoinCash.fromWIF(address.privateKeyWIF).getAddress();
+      accounts.forEach((account, index) => {
+        let tmp = BitcoinCash.fromWIF(account.privateKeyWIF).getAddress();
         if(tmp === BitcoinCash.toLegacyAddress(req.body.params[0])) {
-          res.send(address.privateKeyWIF);
+          res.send(account.privateKeyWIF);
         }
       });
     });
@@ -165,11 +167,7 @@ class Server {
     server.post('/dumpwallet', (req, res) =>{
       res.setHeader('Content-Type', 'application/json');
 
-      let addresses = [];
-      store.get('addresses').forEach(function(address, index) {
-        addresses.push(address.privateKeyWIF);
-      });
-      res.send(addresses);
+      res.send(store.get('state').wallet);
     });
 
     server.post('/encryptwallet', (req, res) => {
@@ -278,9 +276,11 @@ class Server {
 
     server.post('/getaddressesbyaccount', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
+      let state = store.get('state');
+      let accounts = state.wallet.accounts;
       let addresses = [];
-      store.get('addresses').forEach((address, index) => {
-        addresses.push(BitcoinCash.toCashAddress(BitcoinCash.fromWIF(address.privateKeyWIF).getAddress()));
+      accounts.forEach((account, index) => {
+        addresses.push(account.cashAddr);
       });
       res.send(addresses);
     });
@@ -700,8 +700,10 @@ class Server {
 
     server.post('/getnewaddress', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
+      let state = store.get('state');
+      let accounts = state.wallet.accounts;
 
-      res.send(BitcoinCash.toCashAddress(BitcoinCash.fromWIF(store.get('addresses')[0].privateKeyWIF).getAddress()));
+      res.send(accounts[0].cashAddr);
     });
 
     server.post('/getpeerinfo', (req, res) => {
@@ -754,8 +756,10 @@ class Server {
 
     server.post('/getrawchangeaddress', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
+      let state = store.get('state');
+      let accounts = state.wallet.accounts;
 
-      res.send(BitcoinCash.toCashAddress(BitcoinCash.fromWIF(store.get('addresses')[0].privateKeyWIF).getAddress()));
+      res.send(accounts[0].cashAddr);
     });
 
     server.post('/getrawmempool', (req, res) => {
@@ -1343,9 +1347,11 @@ class Server {
 
     server.post('/signmessage', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
+      let state = store.get('state');
+      let accounts = state.wallet.accounts;
       let address = req.body.params[0];
 
-      let privateKeyWIF = BitcoinCash.returnPrivateKeyWIF(address, store.get('addresses'));
+      let privateKeyWIF = BitcoinCash.returnPrivateKeyWIF(address, accounts);
 
       if(privateKeyWIF === undefined) {
         res.send("BITBOX doesn't have the private key for that address");

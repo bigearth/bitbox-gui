@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import BitcoinCash from '../utilities/BitcoinCash';
 
-class MessageDisplay extends Component {
+class SignAndVerify extends Component {
   constructor(props) {
     super(props);
 
@@ -52,7 +52,7 @@ class MessageDisplay extends Component {
       message1Error: ''
     })
 
-    let privateKeyWIF = BitcoinCash.returnPrivateKeyWIF(this.state.address1, this.props.addresses);
+    let privateKeyWIF = BitcoinCash.returnPrivateKeyWIF(this.state.address1, this.props.wallet.accounts);
     if(privateKeyWIF === 'Received an invalid Bitcoin Cash address as input.') {
       this.setState({
         message1Success: '',
@@ -126,7 +126,7 @@ class MessageDisplay extends Component {
     }
 
     return (
-      <div className="MessageDisplay">
+      <div className="SignAndVerify">
         <h2 className="content-head is-center">Sign &amp; Verify</h2>
         <div className="pure-g">
           <div className="l-box-lrg pure-u-1-2">
@@ -165,4 +165,4 @@ class MessageDisplay extends Component {
   }
 }
 
-export default MessageDisplay;
+export default SignAndVerify;
