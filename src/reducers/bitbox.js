@@ -3,11 +3,13 @@ import { combineReducers } from 'redux'
 import configuration from './configuration';
 import wallet from './wallet';
 import importAndExport from './importAndExport';
+import convert from './convert';
  
 const bitbox = combineReducers({
   configuration,
   wallet,
-  importAndExport
+  importAndExport,
+  convert
 })
 
 const rootReducer = (state, action) => {

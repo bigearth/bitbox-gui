@@ -21,13 +21,13 @@ import Utxo from './models/Utxo';
 import WalletContainer from './containers/WalletContainer'
 import SignAndVerifyContainer from './containers/SignAndVerifyContainer'
 import ImportAndExportContainer from './containers/ImportAndExportContainer'
+import ConvertContainer from './containers/ConvertContainer';
 
 // custom components
 import Blocks from './components/Blocks';
 import BlockDetails from './components/BlockDetails';
 // import Account from './components/Account';
 import TransactionsDisplay from './components/TransactionsDisplay';
-import Convert from './components/Convert';
 import SignAndVerify from './components/SignAndVerify';
 import Configuration from './components/Configuration';
 
@@ -43,6 +43,7 @@ import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import bitbox from './reducers/bitbox'
 
+// redux actions
 import {
   createConfig,
   toggleWalletConfig,
@@ -63,6 +64,10 @@ import {
   toggleExportCopied
 } from './actions/ImportAndExportActions';
 
+import {
+  createConvert
+} from './actions/ConvertActions';
+
 let reduxStore = createStore(bitbox)
 
 // const unsubscribe = reduxStore.subscribe(() =>{
@@ -82,6 +87,7 @@ class App extends Component {
     // Write default config top reduxStore
     reduxStore.dispatch(createConfig());
     reduxStore.dispatch(createImportAndExport());
+    reduxStore.dispatch(createConvert());
     // reduxStore.dispatch(toggleWalletConfig(false, 'autogenerateHDMnemonic'))
     // reduxStore.dispatch(toggleWalletConfig(false, 'autogenerateHDPath'))
     // reduxStore.dispatch(toggleWalletConfig('displayCashaddr', false))
@@ -287,13 +293,6 @@ class App extends Component {
       );
     };
 
-    const ConvertPage = (props) => {
-      return (
-        <Convert
-          wallet={this.wallet}
-        />
-      );
-    };
 
     const MessagePage = (props) => {
       return (
@@ -405,7 +404,7 @@ class App extends Component {
               <Route exact path="/blocks" component={BlocksPage}/>
               <Route path="/blocks/:block_id" component={BlockPage}/>
               <Route path="/transactions/:transaction_id" component={TransactionsPage}/>
-              <Route path="/convert" component={ConvertPage}/>
+              <Route path="/convert" component={ConvertContainer}/>
               <Route path="/signandverify" component={SignAndVerifyContainer}/>
               <Route path="/configuration" component={ConfigurationPage}/>
               <Route exact path="/" component={WalletContainer}/>

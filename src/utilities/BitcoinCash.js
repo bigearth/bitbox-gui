@@ -4,8 +4,9 @@ import Crypto from './Crypto';
 import Bitcoin from 'bitcoinjs-lib';
 import BIP39 from 'bip39';
 import bchaddr from 'bchaddrjs';
-import sb from 'satoshi-bitcoin';
 import bitcoinMessage from 'bitcoinjs-message';
+// var bitcore = require('bitcore-lib');
+
 
 class BitcoinCash {
   // Utility class to wrap the following bitcoin related npm packages
@@ -14,16 +15,6 @@ class BitcoinCash {
   // * https://github.com/bitcoincashjs/bchaddrjs
   // * https://github.com/dawsbot/satoshi-bitcoin
 
-  // Translate coins to satoshi value
-  static toSatoshi(coins) {
-    return sb.toSatoshi(coins);
-  }
-
-  // Translate satoshi to coin value
-  static toBitcoinCash(satoshis) {
-    return sb.toBitcoin(satoshis);
-  }
-
   // Translate address from any address format into a specific format.
   static toLegacyAddress(address) {
     return bchaddr.toLegacyAddress(address);
@@ -31,48 +22,6 @@ class BitcoinCash {
 
   static toCashAddress(address) {
     return bchaddr.toCashAddress(address);
-  }
-
-  // Test for address format.
-  static isLegacyAddress(address) {
-    return bchaddr.isLegacyAddress(address);
-  }
-
-  static isCashAddress(address) {
-    return bchaddr.isCashAddress(address);
-  }
-
-  // Test for address network.
-  static isMainnetAddress(address) {
-    return bchaddr.isMainnetAddress(address);
-  }
-
-  static isTestnetAddress(address) {
-    return bchaddr.isTestnetAddress(address);
-  }
-
-  // Test for address type.
-  static isP2PKHAddress(address) {
-    return bchaddr.isP2PKHAddress(address);
-  }
-
-  static isP2SHAddress(address) {
-    return bchaddr.isP2SHAddress(address);
-  }
-
-  // Detect address format.
-  static detectAddressFormat(address) {
-    return bchaddr.detectAddressFormat(address);
-  }
-
-  // Detect address network.
-  static detectAddressNetwork(address) {
-    return bchaddr.detectAddressNetwork(address);
-  }
-
-  // Detect address type.
-  static detectAddressType(address) {
-    return bchaddr.detectAddressType(address);
   }
 
   static entropyToMnemonic(bytes = 16) {
@@ -157,10 +106,22 @@ class BitcoinCash {
       // create accounts
       // follow BIP 44 account discovery algo https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#account-discovery
       let account = masterPrivateKey.derivePath(`${HDPath.replace(/\/$/, "")}/${i}'`);
+      // console.log('account', account);
       let xpriv = account.toBase58();
       let xpub = account.neutered().toBase58();
       let address = masterPrivateKey.derivePath(`${HDPath.replace(/\/$/, "")}/${i}'/${config.HDPath.change}/${config.HDPath.address_index}`);
+      // let xPubNode = Bitcoin.HDNode.fromBase58(xpub);
 
+      // var HdPublicKey = new bitcore.HDPublicKey.fromString(xpub);
+      // for (let j = 0; j < 1; j++) {
+      //   // console.log('asdasfd', j)
+      //   var derivedPublicKey = HdPublicKey.derive("m/0/"+j).publicKey;
+      //   var addy = derivedPublicKey.toAddress();
+      //   console.log('addy', BitcoinCash.toCashAddress(addy.toString()));
+      // }
+      // console.log('xPubNode', xPubNode);
+      // console.log('yay', xPubNode.derive(xPubNode.chainCode));
+      // console.log('---------')
       accounts.push({
         title: '',
         privateKeyWIF: address.keyPair.toWIF(),

@@ -2,94 +2,91 @@ import React, { Component } from 'react';
 import BitcoinCash from '../utilities/BitcoinCash';
 var QRCode = require('qrcode.react');
 
-
 class Convert extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      cashaddr: '',
-      base58Check: '',
-      error: false,
-      errorMsg: '',
-      privateKeyWIF: ''
-    }
+    this.props.createConvert();
   }
 
   convert(e) {
-    let value = e.target.value;
-    let cashaddr = '';
-    let base58Check = '';
-    let error;
-    let errorMsg;
-    let publicKey = '';
-    let privateKeyWIF = '';
-
+    let inputValue = e.target.value;
+    let keyPair = '';
+    let cashaddr = this.props.convert.cashaddr;
+    let base58Check = this.props.convert.base58Check;
+    let error = this.props.convert.error;
+    let errorMsg = this.props.convert.errorMsg;
+    let privateKeyWIF = this.props.convert.privateKeyWIF;
+    this.props.updateValue('inputValue', inputValue);
+    this.props.updateValue('error', null);
+    this.props.updateValue('errorMsg', '');
     try {
-      publicKey = BitcoinCash.fromWIF(value, this.props.wallet.network).getAddress();
+      keyPair = BitcoinCash.fromWIF(inputValue, this.props.configuration.network);
+      privateKeyWIF = inputValue;
+      this.props.updateValue('privateKeyWIF', inputValue);
+
+      cashaddr = bitbox.BitcoinCash.toCashAddress(keyPair.getAddress());
+      this.props.updateValue('cashaddr', cashaddr);
+
+      base58Check = bitbox.BitcoinCash.toLegacyAddress(keyPair.getAddress());
+      this.props.updateValue('base58Check', base58Check);
     }
     catch (e) {
       try {
-        cashaddr = BitcoinCash.toCashAddress(value);
-        base58Check = BitcoinCash.toLegacyAddress(value);
+        cashaddr = bitbox.BitcoinCash.toCashAddress(inputValue);
+        this.props.updateValue('cashaddr', cashaddr);
+
+        base58Check = bitbox.BitcoinCash.toLegacyAddress(inputValue);
+        this.props.updateValue('base58Check', base58Check);
       }
       catch (e) {
         error = true;
+        this.props.updateValue('error', error);
         errorMsg = 'Invalid address';
+        this.props.updateValue('errorMsg', errorMsg);
+
+        this.props.updateValue('privateKeyWIF', '');
+        this.props.updateValue('cashaddr', '');
+        this.props.updateValue('base58Check', '');
       }
     }
-
-    if(publicKey !== '') {
-      cashaddr = BitcoinCash.toCashAddress(publicKey);
-      base58Check = BitcoinCash.toLegacyAddress(publicKey);
-      privateKeyWIF = value;
-    }
-
-    this.setState({
-      cashaddr: cashaddr,
-      base58Check: base58Check,
-      error: error,
-      errorMsg: errorMsg,
-      privateKeyWIF: privateKeyWIF
-    })
   }
 
   render() {
     let conversion;
     let privateKeyWIF;
-    if(this.state.base58Check !== '' && this.state.cashaddr !== '') {
+    if(this.props.convert.base58Check !== '' && this.props.convert.cashaddr !== '') {
       conversion = <div className="pure-g">
           <div className="pure-u-1-2 alignLeft">
             <h3>CashAddr</h3>
-            <p><QRCode value={this.state.cashaddr} /></p>
-            <p>{this.state.cashaddr}</p>
+            <p><QRCode value={this.props.convert.cashaddr} /></p>
+            <p>{this.props.convert.cashaddr}</p>
           </div>
           <div className="pure-u-1-2 alignRight">
             <h3>Legacy base58Check</h3>
-            <p><QRCode value={this.state.base58Check} /></p>
-            <p>{this.state.base58Check}</p>
+            <p><QRCode value={this.props.convert.base58Check} /></p>
+            <p>{this.props.convert.base58Check}</p>
           </div>
         </div>
     }
 
-    if(this.state.privateKeyWIF !== '') {
+    if(this.props.convert.privateKeyWIF !== '') {
       privateKeyWIF =
         <div className="pure-g">
           <div className="pure-u-1-1 alignLeft">
             <h3>Private Key WIF</h3>
-            <p><QRCode value={this.state.privateKeyWIF} /></p>
-            <p>{this.state.privateKeyWIF}</p>
+            <p><QRCode value={this.props.convert.privateKeyWIF} /></p>
+            <p>{this.props.convert.privateKeyWIF}</p>
           </div>
         </div>;
     }
 
     let error;
-    if(this.state.error) {
+    if(this.props.convert.error) {
       error =
         <div className="pure-g">
           <div className="pure-u-1-1">
             <h3>Error</h3>
-            <p>{this.state.errorMsg}</p>
+            <p>{this.props.convert.errorMsg}</p>
           </div>
         </div>;
     }
