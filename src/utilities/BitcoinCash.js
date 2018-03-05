@@ -3,27 +3,10 @@ import Crypto from './Crypto';
 
 import Bitcoin from 'bitcoinjs-lib';
 import BIP39 from 'bip39';
-import bchaddr from 'bchaddrjs';
-import bitcoinMessage from 'bitcoinjs-message';
 // var bitcore = require('bitcore-lib');
 
 
 class BitcoinCash {
-  // Utility class to wrap the following bitcoin related npm packages
-  // * https://github.com/bitcoinjs/bitcoinjs-lib
-  // * https://github.com/bitcoinjs/bip39
-  // * https://github.com/bitcoincashjs/bchaddrjs
-  // * https://github.com/dawsbot/satoshi-bitcoin
-
-  // Translate address from any address format into a specific format.
-  static toLegacyAddress(address) {
-    return bchaddr.toLegacyAddress(address);
-  }
-
-  static toCashAddress(address) {
-    return bchaddr.toCashAddress(address);
-  }
-
   static entropyToMnemonic(bytes = 16) {
     // Generate cryptographically strong pseudo-random data.
     // The bytes argument is a number indicating the number of bytes to generate.
@@ -150,17 +133,13 @@ class BitcoinCash {
     }
 
     let privateKey = keyPair.d.toBuffer(32);
-    let signature = BitcoinCash.sign(message, privateKey, keyPair);
+    let signature = BitcoinCash.sign(message, privateKeyWIF);
     let signature1 = signature.toString('base64')
     return signature1;
   }
 
-  static sign(message, privateKey, keyPair) {
-    return bitcoinMessage.sign(message, privateKey, keyPair.compressed);
-  }
-
-  static verifyMessage(message, address, signature) {
-    return bitcoinMessage.verify(message, address, signature);
+  static sign(message, privateKeyWIF) {
+    return bitbox.BitcoinCash.signMessageWithPrivKey(privateKeyWIF, message);
   }
 
   static returnPrivateKeyWIF(pubAddress, addresses) {
@@ -168,7 +147,7 @@ class BitcoinCash {
     let errorMsg = '';
     try {
       addresses.forEach((address, index) => {
-        if(BitcoinCash.toLegacyAddress(pubAddress) === BitcoinCash.fromWIF(address.privateKeyWIF).getAddress()) {
+        if(bitbox.BitcoinCash.toLegacyAddress(pubAddress) === BitcoinCash.fromWIF(address.privateKeyWIF).getAddress()) {
           privateKeyWIF = address.privateKeyWIF;
         }
       });

@@ -41,7 +41,7 @@ import './styles/app.scss';
 
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
-import bitbox from './reducers/bitbox'
+import bitboxReducer from './reducers/bitbox'
 
 // redux actions
 import {
@@ -68,7 +68,7 @@ import {
   createConvert
 } from './actions/ConvertActions';
 
-let reduxStore = createStore(bitbox)
+let reduxStore = createStore(bitboxReducer)
 
 // const unsubscribe = reduxStore.subscribe(() =>{
 //   console.log(JSON.stringify(reduxStore.getState(), null, 2))
@@ -138,7 +138,7 @@ class App extends Component {
         xpriv: account.xpriv,
         xpub: account.xpub,
         legacy: address,
-        cashAddr: BitcoinCash.toCashAddress(address)
+        cashAddr: bitbox.BitcoinCash.toCashAddress(address)
       };
 
       reduxStore.dispatch(createAccount(formattedAccount));

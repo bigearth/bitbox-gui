@@ -158,7 +158,7 @@ class Server {
 
       accounts.forEach((account, index) => {
         let tmp = BitcoinCash.fromWIF(account.privateKeyWIF).getAddress();
-        if(tmp === BitcoinCash.toLegacyAddress(req.body.params[0])) {
+        if(tmp === bitbox.BitcoinCash.toLegacyAddress(req.body.params[0])) {
           res.send(account.privateKeyWIF);
         }
       });
@@ -248,7 +248,7 @@ class Server {
     server.post('/getaccountaddress', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      res.send(BitcoinCash.toCashAddress(BitcoinCash.fromWIF(store.get('addresses')[0].privateKeyWIF).getAddress()));
+      res.send(bitbox.BitcoinCash.toCashAddress(BitcoinCash.fromWIF(store.get('addresses')[0].privateKeyWIF).getAddress()));
     });
 
     server.post('/getaccount', (req, res) => {
@@ -1423,7 +1423,7 @@ class Server {
       let address;
       let verified;
       try {
-        address = BitcoinCash.toLegacyAddress(req.body.params[0]);
+        address = bitbox.BitcoinCash.toLegacyAddress(req.body.params[0]);
       }
       catch (e) {
         address = e.message;
@@ -1434,7 +1434,7 @@ class Server {
       }
 
       try {
-        verified = BitcoinCash.verifyMessage(req.body.params[2], address, req.body.params[1])
+        verified = bitbox.BitcoinCash.verifyMessage(req.body.params[2], address, req.body.params[1])
       }
       catch (e) {
         verified = e.message;

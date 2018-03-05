@@ -83,7 +83,7 @@ class Transactions extends Component {
     let outs = [];
     this.state.transaction.outputs.forEach((outp, ind) => {
       if(this.props.wallet.displayCashaddr) {
-        outp = BitcoinCash.toCashAddress(outp);
+        outp = bitbox.BitcoinCash.toCashAddress(outp);
       }
       outs.push(<li key={ind}>{outp}</li>);
     })
@@ -91,7 +91,7 @@ class Transactions extends Component {
     let inputs = [];
     this.state.inputs.forEach((input, index) => {
       if(this.props.wallet.displayCashaddr) {
-        input.inputPubKey = BitcoinCash.toCashAddress(input.inputPubKey);
+        input.inputPubKey = bitbox.BitcoinCash.toCashAddress(input.inputPubKey);
       }
       inputs.push(
         <table className="pure-table tableFormatting" key={index}>
@@ -113,7 +113,7 @@ class Transactions extends Component {
     let outputs = [];
     this.state.outputs.forEach((output, index) => {
       if(this.props.wallet.displayCashaddr) {
-        output.outputPubKey = BitcoinCash.toCashAddress(output.outputPubKey);
+        output.outputPubKey = bitbox.BitcoinCash.toCashAddress(output.outputPubKey);
       }
       outputs.push(
         <table className="pure-table tableFormatting" key={index}>

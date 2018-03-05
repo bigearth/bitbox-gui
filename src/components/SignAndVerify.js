@@ -72,13 +72,13 @@ class SignAndVerify extends Component {
       message2Error: ''
     })
 
-    let address = BitcoinCash.toLegacyAddress(this.state.address2);
+    let address = bitbox.BitcoinCash.toLegacyAddress(this.state.address2);
     let signature = this.state.signature2;
     let message = this.state.message2;
     let verified;
     let error = false;
     try {
-      verified = BitcoinCash.verifyMessage(message, address, signature)
+      verified = bitbox.BitcoinCash.verifyMessage(address, signature, message)
     }
     catch (e) {
       error = true;

@@ -5,7 +5,7 @@ import wallet from './wallet';
 import importAndExport from './importAndExport';
 import convert from './convert';
  
-const bitbox = combineReducers({
+const bitboxReducer = combineReducers({
   configuration,
   wallet,
   importAndExport,
@@ -21,7 +21,7 @@ const rootReducer = (state, action) => {
     store.set('state', state);
   }
 
-  return bitbox(state, action)
+  return bitboxReducer(state, action)
 }
  
 export default rootReducer
