@@ -9,6 +9,8 @@ import cors from 'cors';
 
 import axios from 'axios';
 import bodyParser from 'body-parser';
+let BITBOXCli = require('bitbox-cli/lib/bitboxcli').default;
+let bitbox = new BITBOXCli();
 
 class Server {
   constructor() {
@@ -1434,7 +1436,7 @@ class Server {
       }
 
       try {
-        verified = bitbox.BitcoinCash.verifyMessage(req.body.params[2], address, req.body.params[1])
+        verified = bitbox.BitcoinCash.verifyMessage(address, req.body.params[1], req.body.params[2])
       }
       catch (e) {
         verified = e.message;
