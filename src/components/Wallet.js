@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import BitcoinCash from '../utilities/BitcoinCash';
-import Crypto from '../utilities/Crypto';
 import Bitcoin from 'bitcoinjs-lib';
 import Account from './Account';
 import AccountModal from './AccountModal';
@@ -38,7 +37,7 @@ class Wallet extends Component {
       this.props.wallet.accounts.forEach((account) => {
         // get balances
         // let publicKey = BitcoinCash.fromWIF(account.privateKeyWIF, this.props.configuration.network).getAddress();
-        // let ripemd160 = Crypto.createRIPEMD160Hash(publicKey);
+        // let ripemd160 = bitbox.Crypto.createRIPEMD160Hash(publicKey);
 
         // let outputs = [];
         // underscore.each(this.props.utxoSet.outputs, (output, index) => {

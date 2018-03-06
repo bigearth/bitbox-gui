@@ -1,9 +1,9 @@
 import Address from '../models/Address';
-import Crypto from './Crypto';
 
 import Bitcoin from 'bitcoinjs-lib';
 import BIP39 from 'bip39';
-// var bitcore = require('bitcore-lib');
+let BITBOXCli = require('bitbox-cli/lib/bitboxcli').default;
+let bitbox = new BITBOXCli();
 
 
 class BitcoinCash {
@@ -11,7 +11,7 @@ class BitcoinCash {
     // Generate cryptographically strong pseudo-random data.
     // The bytes argument is a number indicating the number of bytes to generate.
     // Uses the NodeJS crypto lib. More info: https://nodejs.org/api/crypto.html#crypto_crypto_randombytes_size_callback
-    let randomBytes = Crypto.randomBytes(bytes);
+    let randomBytes = bitbox.Crypto.randomBytes(bytes);
 
     // Create BIP 39 compliant mnemonic w/ entropy
     // Entropy (bits/bytes)	Checksum (bits)	Entropy + checksum (bits)	Mnemonic length (words)
@@ -95,7 +95,6 @@ class BitcoinCash {
       let address = masterPrivateKey.derivePath(`${HDPath.replace(/\/$/, "")}/${i}'/${config.HDPath.change}/${config.HDPath.address_index}`);
       // let xPubNode = Bitcoin.HDNode.fromBase58(xpub);
 
-      // var HdPublicKey = new bitcore.HDPublicKey.fromString(xpub);
       // for (let j = 0; j < 1; j++) {
       //   // console.log('asdasfd', j)
       //   var derivedPublicKey = HdPublicKey.derive("m/0/"+j).publicKey;

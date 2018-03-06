@@ -32,7 +32,6 @@ import SignAndVerify from './components/SignAndVerify';
 import Configuration from './components/Configuration';
 
 // utilities
-import Crypto from './utilities/Crypto';
 import BitcoinCash from './utilities/BitcoinCash';
 import Miner from './utilities/Miner';
 
@@ -198,7 +197,7 @@ class App extends Component {
 
     let keyPair = BitcoinCash.fromWIF(this.state.addresses[0].privateKeyWIF, this.wallet.network);
     let address = keyPair.getAddress();
-    let ripemd160 = Crypto.createRIPEMD160Hash(address);
+    let ripemd160 = bitbox.Crypto.createRIPEMD160Hash(address);
 
     let output = new Output({
       value: 5000000000,

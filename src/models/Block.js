@@ -1,5 +1,4 @@
 import BlockHeader from './BlockHeader';
-import Crypto from '../utilities/Crypto';
 import Utxo from './Utxo';
 
 class Block {
@@ -26,13 +25,13 @@ class Block {
 
   calculateMerkle() {
     let txs = this.transactions.map((tx) => {
-      return tx = Crypto.createSHA256Hash(`${tx.lockTime}`);
+      return tx = bitbox.Crypto.createSHA256Hash(`${tx.lockTime}`);
     });
     let data = txs.map(x => new Buffer(x, 'hex'))
 
     let fastRoot = require('merkle-lib/fastRoot');
     let root = fastRoot(data, (data) => {
-      return Crypto.createSHA256Hash(data);
+      return bitbox.Crypto.createSHA256Hash(data);
     });
     return root.toString('hex');
   }
@@ -43,7 +42,7 @@ class Block {
     //   this.blockheader.hashMerkleRoot = this.calculateMerkle();
     // }
     // console.log("BLOCK MINED: " + this.blockheader.hashMerkleRoot);
-    this.hash = Crypto.createSHA256Hash(`${Date.now()}`);
+    this.hash = bitbox.Crypto.createSHA256Hash(`${Date.now()}`);
   }
 }
 

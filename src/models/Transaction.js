@@ -12,7 +12,7 @@ class Transaction {
     let coinbaseTransaction = new BitcoinCash.transaction();
     coinbaseTransaction.addInput(new Buffer('0000000000000000000000000000000000000000000000000000000000000000', 'hex'), 0);
     coinbaseTransaction.addOutput(new Buffer(address, 'hex'), 5000000000);
-    // let coinbaseTransactionHash = Crypto.createSHA256Hash(coinbaseTransaction.toHex());
+    // let coinbaseTransactionHash = bitbox.Crypto.createSHA256Hash(coinbaseTransaction.toHex());
   }
 }
 
