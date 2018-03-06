@@ -55,7 +55,7 @@ class Wallet extends Component {
         // let transactions = [];
         // underscore.each(this.props.blockchainInstance.chain, (block, index) => {
         //   underscore.each(block.transactions, (transaction, index) => {
-        //     let t = BitcoinCash.transaction();
+        //     let t = bitbox.BitcoinCash.transaction();
         //     let decodedTx = t.fromHex(transaction.rawHex);
         //     let a = BitcoinCash.address();
         //

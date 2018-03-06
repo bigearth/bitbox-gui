@@ -89,13 +89,13 @@ class Server {
     server.post('/decoderawtransaction', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      let t = BitcoinCash.transaction();
+      let t = bitbox.BitcoinCash.transaction();
       let decodedTx = t.fromHex(req.body.params[0]);
 
-      let a = BitcoinCash.address();
-      let s = BitcoinCash.script();
+      let a = bitbox.BitcoinCash.address();
+      let s = bitbox.BitcoinCash.script();
       let ins = [];
-      let ecpair = BitcoinCash.ECPair();
+      let ecpair = bitbox.BitcoinCash.ECPair();
       decodedTx.ins.forEach((input, index) => {
         let chunksIn = s.decompile(input.script);
         let inputPubKey = ecpair.fromPublicKeyBuffer(chunksIn[1]).getAddress();
@@ -159,7 +159,7 @@ class Server {
       let accounts = state.wallet.accounts;
 
       accounts.forEach((account, index) => {
-        let tmp = BitcoinCash.fromWIF(account.privateKeyWIF).getAddress();
+        let tmp = bitbox.BitcoinCash.fromWIF(account.privateKeyWIF).getAddress();
         if(tmp === bitbox.BitcoinCash.toLegacyAddress(req.body.params[0])) {
           res.send(account.privateKeyWIF);
         }
@@ -250,7 +250,7 @@ class Server {
     server.post('/getaccountaddress', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      res.send(bitbox.BitcoinCash.toCashAddress(BitcoinCash.fromWIF(store.get('addresses')[0].privateKeyWIF).getAddress()));
+      res.send(bitbox.BitcoinCash.toCashAddress(bitbox.BitcoinCash.fromWIF(store.get('addresses')[0].privateKeyWIF).getAddress()));
     });
 
     server.post('/getaccount', (req, res) => {

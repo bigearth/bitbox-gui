@@ -12,9 +12,9 @@ class Miner {
 
   pushGenesisBlock(genesisBlock) {
     genesisBlock.forEach((transaction, index) => {
-      let t = BitcoinCash.transaction();
+      let t = bitbox.BitcoinCash.transaction();
       let decodedTx = t.fromHex(transaction.rawHex);
-      let a = BitcoinCash.address();
+      let a = bitbox.BitcoinCash.address();
 
       decodedTx.outs.forEach((output, index) => {
         let outputPubKey = a.fromOutputScript(output.script, Bitcoin.networks[this.network]);

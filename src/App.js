@@ -120,7 +120,7 @@ class App extends Component {
 
   createHDWallet() {
     let walletConfig = reduxStore.getState().configuration.wallet;
-    let [rootSeed, masterPrivateKey, mnemonic, HDPath, accounts] = BitcoinCash.createHDWallet(walletConfig);
+    let [rootSeed, masterPrivateKey, mnemonic, HDPath, accounts] = bitbox.BitcoinCash.createHDWallet(walletConfig);
     reduxStore.dispatch(createWallet());
     reduxStore.dispatch(addRootSeed(rootSeed));
     reduxStore.dispatch(addMasterPrivateKey(masterPrivateKey.chainCode));
@@ -129,7 +129,7 @@ class App extends Component {
 
     accounts.forEach((account, index) => {
 
-      let address = BitcoinCash.fromWIF(account.privateKeyWIF, walletConfig.network).getAddress();
+      let address = bitbox.BitcoinCash.fromWIF(account.privateKeyWIF, walletConfig.network).getAddress();
       let formattedAccount = {
         title: account.title,
         index: account.index,
@@ -147,16 +147,16 @@ class App extends Component {
 
   createBlockchain(addresses) {
     // create genesis tx
-    // This is a hack because I've not yet figured out how to properly sign coinbase txs w/ BitcoinCash.transaction
+    // This is a hack because I've not yet figured out how to properly sign coinbase txs w/ bitbox.BitcoinCash.transaction
     let genesisBlock = [];
     addresses.forEach((address, index) => {
-      let privkey = BitcoinCash.fromWIF(addresses[0].privateKeyWIF, this.wallet.network);
-      let tx = BitcoinCash.transactionBuilder(this.wallet.network);
+      let privkey = bitbox.BitcoinCash.fromWIF(addresses[0].privateKeyWIF, this.wallet.network);
+      let tx = bitbox.BitcoinCash.transactionBuilder(this.wallet.network);
 
       // Hardcode the input hash
       tx.addInput("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b", 0);
 
-      let addy = BitcoinCash.fromWIF(address.privateKeyWIF, this.wallet.network).getAddress();
+      let addy = bitbox.BitcoinCash.fromWIF(address.privateKeyWIF, this.wallet.network).getAddress();
       // send 12.5 BCH to the first newly generated account
       let value = BitcoinCash.toSatoshi(12.5);
 
@@ -195,7 +195,7 @@ class App extends Component {
   createBlock() {
     let blockchainInstance = this.state.blockchainInstance;
 
-    let keyPair = BitcoinCash.fromWIF(this.state.addresses[0].privateKeyWIF, this.wallet.network);
+    let keyPair = bitbox.BitcoinCash.fromWIF(this.state.addresses[0].privateKeyWIF, this.wallet.network);
     let address = keyPair.getAddress();
     let ripemd160 = bitbox.Crypto.createRIPEMD160Hash(address);
 

@@ -37,7 +37,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(updateWalletConfig('entropy', value))
     },
     resetBitbox: (configuration) => {
-      let [rootSeed, masterPrivateKey, mnemonic, HDPath, accounts] = BitcoinCash.createHDWallet(configuration);
+      let [rootSeed, masterPrivateKey, mnemonic, HDPath, accounts] = bitbox.BitcoinCash.createHDWallet(configuration);
 
       dispatch(resetWallet());
       dispatch(addRootSeed(rootSeed));
@@ -47,7 +47,7 @@ const mapDispatchToProps = (dispatch) => {
 
       accounts.forEach((account, index) => {
 
-        let address = BitcoinCash.fromWIF(account.privateKeyWIF, configuration.network).getAddress();
+        let address = bitbox.BitcoinCash.fromWIF(account.privateKeyWIF, configuration.network).getAddress();
 
         dispatch(createAccount({
           title: account.title,

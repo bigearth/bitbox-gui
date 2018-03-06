@@ -26,12 +26,12 @@ class Transactions extends Component {
   }
 
   componentDidMount() {
-    let t = BitcoinCash.transaction();
+    let t = bitbox.BitcoinCash.transaction();
     let decodedTx = t.fromHex(this.state.transaction.rawHex);
-    let a = BitcoinCash.address();
-    let s = BitcoinCash.script();
+    let a = bitbox.BitcoinCash.address();
+    let s = bitbox.BitcoinCash.script();
     let ins = [];
-    let ecpair = BitcoinCash.ECPair();
+    let ecpair = bitbox.BitcoinCash.ECPair();
     decodedTx.ins.forEach((input, index) => {
       let chunksIn = s.decompile(input.script);
       let inputPubKey = ecpair.fromPublicKeyBuffer(chunksIn[1], Bitcoin.networks[this.props.wallet.network]).getAddress();

@@ -20,7 +20,7 @@ class Convert extends Component {
     this.props.updateValue('error', null);
     this.props.updateValue('errorMsg', '');
     try {
-      keyPair = BitcoinCash.fromWIF(inputValue, this.props.configuration.network);
+      keyPair = bitbox.BitcoinCash.fromWIF(inputValue, this.props.configuration.network);
       privateKeyWIF = inputValue;
       this.props.updateValue('privateKeyWIF', inputValue);
 

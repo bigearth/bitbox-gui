@@ -119,33 +119,33 @@ describe('return address type', () => {
 
 describe('generate specific length mnemonic', () => {
   it('should generate a 12 word mnemonic', () => {
-    let mnemonic = BitcoinCash.entropyToMnemonic(16);
+    let mnemonic = bitbox.BitcoinCash.entropyToMnemonic(16);
     assert.lengthOf(mnemonic.split(' '), 12);
   });
 
   it('should generate a 15 word mnemonic', () => {
-    let mnemonic = BitcoinCash.entropyToMnemonic(20);
+    let mnemonic = bitbox.BitcoinCash.entropyToMnemonic(20);
     assert.lengthOf(mnemonic.split(' '), 15);
   });
 
   it('should generate an 18 word mnemonic', () => {
-    let mnemonic = BitcoinCash.entropyToMnemonic(24);
+    let mnemonic = bitbox.BitcoinCash.entropyToMnemonic(24);
     assert.lengthOf(mnemonic.split(' '), 18);
   });
 
   it('should generate an 21 word mnemonic', () => {
-    let mnemonic = BitcoinCash.entropyToMnemonic(28);
+    let mnemonic = bitbox.BitcoinCash.entropyToMnemonic(28);
     assert.lengthOf(mnemonic.split(' '), 21);
   });
 
   it('should generate an 24 word mnemonic', () => {
-    let mnemonic = BitcoinCash.entropyToMnemonic(32);
+    let mnemonic = bitbox.BitcoinCash.entropyToMnemonic(32);
     assert.lengthOf(mnemonic.split(' '), 24);
   });
 });
 
 describe('create 512 bit HMAC-SHA512 root seed', () => {
-  let rootSeed = BitcoinCash.mnemonicToSeed(BitcoinCash.entropyToMnemonic(32), 'password');
+  let rootSeed = bitbox.BitcoinCash.mnemonicToSeed(bitbox.BitcoinCash.entropyToMnemonic(32), 'password');
   it('should create 64 byte root seed', () => {
     assert.equal(rootSeed.byteLength, 64);
   });
@@ -157,8 +157,8 @@ describe('create 512 bit HMAC-SHA512 root seed', () => {
 
 describe('create master private key', () => {
   it('should create 32 byte chain code', () => {
-    let rootSeed = BitcoinCash.mnemonicToSeed(BitcoinCash.entropyToMnemonic(32), 'password');
-    let masterkey = BitcoinCash.fromSeedBuffer(rootSeed);
+    let rootSeed = bitbox.BitcoinCash.mnemonicToSeed(bitbox.BitcoinCash.entropyToMnemonic(32), 'password');
+    let masterkey = bitbox.BitcoinCash.fromSeedBuffer(rootSeed);
     assert.equal(masterkey.chainCode.byteLength, 32);
   });
 });
@@ -183,7 +183,6 @@ describe('sign and verify messages', () => {
   });
 
   it('should not verify a invalid signed message', () => {
-    console.log('asdf', bitbox.BitcoinCash.verifyMessage)
 
     let address = '1HZwkjkeaoZfTSaJxDw6aKkxp45agDiEzN'
     let signature = 'HJLQlDWLyb1Ef8bQKEISzFbDAKctIlaqOpGbrk3YVtRsjmC61lpE5ErkPRUFtDKtx98vHFGUWlFhsh3DiW6N0rE'

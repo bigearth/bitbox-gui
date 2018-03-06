@@ -23,13 +23,13 @@ class BlockDetails extends Component {
 
     let txs = this.state.transactions;
     this.state.block.transactions.forEach((tx, index) => {
-      let t = BitcoinCash.transaction();
+      let t = bitbox.BitcoinCash.transaction();
       let decodedTx = t.fromHex(tx.rawHex);
-      let a = BitcoinCash.address();
+      let a = bitbox.BitcoinCash.address();
 
-      let s = BitcoinCash.script();
+      let s = bitbox.BitcoinCash.script();
       let ins = [];
-      let ecpair = BitcoinCash.ECPair();
+      let ecpair = bitbox.BitcoinCash.ECPair();
       decodedTx.ins.forEach((input, index) => {
         let chunksIn = s.decompile(input.script);
         let inputPubKey = ecpair.fromPublicKeyBuffer(chunksIn[1], Bitcoin.networks[this.props.wallet.network]).getAddress();
