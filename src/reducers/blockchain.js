@@ -9,7 +9,6 @@ export default function convert(state = {}, action) {
   switch (action.type) {
     case CREATE_BLOCKCHAIN:
       blockchainConfig = new Blockchain();
-      console.log(blockchainConfig);
       return Object.assign({}, state, blockchainConfig)
     case ADD_BLOCK:
       blockchainConfig.chain.push(action.block);

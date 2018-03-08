@@ -70,6 +70,10 @@ import {
   addBlock
 } from './actions/BlockchainActions';
 
+import {
+  createSignAndVerify
+} from './actions/SignAndVerifyActions';
+
 import underscore from 'underscore';
 
 let reduxStore = createStore(bitboxReducer)
@@ -91,6 +95,7 @@ class App extends Component {
     reduxStore.dispatch(createImportAndExport());
     reduxStore.dispatch(createConvert());
     reduxStore.dispatch(createBlockchain());
+    reduxStore.dispatch(createSignAndVerify());
     let genesisBlock = new Block({
       index: 0,
       transactions: [{coinAmount : 10}],

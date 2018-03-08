@@ -5,13 +5,15 @@ import wallet from './wallet';
 import importAndExport from './importAndExport';
 import convert from './convert';
 import blockchain from './blockchain';
+import signandverify from './signandverify';
  
 const bitboxReducer = combineReducers({
   configuration,
   wallet,
   importAndExport,
   convert,
-  blockchain
+  blockchain,
+  signandverify
 })
 
 const rootReducer = (state, action) => {
