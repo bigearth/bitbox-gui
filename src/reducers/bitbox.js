@@ -4,12 +4,14 @@ import configuration from './configuration';
 import wallet from './wallet';
 import importAndExport from './importAndExport';
 import convert from './convert';
+import blockchain from './blockchain';
  
 const bitboxReducer = combineReducers({
   configuration,
   wallet,
   importAndExport,
-  convert
+  convert,
+  blockchain
 })
 
 const rootReducer = (state, action) => {

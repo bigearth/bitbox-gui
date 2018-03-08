@@ -14,13 +14,6 @@ class Blocks extends Component {
     };
   }
 
-  handleBlockDetails(blockId) {
-    this.setState({
-      redirect: true,
-      blockId: blockId
-    })
-  }
-
   render() {
 
     if (this.state.redirect) {
@@ -42,7 +35,6 @@ class Blocks extends Component {
             block={block}
             key={index}
             match={this.props.match}
-            handleBlockDetails={this.handleBlockDetails.bind(this)}
           />
         )
       });

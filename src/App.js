@@ -11,7 +11,6 @@ import {
 import Bitcoin from 'bitcoinjs-lib';
 
 // custom models
-import Blockchain from './models/Blockchain';
 import Block from './models/Block';
 import Transaction from './models/Transaction';
 import Output from './models/Output';
@@ -28,7 +27,6 @@ import Blocks from './components/Blocks';
 import BlockDetails from './components/BlockDetails';
 // import Account from './components/Account';
 import TransactionsDisplay from './components/TransactionsDisplay';
-import SignAndVerify from './components/SignAndVerify';
 import Configuration from './components/Configuration';
 
 // utilities
@@ -67,54 +65,45 @@ import {
   createConvert
 } from './actions/ConvertActions';
 
+import {
+  createBlockchain,
+  addBlock
+} from './actions/BlockchainActions';
+
+import underscore from 'underscore';
+
 let reduxStore = createStore(bitboxReducer)
 
-// const unsubscribe = reduxStore.subscribe(() =>{
-//   console.log(JSON.stringify(reduxStore.getState(), null, 2))
-//   console.log('*********************************************');
-// })
-//
+const unsubscribe = reduxStore.subscribe(() =>{
+  console.log(JSON.stringify(reduxStore.getState(), null, 2))
+  console.log('*********************************************');
+})
+
 // stop listening to state updates
 // unsubscribe()
-
 
 class App extends Component {
 
   constructor(props) {
     super(props);
-    // let mnemonic = 'business antique staff gap chief harbor federal answer bright icon badge polar';
     // Write default config top reduxStore
     reduxStore.dispatch(createConfig());
     reduxStore.dispatch(createImportAndExport());
     reduxStore.dispatch(createConvert());
-    // reduxStore.dispatch(toggleWalletConfig(false, 'autogenerateHDMnemonic'))
-    // reduxStore.dispatch(toggleWalletConfig(false, 'autogenerateHDPath'))
-    // reduxStore.dispatch(toggleWalletConfig('displayCashaddr', false))
-    // reduxStore.dispatch(toggleWalletConfig(false, 'displayTestnet'))
-    // reduxStore.dispatch(toggleWalletConfig(false, 'usePassword'))
-    //
-    // reduxStore.dispatch(updateWalletConfig(32, 'entropy'))
-    // reduxStore.dispatch(updateWalletConfig('test', 'network'))
-    // reduxStore.dispatch(updateWalletConfig(25, 'totalAccounts'))
-    // reduxStore.dispatch(updateWalletConfig('l337', 'password'))
+    reduxStore.dispatch(createBlockchain());
+    let genesisBlock = new Block({
+      index: 0,
+      transactions: [{coinAmount : 10}],
+      timestamp: Date()
+    });
+    genesisBlock.previousBlockHeader = "#BCHForEveryone";
+    genesisBlock.header = bitbox.Crypto.createSHA256Hash(`${genesisBlock.index}${genesisBlock.previousBlockHeader}${JSON.stringify(genesisBlock.transactions)}${genesisBlock.timestamp}`);
 
-    // Create HD wallet w/ default configuration
-    // store.set('wallet', this.wallet);
-
-    // this.blockchain = new Blockchain();
-    //
-    // this.utxoSet = new Utxo();
-    // // Miner Utility for handling txs and blocks
-    // this.miner = new Miner(this.blockchain, this.utxoSet, this.wallet.network);
-    this.state = {
-      addresses: [],
-      blockchainInstance: ''
-    };
+    reduxStore.dispatch(addBlock(genesisBlock));
   }
 
   componentDidMount() {
     this.createHDWallet();
-  //   this.createBlockchain(addresses);
   }
 
 
@@ -145,45 +134,12 @@ class App extends Component {
     reduxStore.dispatch(updateStore());
   }
 
-  createBlockchain(addresses) {
-    // create genesis tx
-    // This is a hack because I've not yet figured out how to properly sign coinbase txs w/ bitbox.BitcoinCash.transaction
-    let genesisBlock = [];
-    addresses.forEach((address, index) => {
-      let privkey = bitbox.BitcoinCash.fromWIF(addresses[0].privateKeyWIF, this.wallet.network);
-      let tx = bitbox.BitcoinCash.transactionBuilder(this.wallet.network);
-
-      // Hardcode the input hash
-      tx.addInput("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b", 0);
-
-      let addy = bitbox.BitcoinCash.fromWIF(address.privateKeyWIF, this.wallet.network).getAddress();
-      // send 12.5 BCH to the first newly generated account
-      let value = BitcoinCash.toSatoshi(12.5);
-
-      tx.addOutput(addy, value);
-      tx.sign(0, privkey);
-      let rawHex = tx.build().toHex();
-      genesisBlock.push({
-        rawHex: rawHex,
-        timestamp: Date.now()
-      });
-    });
-
-    this.miner.pushGenesisBlock(genesisBlock);
-  }
-
   handlePathMatch(path) {
     if(path === '/' || path === '/blocks' || path === '/transactions' || path === '/configuration/wallet') {
       return true;
     } else {
       return false;
     }
-  }
-
-  handleBlockchainUpdate(blockchainInstance) {
-    this.setState({
-      blockchainInstance: blockchainInstance
-    })
   }
 
   handleUtxoUpdate(utxoSet) {
@@ -193,44 +149,77 @@ class App extends Component {
   }
 
   createBlock() {
-    let blockchainInstance = this.state.blockchainInstance;
+    let blockchain = reduxStore.getState().blockchain;
+    let previousBlock = underscore.last(blockchain.chain);
+    let lastIndex = previousBlock.index;
 
-    let keyPair = bitbox.BitcoinCash.fromWIF(this.state.addresses[0].privateKeyWIF, this.wallet.network);
-    let address = keyPair.getAddress();
-    let ripemd160 = bitbox.Crypto.createRIPEMD160Hash(address);
-
-    let output = new Output({
-      value: 5000000000,
-      ripemd160: ripemd160
-    });
-
-    let tx = new Transaction({
-      versionNumber: 1,
-      inputs: [],
-      outputs: [output],
-      time: Date.now(),
-      address: address
-    }, true);
-
-    let block = {
-      hash: '0x000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f',
-      version: 1,
-      hashPrevBlock: '00000000000000',
-      hashMerkleRoot: '0x4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b',
-      time: Date.now(),
-      bits: '0x1d00ffff',
-      nonce: '2083236893',
-      vtx: 1,
-      index: blockchainInstance.chain.length,
-      transactions: [tx],
-      previousHash: blockchainInstance.getLatestBlock().blockheader.hashMerkleRoot
+    let blockData = {
+      index: ++lastIndex,
+      transactions: [{coinAmount : ++lastIndex}],
+      timestamp: Date()
     };
 
-    blockchainInstance.addBlock(new Block(block));
-    let utxoSet = this.state.utxoSet;
-    utxoSet.addUtxo(address, output.value);
-    this.handleBlockchainUpdate(blockchainInstance);
-    this.handleUtxoUpdate(utxoSet);
+    let block = new Block(blockData)
+    block.previousBlockHeader = previousBlock.header;
+    block.header = bitbox.Crypto.createSHA256Hash(`${block.index}${block.previousBlockHeader}${JSON.stringify(block.transactions)}${block.timestamp}`);
+    reduxStore.dispatch(addBlock(block));
+    //
+    // let block2Data = {
+    //   index: 2,
+    //   transactions: {coinAmount : 2},
+    //   timestamp: Date()
+    // };
+    //
+    // let block2 = new Block(block2Data)
+    // blockchain.addBlock(block2);
+    //
+    // let block3Data = {
+    //   index: 3,
+    //   transactions: {coinAmount : 3},
+    //   timestamp: Date()
+    // };
+    //
+    // let block3 = new Block(block3Data)
+    // blockchain.addBlock(block3);
+
+    // let blockchainInstance = this.state.blockchainInstance;
+    //
+    // let keyPair = bitbox.BitcoinCash.fromWIF(this.state.addresses[0].privateKeyWIF, this.wallet.network);
+    // let address = keyPair.getAddress();
+    // let ripemd160 = bitbox.Crypto.createRIPEMD160Hash(address);
+    //
+    // let output = new Output({
+    //   value: 5000000000,
+    //   ripemd160: ripemd160
+    // });
+    //
+    // let tx = new Transaction({
+    //   versionNumber: 1,
+    //   inputs: [],
+    //   outputs: [output],
+    //   time: Date.now(),
+    //   address: address
+    // }, true);
+    //
+    // let block = {
+    //   hash: '0x000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f',
+    //   version: 1,
+    //   hashPrevBlock: '00000000000000',
+    //   hashMerkleRoot: '0x4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b',
+    //   time: Date.now(),
+    //   bits: '0x1d00ffff',
+    //   nonce: '2083236893',
+    //   vtx: 1,
+    //   index: blockchainInstance.chain.length,
+    //   transactions: [tx],
+    //   previousHash: blockchainInstance.getLatestBlock().blockheader.hashMerkleRoot
+    // };
+    //
+    // blockchainInstance.addBlock(new Block(block));
+    // let utxoSet = this.state.utxoSet;
+    // utxoSet.addUtxo(address, output.value);
+    // this.handleBlockchainUpdate(blockchainInstance);
+    // this.handleUtxoUpdate(utxoSet);
   }
 
   showImport() {
@@ -254,11 +243,6 @@ class App extends Component {
       return (
         <Blocks
           match={props.match}
-          blockchainInstance={this.state.blockchainInstance}
-          handleBlockchainUpdate={this.handleBlockchainUpdate.bind(this)}
-          handleUtxoUpdate={this.handleUtxoUpdate.bind(this)}
-          addresses={this.state.addresses}
-          utxoSet={this.state.utxoSet}
         />
       );
     };
@@ -266,9 +250,7 @@ class App extends Component {
     const BlockPage = (props) => {
       return (
         <BlockDetails
-          blockchainInstance={this.state.blockchainInstance}
           match={props.match}
-          wallet={this.wallet}
         />
       );
     };
@@ -276,7 +258,6 @@ class App extends Component {
     const AddressPage = (props) => {
       return (
         <Account
-          blockchainInstance={this.state.blockchainInstance}
           match={props.match}
         />
       );
@@ -285,18 +266,7 @@ class App extends Component {
     const TransactionsPage = (props) => {
       return (
         <TransactionsDisplay
-          blockchainInstance={this.state.blockchainInstance}
           match={props.match}
-          wallet={this.wallet}
-        />
-      );
-    };
-
-
-    const MessagePage = (props) => {
-      return (
-        <SignAndVerify
-          addresses={this.state.addresses}
         />
       );
     };
@@ -309,13 +279,7 @@ class App extends Component {
       );
     };
 
-    let chainlength = 0;
-    if(this.state.blockchainInstance && this.state.blockchainInstance.chain) {
-      chainlength = this.state.blockchainInstance.chain.length - 1;
-    }
-              // <li className="pure-menu-item">
-              //   <button className='pure-button danger-background' onClick={this.createBlock.bind(this)}><i className="fas fa-cube"></i> Create block</button>
-              // </li>
+    let chainlength = reduxStore.getState().blockchain.length;
                 // <li className="pure-menu-item">
                 //   <NavLink
                 //     isActive={pathMatch}
@@ -360,6 +324,9 @@ class App extends Component {
                     to="/signandverify">
                     <i className="far fa-check-circle"></i> Sign &amp; Verify
                   </NavLink>
+                </li>
+                <li className="pure-menu-item">
+                  <button className='pure-button danger-background' onClick={this.createBlock.bind(this)}><i className="fas fa-cube"></i> Create block</button>
                 </li>
               </ul>
               <ul className="pure-menu-list right">
