@@ -444,13 +444,13 @@ class Server {
     server.post('/getconnectioncount', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      res.send(0);
+      res.send('success');
     });
 
     server.post('/getdifficulty', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      res.send(0);
+      res.send(JSON.stringify('0'));
     });
 
     server.post('/getexcessiveblock', (req, res) => {

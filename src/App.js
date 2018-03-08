@@ -147,12 +147,6 @@ class App extends Component {
     }
   }
 
-  handleUtxoUpdate(utxoSet) {
-    this.setState({
-      utxoSet: utxoSet
-    })
-  }
-
   createBlock() {
     let blockchain = reduxStore.getState().blockchain;
     let previousBlock = underscore.last(blockchain.chain);
