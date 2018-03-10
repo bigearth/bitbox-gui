@@ -8,6 +8,10 @@ class Convert extends Component {
     this.props.createConvert();
   }
 
+  handleSubmit(event) {
+    event.preventDefault();
+  }
+
   convert(e) {
     let inputValue = e.target.value;
     let keyPair = '';
@@ -92,12 +96,12 @@ class Convert extends Component {
     }
     return (
       <div className="Convert">
-        <h2 className="content-head is-center">Converter</h2>
+        <h2 className="content-head is-center">Convert</h2>
         <div className="pure-g">
           <div className="l-box-lrg pure-u-1-1">
             <p>Paste in a public address or private key in Wallet Import Format to convert legacy or cashaddr addresses and generate a QR code.</p>
-            <form className="pure-form pure-form-stacked">
-              <input id='path' type='text' placeholder='enter legacy or cashaddr address' onChange={this.convert.bind(this)} />
+            <form className="pure-form pure-form-stacked" onSubmit={this.handleSubmit}>
+              <input id='path' type='text' placeholder='enter legacy or cashaddr address' onChange={this.convert.bind(this)}/>
             </form>
           </div>
         </div>

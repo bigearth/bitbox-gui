@@ -78,10 +78,10 @@ import underscore from 'underscore';
 
 let reduxStore = createStore(bitboxReducer)
 
-const unsubscribe = reduxStore.subscribe(() =>{
-  console.log(JSON.stringify(reduxStore.getState(), null, 2))
-  console.log('*********************************************');
-})
+// const unsubscribe = reduxStore.subscribe(() =>{
+//   console.log(JSON.stringify(reduxStore.getState(), null, 2))
+//   console.log('*********************************************');
+// })
 
 // stop listening to state updates
 // unsubscribe()
@@ -278,7 +278,7 @@ class App extends Component {
       );
     };
 
-    let chainlength = reduxStore.getState().blockchain.length;
+    let chainlength = reduxStore.getState().blockchain.chain.length;
                 // <li className="pure-menu-item">
                 //   <NavLink
                 //     isActive={pathMatch}
@@ -288,6 +288,13 @@ class App extends Component {
                 //     <i className="fas fa-cubes"></i> Blocks
                 //   </NavLink>
                 // </li>
+                // <li className="pure-menu-item">
+                //   <button className='pure-button danger-background' onClick={this.createBlock.bind(this)}><i className="fas fa-cube"></i> Create block</button>
+                // </li>
+                // <li className="pure-menu-item">
+                //   MINING STATUS <br /> AUTOMINING <i className="fas fa-spinner fa-spin" />
+                // </li>
+
 
     return (
       <Provider store={reduxStore}>
@@ -324,9 +331,6 @@ class App extends Component {
                     <i className="far fa-check-circle"></i> Sign &amp; Verify
                   </NavLink>
                 </li>
-                <li className="pure-menu-item">
-                  <button className='pure-button danger-background' onClick={this.createBlock.bind(this)}><i className="fas fa-cube"></i> Create block</button>
-                </li>
               </ul>
               <ul className="pure-menu-list right">
                 <li className="pure-menu-item">
@@ -358,9 +362,6 @@ class App extends Component {
                 </li>
                 <li className="pure-menu-item">
                   RPC SERVER <br /> http://127.0.0.1:8332
-                </li>
-                <li className="pure-menu-item">
-                  MINING STATUS <br /> AUTOMINING <i className="fas fa-spinner fa-spin" />
                 </li>
               </ul>
             </div>
