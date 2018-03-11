@@ -11,6 +11,7 @@ import axios from 'axios';
 import bodyParser from 'body-parser';
 let BITBOXCli = require('bitbox-cli/lib/bitboxcli').default;
 let bitbox = new BITBOXCli();
+import underscore from 'underscore';
 
 class Server {
   constructor() {
@@ -295,43 +296,17 @@ class Server {
 
     server.post('/getbestblockhash', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
+      let bestblock = underscore.last(store.get('state').blockchain.chain);
 
-      res.send(JSON.stringify('0000000000075c58ed39c3e50f99b32183d090aefa0cf8c324a82eea9b01a887'));
+      res.send(JSON.stringify(bestblock.header));
     });
 
     server.post('/getblock', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
+      let blockchain = store.get('state').blockchain;
+      let block = underscore.findWhere(blockchain.chain, {header: req.body.params[0]});
 
-      res.send(JSON.stringify({ hash: '000000000000000002eafe2494f7dd1f678988217a12e8ab20d3594affd03392',
-        confirmations: 1,
-        size: 3827,
-        height: 518990,
-        version: 536870912,
-        versionHex: '20000000',
-        merkleroot: 'd728487f6b559e46316605e2f4fdb7ff472017a5603c27523a3f41754aabfebf',
-        tx:
-         [ '887f1545a7fc2dd1af3cd2adacbe387d57ab1868a77b12d324c79f4446f95cb8',
-           '8660e931e59db9c37f3f1805e558e5dc2811fb90b5d36fadbcd489e6f0f1e058',
-           'ed26deabed91eca37a9df871855e0c29eed14c11ec6964bb4a25dfbfd274f9c7',
-           'a59dafb4e76bee152b25924545dbefc932179dcd03f24224dc6e4fc3922df120',
-           '3eed0b9964101e1f65796974a1eaf11cf654f2c6d8cde00a507d5b9bc0c519c6',
-           'ff10efc734c95a20a96b2dd62f4911b8dffe3c1bf06065c9b54d2d636156cddc',
-           '4df121a83914704ed6dd38434a05561de6c733e4ad0b19138c5747bea2d89632',
-           '48c66dc7cca2dd6cd54319db19e90dc9203a1a4cf7df7b1c36da1c333dc99a17',
-           '2a28269bb4b284b6fde5beb35feda500e4c164ccfe98ddd5611c52b9e5d5072e',
-           '95c2f3f6bbb68ec839de0fe66ed2c02a52dab345390b06f014ba66e8372ad654',
-           '96c5cb8e5060bc9d177e398acd529a12c7bd18085c5c72d7e20875d3f4a97a5a',
-           '0f4e99a3047905b47537a1e7d4c6db34bfb6dcb5c8ba8f52a77a7942283a5a6f',
-           '31938cc2db6fd1aa702cc461c53941dcb1895d80a958d689f40737244d67b29a',
-           '93a5ac08e4e026fc1ae40b54ed3534bb6d975806aefa84cf6ef67de3d1603be1' ],
-        time: 1519595851,
-        mediantime: 1519593171,
-        nonce: 1942317402,
-        bits: '18030655',
-        difficulty: 363501276434.3268,
-        chainwork: '0000000000000000000000000000000000000000008ac73e431fce0e00d0f62f',
-        previousblockhash: '000000000000000002187c90897b518c4da5122dcc42389a6f7461064f3ae7bd'
-      }));
+      res.send(JSON.stringify(block));
     });
 
     server.post('/getblockchaininfo', (req, res) => {
@@ -390,7 +365,8 @@ class Server {
 
     server.post('/getblockcount', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
-      res.send('0');
+      let blockCount = store.get('state').blockchain.chain.length;
+      res.send(JSON.stringify(blockCount));
     });
 
     server.post('/getblockhash', (req, res) => {

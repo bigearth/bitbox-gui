@@ -129,7 +129,6 @@ class App extends Component {
 
       reduxStore.dispatch(createAccount(formattedAccount));
     });
-    reduxStore.dispatch(updateStore());
 
     let blockchain = reduxStore.getState().blockchain;
     let previousBlock = underscore.last(blockchain.chain) || {};
@@ -185,6 +184,7 @@ class App extends Component {
       blockchain.chain.push(block);
       let newChain = blockchain;
       reduxStore.dispatch(addBlock(newChain));
+      reduxStore.dispatch(updateStore());
     }, (err) => { console.log(err);
     });
   }

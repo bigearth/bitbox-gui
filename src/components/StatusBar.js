@@ -23,10 +23,11 @@ class StatusBar extends Component {
       newIndex = 0;
     }
 
+
     let walletConfig = this.props.configuration.wallet;
 
-    let account1 = reduxStore.getState().wallet.accounts[0];
-    let account2 = reduxStore.getState().wallet.accounts[1];
+    let account1 = this.props.wallet.accounts[0];
+    let account2 = this.props.wallet.accounts[1];
 
     let alice = bitbox.BitcoinCash.fromWIF(account1.privateKeyWIF)
     let txb = bitbox.BitcoinCash.transactionBuilder(walletConfig.network)
@@ -77,6 +78,7 @@ class StatusBar extends Component {
       blockchain.chain.push(block);
       let newChain = blockchain;
       this.props.addBlock(newChain);
+      this.props.updateStore();
     }, (err) => { console.log(err);
     });
     // utxoSet.addUtxo(address, output.value);

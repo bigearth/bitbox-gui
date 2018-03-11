@@ -4,6 +4,11 @@ import {
   addBlock
 } from '../actions/BlockchainActions';
 
+import {
+  updateStore
+} from '../actions/ConfigurationActions';
+
+
 const mapStateToProps = (state) => {
   return {
     wallet: state.wallet,
@@ -16,6 +21,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     addBlock: (chain) => {
       dispatch(addBlock(chain))
+    },
+    updateStore: () => {
+      dispatch(updateStore())
     }
   }
 }
