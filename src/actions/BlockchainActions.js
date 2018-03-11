@@ -13,6 +13,6 @@ export function createBlockchain() {
   return { type: CREATE_BLOCKCHAIN }
 }
 
-export function addBlock(block) {
-  return { type: ADD_BLOCK, block}
+export function addBlock(chain) {
+  return { type: ADD_BLOCK, chain}
 }

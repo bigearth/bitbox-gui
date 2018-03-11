@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import BlocksDetails from './BlocksDetails';
+import Block from './Block';
 import underscore from 'underscore';
 import {
   Redirect
@@ -9,32 +9,28 @@ class Blocks extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      redirect: false,
-      blockId: 0
+      redirect: false
     };
   }
 
   render() {
-
-    if (this.state.redirect) {
-      return (<Redirect to={{
-        pathname: `${this.props.match.url}/${this.state.blockId}`,
-        state: {
-          block: this.props.blockchainInstance.chain[this.state.blockId]
-        }
-      }} />)
-    }
+    // if(this.state.redirect) {
+    //   return (<Redirect to={{
+    //     pathname: `${this.props.match.url}/${this.state.blockId}`,
+    //     state: {
+    //       block: this.props.chain[this.state.blockId]
+    //     }
+    //   }} />)
+    // }
 
     let blocks = [];
-    if(this.props.blockchainInstance && this.props.blockchainInstance.chain.length) {
-      let chain = underscore.sortBy(this.props.blockchainInstance.chain, 'index');
-
+    if(this.props.blockchain.chain.length) {
+      let chain = underscore.sortBy(this.props.blockchain.chain, 'index');
       chain.reverse().forEach((block, index) => {
         blocks.push(
-          <BlocksDetails
+          <Block
             block={block}
             key={index}
-            match={this.props.match}
           />
         )
       });

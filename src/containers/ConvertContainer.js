@@ -5,7 +5,7 @@ import {
   updateValue
 } from '../actions/ConvertActions';
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     configuration: state.configuration.wallet,
     convert: state.convert
