@@ -1,6 +1,6 @@
 {
   "name": "BITBOX",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A development framework for Bitcoin Cash",
   "main": "main.js",
   "productName": "BITBOX",
