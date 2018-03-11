@@ -371,27 +371,18 @@ class Server {
 
     server.post('/getblockhash', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
-      res.send('00000000a0faf83ab5799354ae9c11da2a2bd6db44058e03c528851dee0a3fff');
+      let blockchain = store.get('state').blockchain;
+      let block = underscore.findWhere(blockchain.chain, {index: +req.body.params[0]});
+
+      res.send(block ? block.header : 'n/a');
     });
 
     server.post('/getblockheader', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
-      res.send(JSON.stringify({
-        "hash": "00000000c937983704a73af28acdec37b049d214adbda81d7e2a3dd146f6ed09",
-        "confirmations": 437926,
-        "height": 1000,
-        "version": 1,
-        "versionHex": "00000001",
-        "merkleroot": "fe28050b93faea61fa88c4c630f0e1f0a1c24d0082dd0e10d369e13212128f33",
-        "time": 1232346882,
-        "mediantime": 1232344831,
-        "nonce": 2595206198,
-        "bits": "1d00ffff",
-        "difficulty": 1,
-        "chainwork": "000000000000000000000000000000000000000000000000000003e903e903e9",
-        "previousblockhash": "0000000008e647742775a230787d66fdf92c46a48c896bfbc85cdc8acc67e87d",
-        "nextblockhash": "00000000a2887344f8db859e372e7e4bc26b23b9de340f725afbf2edb265b4c6"
-      }));
+      let blockchain = store.get('state').blockchain;
+      let block = underscore.findWhere(blockchain.chain, {header: req.body.params[0]});
+
+      res.send(block ? block.header : 'n/a');
     });
 
     server.post('/getblocktemplate', (req, res) => {
