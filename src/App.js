@@ -19,6 +19,7 @@ import Utxo from './models/Utxo';
 
 import WalletContainer from './containers/WalletContainer'
 import BlocksContainer from './containers/BlocksContainer';
+import BlockContainer from './containers/BlockContainer';
 import SignAndVerifyContainer from './containers/SignAndVerifyContainer'
 import ImportAndExportContainer from './containers/ImportAndExportContainer'
 import ConvertContainer from './containers/ConvertContainer';
@@ -182,8 +183,8 @@ class App extends Component {
       })
 
       let tx = new Transaction({
-        inputs: [inputs],
-        outputs: [outputs]
+        inputs: inputs,
+        outputs: outputs
       });
 
       let blockData = {
@@ -220,14 +221,6 @@ class App extends Component {
       }
       return this.handlePathMatch(match.path);
     }
-
-    const BlockPage = (props) => {
-      return (
-        <BlockDetails
-          match={props.match}
-        />
-      );
-    };
 
     const AddressPage = (props) => {
       return (
@@ -329,7 +322,7 @@ class App extends Component {
             <ImportAndExportContainer />
             <Switch>
               <Route exact path="/blocks" component={BlocksContainer}/>
-              <Route path="/blocks/:block_id" component={BlockPage}/>
+              <Route path="/blocks/:block_id" component={BlockContainer}/>
               <Route path="/transactions/:transaction_id" component={TransactionsPage}/>
               <Route path="/convert" component={ConvertContainer}/>
               <Route path="/signandverify" component={SignAndVerifyContainer}/>

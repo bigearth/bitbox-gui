@@ -1,27 +1,13 @@
 import React, { Component } from 'react';
 import Block from './Block';
 import underscore from 'underscore';
-import {
-  Redirect
-} from 'react-router-dom';
 
 class Blocks extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      redirect: false
-    };
   }
 
   render() {
-    // if(this.state.redirect) {
-    //   return (<Redirect to={{
-    //     pathname: `${this.props.match.url}/${this.state.blockId}`,
-    //     state: {
-    //       block: this.props.chain[this.state.blockId]
-    //     }
-    //   }} />)
-    // }
 
     let blocks = [];
     if(this.props.blockchain.chain.length) {
