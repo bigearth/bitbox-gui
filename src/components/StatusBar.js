@@ -4,7 +4,79 @@ import {
   withRouter
 } from 'react-router-dom';
 
+import Block from '../models/Block';
+import Transaction from '../models/Transaction';
+import Output from '../models/Output';
+import Input from '../models/Input';
+import underscore from 'underscore';
+
 class StatusBar extends Component {
+
+  createBlock() {
+    let accounts = this.props.wallet.accounts;
+    let blockchain = this.props.blockchain;
+    let previousBlock = underscore.last(blockchain.chain) || {};
+    let newIndex
+    if(previousBlock.index || previousBlock.index === 0) {
+      newIndex = previousBlock.index + 1;
+    } else {
+      newIndex = 0;
+    }
+
+    let walletConfig = this.props.configuration.wallet;
+
+    let alice = bitbox.BitcoinCash.fromWIF(accounts[0].privateKeyWIF)
+    let txb = bitbox.BitcoinCash.transactionBuilder(walletConfig.network)
+    txb.addInput('61d520ccb74288c96bc1a2b20ea1c0d5a704776dd0164a396efec3ea7040349d', 0) // Alice's previous transaction output, has 15000 satoshis
+    txb.addOutput(accounts[0].legacy, 1250000000)
+    // (in)15000 - (out)12000 = (fee)3000, this is the miner fee
+    txb.sign(0, alice)
+    let hex = txb.build().toHex();
+
+    bitbox.RawTransactions.decodeRawTransaction(hex)
+    .then((result) => {
+      let inputs = [];
+      result.ins.forEach((vin, index) => {
+        inputs.push(new Input({
+          hex: vin.hex,
+          inputPubKey: vin.inputPubKey,
+          script: vin.script
+        }));
+      })
+
+      let outputs = [];
+      result.outs.forEach((vout, index) => {
+        outputs.push(new Output({
+          hex: vout.hex,
+          outputPubKey: vout.outputPubKey,
+          script: vout.script
+        }));
+      })
+
+      let tx = new Transaction({
+        hash: bitbox.Crypto.createSHA256Hash(hex),
+        inputs: inputs,
+        outputs: outputs
+      });
+
+      let blockData = {
+        index: newIndex,
+        transactions: [tx],
+        timestamp: Date()
+      };
+
+      let block = new Block(blockData)
+      block.previousBlockHeader = previousBlock.header || "#BCHForEveryone";
+      block.header = bitbox.Crypto.createSHA256Hash(`${block.index}${block.previousBlockHeader}${JSON.stringify(block.transactions)}${block.timestamp}`);
+      blockchain.chain.push(block);
+      let newChain = blockchain;
+      this.props.addBlock(newChain);
+    }, (err) => { console.log(err);
+    });
+    // utxoSet.addUtxo(address, output.value);
+    // this.handleUtxoUpdate(utxoSet);
+  }
+
   render() {
     return (
       <div className="pure-menu pure-menu-horizontal networkInfo">
@@ -18,6 +90,9 @@ class StatusBar extends Component {
           </li>
           <li className="pure-menu-item">
             MINING STATUS <br /> AUTOMINING <i className="fas fa-spinner fa-spin" />
+          </li>
+          <li className="pure-menu-item">
+            <button className='pure-button danger-background' onClick={this.createBlock.bind(this)}><i className="fas fa-cube"></i> Create block</button>
           </li>
         </ul>
       </div>

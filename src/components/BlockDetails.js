@@ -27,7 +27,6 @@ class BlockDetails extends Component {
     })
   }
 
-
   render() {
     let block = underscore.findWhere(this.props.blockchain.chain, {index: +this.props.match.params.block_id});
 
@@ -96,10 +95,10 @@ class BlockDetails extends Component {
         <table className="pure-table tableFormatting">
           <tbody>
             <tr>
-              <td><span className='subheader'>BLOCK HASH</span> <br />{block.hash}</td>
+              <td><span className='subheader'>BLOCK HASH</span> <br />{block.header}</td>
             </tr>
             <tr>
-              <td>HASHPREVBLOCK <br />00000</td>
+              <td>HASHPREVBLOCK <br />{block.previousBlockHeader}</td>
               <td>MINED ON <br />{moment(block.timestamp).format('MMMM Do YYYY, h:mm:ss a')}</td>
               <td>TX COUNT <br />{block.transactions.length}</td>
               <td>DIFFICULTY <br />0</td>

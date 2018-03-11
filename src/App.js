@@ -15,6 +15,8 @@ import Block from './models/Block';
 import Transaction from './models/Transaction';
 import Output from './models/Output';
 import Input from './models/Input';
+import underscore from 'underscore';
+
 import Utxo from './models/Utxo';
 
 import WalletContainer from './containers/WalletContainer'
@@ -76,8 +78,6 @@ import {
   createSignAndVerify
 } from './actions/SignAndVerifyActions';
 
-import underscore from 'underscore';
-
 let reduxStore = createStore(bitboxReducer)
 
 // const unsubscribe = reduxStore.subscribe(() =>{
@@ -130,35 +130,15 @@ class App extends Component {
       reduxStore.dispatch(createAccount(formattedAccount));
     });
     reduxStore.dispatch(updateStore());
-    this.createBlock();
-  }
 
-  handlePathMatch(path) {
-    if(path === '/' || path === '/blocks' || path === '/transactions' || path === '/configuration/wallet') {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  createBlock() {
-    let accounts = reduxStore.getState().wallet.accounts;
     let blockchain = reduxStore.getState().blockchain;
     let previousBlock = underscore.last(blockchain.chain) || {};
-    let newIndex
-    if(previousBlock.index || previousBlock.index === 0) {
-      newIndex = previousBlock.index + 1;
-    } else {
-      newIndex = 0;
-    }
+    let account = reduxStore.getState().wallet.accounts[0];
 
-    let walletConfig = reduxStore.getState().configuration.wallet;
-
-    let alice = bitbox.BitcoinCash.fromWIF(accounts[0].privateKeyWIF)
+    let alice = bitbox.BitcoinCash.fromWIF(account.privateKeyWIF)
     let txb = bitbox.BitcoinCash.transactionBuilder(walletConfig.network)
-    txb.addInput('61d520ccb74288c96bc1a2b20ea1c0d5a704776dd0164a396efec3ea7040349d', 0) // Alice's previous transaction output, has 15000 satoshis
-    txb.addOutput(accounts[0].legacy, 1250000000)
-    // (in)15000 - (out)12000 = (fee)3000, this is the miner fee
+    txb.addInput('61d520ccb74288c96bc1a2b20ea1c0d5a704776dd0164a396efec3ea7040349d', 0)
+    txb.addOutput(account.legacy, 1250000000)
     txb.sign(0, alice)
     let hex = txb.build().toHex();
 
@@ -183,12 +163,13 @@ class App extends Component {
       })
 
       let tx = new Transaction({
+        hash: bitbox.Crypto.createSHA256Hash(hex),
         inputs: inputs,
         outputs: outputs
       });
 
       let blockData = {
-        index: newIndex,
+        index: 0,
         transactions: [tx],
         timestamp: Date()
       };
@@ -201,8 +182,14 @@ class App extends Component {
       reduxStore.dispatch(addBlock(newChain));
     }, (err) => { console.log(err);
     });
-    // utxoSet.addUtxo(address, output.value);
-    // this.handleUtxoUpdate(utxoSet);
+  }
+
+  handlePathMatch(path) {
+    if(path === '/' || path === '/blocks' || path === '/transactions' || path === '/configuration/wallet') {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   showImport() {
@@ -291,9 +278,6 @@ class App extends Component {
                     to="/signandverify">
                     <i className="far fa-check-circle"></i> Sign &amp; Verify
                   </NavLink>
-                </li>
-                <li className="pure-menu-item">
-                  <button className='pure-button danger-background' onClick={this.createBlock.bind(this)}><i className="fas fa-cube"></i> Create block</button>
                 </li>
               </ul>
               <ul className="pure-menu-list right">

@@ -1,5 +1,6 @@
 class Transaction {
   constructor(transactionData) {
+    this.hash = transactionData.hash;
     this.inputs = transactionData.inputs;
     this.outputs = transactionData.outputs;
   }
