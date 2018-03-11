@@ -118,8 +118,8 @@ class Wallet extends Component {
           {modal}
 
           <ul className='subheader'>
-            <li className=''>MNEMONIC</li>
-            <li className='right'>HD PATH</li>
+            <li className=''><strong>MNEMONIC</strong></li>
+            <li className='right'><strong>HD PATH</strong></li>
           </ul>
           <ul className='subheader'>
             <li className='content-head'>{this.props.configuration.mnemonic}</li>

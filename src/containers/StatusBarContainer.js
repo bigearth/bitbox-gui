@@ -4,7 +4,6 @@ import {
   addBlock
 } from '../actions/BlockchainActions';
 
-
 const mapStateToProps = (state) => {
   return {
     wallet: state.wallet,
@@ -20,7 +19,6 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
 }
-
  
 const StatusBarContainer = connect(
   mapStateToProps,

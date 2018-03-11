@@ -6,17 +6,14 @@ import {
 import BitcoinCash from '../utilities/BitcoinCash'
 import Bitcoin from 'bitcoinjs-lib';
 import moment from 'moment';
+import underscore from 'underscore';
 
-class Transactions extends Component {
+class Transaction extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      redirect: false,
-      transaction: props.location.state.transaction,
-      blockId: props.location.state.blockId,
-      inputs: [],
-      outputs: []
-    };
+      redirect: false
+    }
   }
 
   handleRedirect() {
@@ -25,72 +22,59 @@ class Transactions extends Component {
     })
   }
 
-  componentDidMount() {
-    let t = bitbox.BitcoinCash.transaction();
-    let decodedTx = t.fromHex(this.state.transaction.rawHex);
-    let a = bitbox.BitcoinCash.address();
-    let s = bitbox.BitcoinCash.script();
-    let ins = [];
-    let ecpair = bitbox.BitcoinCash.ECPair();
-    decodedTx.ins.forEach((input, index) => {
-      let chunksIn = s.decompile(input.script);
-      let inputPubKey = ecpair.fromPublicKeyBuffer(chunksIn[1], Bitcoin.networks[this.props.wallet.network]).getAddress();
-      ins.push({
-        inputPubKey: inputPubKey,
-        hex: input.script.toString('hex'),
-        script: s.toASM(chunksIn)
-      });
-    })
-    this.setState({
-      inputs: ins
-    })
-
-    let outs = [];
-    let value = 0;
-    decodedTx.outs.forEach((output, index) => {
-      value += output.value;
-      let chunksIn = s.decompile(output.script);
-      let outputPubKey = a.fromOutputScript(output.script, Bitcoin.networks[this.props.wallet.network]);
-      outs.push({
-        outputPubKey: outputPubKey,
-        hex: output.script.toString('hex'),
-        script: s.toASM(chunksIn)
-      });
-    })
-    this.setState({
-      outputs: outs
-    })
-  }
+  // componentDidMount() {
+  //   let t = bitbox.BitcoinCash.transaction();
+  //   let decodedTx = t.fromHex(this.state.transaction.rawHex);
+  //   let a = bitbox.BitcoinCash.address();
+  //   let s = bitbox.BitcoinCash.script();
+  //   let ins = [];
+  //   let ecpair = bitbox.BitcoinCash.ECPair();
+  //   decodedTx.ins.forEach((input, index) => {
+  //     let chunksIn = s.decompile(input.script);
+  //     let inputPubKey = ecpair.fromPublicKeyBuffer(chunksIn[1], Bitcoin.networks[this.props.wallet.network]).getAddress();
+  //     ins.push({
+  //       inputPubKey: inputPubKey,
+  //       hex: input.script.toString('hex'),
+  //       script: s.toASM(chunksIn)
+  //     });
+  //   })
+  //   this.setState({
+  //     inputs: ins
+  //   })
+  //
+  //   let outs = [];
+  //   let value = 0;
+  //   decodedTx.outs.forEach((output, index) => {
+  //     value += output.value;
+  //     let chunksIn = s.decompile(output.script);
+  //     let outputPubKey = a.fromOutputScript(output.script, Bitcoin.networks[this.props.wallet.network]);
+  //     outs.push({
+  //       outputPubKey: outputPubKey,
+  //       hex: output.script.toString('hex'),
+  //       script: s.toASM(chunksIn)
+  //     });
+  //   })
+  //   this.setState({
+  //     outputs: outs
+  //   })
+  // }
 
   render() {
+    let block = underscore.findWhere(this.props.blockchain.chain, {index: +this.props.match.params.block_id});
+    let tx = underscore.findWhere(block.transactions, {hash: this.props.match.params.transaction_id});
+
     if (this.state.redirect) {
       return <Redirect
         push
         to={{
-          pathname: `/blocks/${this.state.blockId}`,
-          state: {
-            block: this.props.blockchainInstance.chain[this.state.blockId]
-          }
+          pathname: `/blocks/${this.props.match.params.block_id}`
         }}
       />
     }
 
-    let ins = [];
-    this.state.transaction.inputs.forEach((inp, ind) => {
-      ins.push(<li key={ind}>{inp}</li>);
-    })
-
-    let outs = [];
-    this.state.transaction.outputs.forEach((outp, ind) => {
-      if(this.props.wallet.displayCashaddr) {
-        outp = bitbox.BitcoinCash.toCashAddress(outp);
-      }
-      outs.push(<li key={ind}>{outp}</li>);
-    })
-
     let inputs = [];
-    this.state.inputs.forEach((input, index) => {
-      if(this.props.wallet.displayCashaddr) {
+    tx.inputs.forEach((input, index) => {
+      if(this.props.configuration.wallet.displayCashaddr) {
         input.inputPubKey = bitbox.BitcoinCash.toCashAddress(input.inputPubKey);
       }
       inputs.push(
@@ -111,8 +95,8 @@ class Transactions extends Component {
     });
 
     let outputs = [];
-    this.state.outputs.forEach((output, index) => {
-      if(this.props.wallet.displayCashaddr) {
+    tx.outputs.forEach((output, index) => {
+      if(this.props.configuration.wallet.displayCashaddr) {
         output.outputPubKey = bitbox.BitcoinCash.toCashAddress(output.outputPubKey);
       }
       outputs.push(
@@ -138,19 +122,19 @@ class Transactions extends Component {
           <tbody>
             <tr className="">
               <td className='important' onClick={this.handleRedirect.bind(this)}><i className="fa fa-arrow-left" /> <span className='subheader'>BACK</span></td>
-              <td className='important'>TRANSACTION {this.state.transaction.hash}</td>
+              <td className='important'>TRANSACTION {tx.hash}</td>
             </tr>
           </tbody>
         </table>
         <table className="pure-table tableFormatting">
           <tbody>
             <tr>
-              <td colSpan="4" className='breakWord'><span className='subheader'>HEX</span> <br />{this.state.transaction.rawHex}</td>
+              <td colSpan="4" className='breakWord'><span className='subheader'>HEX</span> <br />{tx.rawHex}</td>
               <td className="label coinbase">COINBASE</td>
             </tr>
             <tr>
-              <td>VALUE <br />{this.state.transaction.value} BCH</td>
-              <td>DATE <br />{moment(this.state.transaction.timestamp).format('MMMM Do YYYY, h:mm:ss a')}</td>
+              <td>VALUE <br />{bitbox.BitcoinCash.toBitcoinCash(tx.value)} BCH</td>
+              <td>DATE <br />{moment(tx.timestamp).format('MMMM Do YYYY, h:mm:ss a')}</td>
             </tr>
           </tbody>
         </table>
@@ -169,4 +153,4 @@ class Transactions extends Component {
   }
 }
 
-export default withRouter(Transactions);
+export default withRouter(Transaction);

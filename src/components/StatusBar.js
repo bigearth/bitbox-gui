@@ -25,11 +25,14 @@ class StatusBar extends Component {
 
     let walletConfig = this.props.configuration.wallet;
 
-    let alice = bitbox.BitcoinCash.fromWIF(accounts[0].privateKeyWIF)
+    let account1 = reduxStore.getState().wallet.accounts[0];
+    let account2 = reduxStore.getState().wallet.accounts[1];
+
+    let alice = bitbox.BitcoinCash.fromWIF(account1.privateKeyWIF)
     let txb = bitbox.BitcoinCash.transactionBuilder(walletConfig.network)
-    txb.addInput('61d520ccb74288c96bc1a2b20ea1c0d5a704776dd0164a396efec3ea7040349d', 0) // Alice's previous transaction output, has 15000 satoshis
-    txb.addOutput(accounts[0].legacy, 1250000000)
-    // (in)15000 - (out)12000 = (fee)3000, this is the miner fee
+    txb.addInput('61d520ccb74288c96bc1a2b20ea1c0d5a704776dd0164a396efec3ea7040349d', 0);
+    let value = 1250000000;
+    txb.addOutput(account2.legacy, value);
     txb.sign(0, alice)
     let hex = txb.build().toHex();
 
@@ -54,6 +57,9 @@ class StatusBar extends Component {
       })
 
       let tx = new Transaction({
+        value: value,
+        rawHex: hex,
+        timestamp: Date(),
         hash: bitbox.Crypto.createSHA256Hash(hex),
         inputs: inputs,
         outputs: outputs

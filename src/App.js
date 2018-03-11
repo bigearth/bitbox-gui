@@ -22,6 +22,7 @@ import Utxo from './models/Utxo';
 import WalletContainer from './containers/WalletContainer'
 import BlocksContainer from './containers/BlocksContainer';
 import BlockContainer from './containers/BlockContainer';
+import TransactionContainer from './containers/TransactionContainer';
 import SignAndVerifyContainer from './containers/SignAndVerifyContainer'
 import ImportAndExportContainer from './containers/ImportAndExportContainer'
 import ConvertContainer from './containers/ConvertContainer';
@@ -30,7 +31,6 @@ import StatusBarContainer from './containers/StatusBarContainer';
 // custom components
 import BlockDetails from './components/BlockDetails';
 // import Account from './components/Account';
-import TransactionsDisplay from './components/TransactionsDisplay';
 import Configuration from './components/Configuration';
 
 // utilities
@@ -133,13 +133,15 @@ class App extends Component {
 
     let blockchain = reduxStore.getState().blockchain;
     let previousBlock = underscore.last(blockchain.chain) || {};
-    let account = reduxStore.getState().wallet.accounts[0];
+    let account1 = reduxStore.getState().wallet.accounts[0];
+    let account2 = reduxStore.getState().wallet.accounts[1];
 
-    let alice = bitbox.BitcoinCash.fromWIF(account.privateKeyWIF)
-    let txb = bitbox.BitcoinCash.transactionBuilder(walletConfig.network)
-    txb.addInput('61d520ccb74288c96bc1a2b20ea1c0d5a704776dd0164a396efec3ea7040349d', 0)
-    txb.addOutput(account.legacy, 1250000000)
-    txb.sign(0, alice)
+    let alice = bitbox.BitcoinCash.fromWIF(account1.privateKeyWIF);
+    let txb = bitbox.BitcoinCash.transactionBuilder(walletConfig.network);
+    txb.addInput('61d520ccb74288c96bc1a2b20ea1c0d5a704776dd0164a396efec3ea7040349d', 0);
+    let value = 1250000000;
+    txb.addOutput(account2.legacy, value);
+    txb.sign(0, alice);
     let hex = txb.build().toHex();
 
     bitbox.RawTransactions.decodeRawTransaction(hex)
@@ -163,6 +165,9 @@ class App extends Component {
       })
 
       let tx = new Transaction({
+        value: value,
+        rawHex: hex,
+        timestamp: Date(),
         hash: bitbox.Crypto.createSHA256Hash(hex),
         inputs: inputs,
         outputs: outputs
@@ -306,8 +311,8 @@ class App extends Component {
             <ImportAndExportContainer />
             <Switch>
               <Route exact path="/blocks" component={BlocksContainer}/>
+              <Route path="/blocks/:block_id/transactions/:transaction_id" component={TransactionContainer}/>
               <Route path="/blocks/:block_id" component={BlockContainer}/>
-              <Route path="/transactions/:transaction_id" component={TransactionsPage}/>
               <Route path="/convert" component={ConvertContainer}/>
               <Route path="/signandverify" component={SignAndVerifyContainer}/>
               <Route path="/configuration" component={ConfigurationPage}/>

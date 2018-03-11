@@ -1,5 +1,8 @@
 class Transaction {
   constructor(transactionData) {
+    this.value = transactionData.value;
+    this.rawHex = transactionData.rawHex;
+    this.timestamp = transactionData.timestamp;
     this.hash = transactionData.hash;
     this.inputs = transactionData.inputs;
     this.outputs = transactionData.outputs;

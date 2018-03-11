@@ -12,6 +12,9 @@ import underscore from 'underscore';
 class BlockDetails extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      redirect: false
+    };
   }
 
   handleRedirect() {
@@ -30,20 +33,15 @@ class BlockDetails extends Component {
   render() {
     let block = underscore.findWhere(this.props.blockchain.chain, {index: +this.props.match.params.block_id});
 
-    // if (this.state.redirect && this.state.transaction === '') {
-    //   return (<Redirect to={{
-    //     pathname: `/blocks`
-    //   }} />)
-    // } else if (this.state.redirect && this.state.transaction) {
-    //   return (<Redirect to={{
-    //     pathname: `/transactions/${this.state.transaction.hash}`,
-    //     state: {
-    //       transaction: this.state.transaction,
-    //       blockId: this.state.block.index,
-    //       blockchainInstance: this.props.blockchainInstance
-    //     }
-    //   }} />)
-    // }
+    if (this.state.redirect && this.state.transaction === '') {
+      return (<Redirect to={{
+        pathname: `/blocks`
+      }} />)
+    } else if (this.state.redirect && this.state.transaction) {
+      return (<Redirect to={{
+        pathname: `/blocks/${this.props.match.params.block_id}/transactions/${this.state.transaction.hash}`
+      }} />)
+    }
 
     let txs = [];
     block.transactions.forEach((tx, idx) => {
@@ -51,6 +49,8 @@ class BlockDetails extends Component {
       tx.inputs.forEach((inp, ind) => {
         if(this.props.configuration.displayCashaddr) {
           inp = bitbox.BitcoinCash.toCashAddress(inp.inputPubKey);
+        } else {
+          inp = inp.inputPubKey;
         }
 
         ins.push(<li key={ind}>{inp}</li>);
@@ -60,6 +60,8 @@ class BlockDetails extends Component {
       tx.outputs.forEach((outp, ind) => {
         if(this.props.configuration.displayCashaddr) {
           outp = bitbox.BitcoinCash.toCashAddress(outp.outputPubKey);
+        } else {
+          outp = outp.outputPubKey;
         }
         outs.push(<li key={ind}>{outp}</li>);
       })
@@ -75,7 +77,7 @@ class BlockDetails extends Component {
           <tr>
             <td>INPUTS <br /><ul>{ins}</ul></td>
             <td>OUTPUTS <br /><ul>{outs}</ul></td>
-            <td>VALUE <br />{tx.value} BCH</td>
+            <td>VALUE <br />{bitbox.BitcoinCash.toBitcoinCash(tx.value)} BCH</td>
             <td>DATE <br />{moment(tx.timestamp).format('MMMM Do YYYY, h:mm:ss a')}</td>
           </tr>
         </tbody>
