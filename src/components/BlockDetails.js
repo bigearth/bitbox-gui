@@ -33,13 +33,13 @@ class BlockDetails extends Component {
   render() {
     let block = underscore.findWhere(this.props.blockchain.chain, {index: +this.props.match.params.block_id});
 
-    if (this.state.redirect && this.state.transaction === '') {
-      return (<Redirect to={{
-        pathname: `/blocks`
-      }} />)
-    } else if (this.state.redirect && this.state.transaction) {
+    if (this.state.redirect && this.state.transaction) {
       return (<Redirect to={{
         pathname: `/blocks/${this.props.match.params.block_id}/transactions/${this.state.transaction.hash}`
+      }} />)
+    } else if (this.state.redirect) {
+      return (<Redirect to={{
+        pathname: `/blocks`
       }} />)
     }
 
@@ -89,7 +89,7 @@ class BlockDetails extends Component {
         <table className="pure-table DetailsHeader">
           <tbody>
             <tr className="">
-              <td className='important' onClick={this.handleRedirect.bind(this)}><i className="fa fa-arrow-left" /> <span className='subheader'>BACK</span></td>
+              <td className='important nextPage' onClick={this.handleRedirect.bind(this)}><i className="fa fa-arrow-left" /> <span className='subheader'>BACK</span></td>
               <td className='important'>BLOCK {block.index}</td>
             </tr>
           </tbody>

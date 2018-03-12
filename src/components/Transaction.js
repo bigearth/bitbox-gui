@@ -121,7 +121,7 @@ class Transaction extends Component {
         <table className="pure-table DetailsHeader">
           <tbody>
             <tr className="">
-              <td className='important' onClick={this.handleRedirect.bind(this)}><i className="fa fa-arrow-left" /> <span className='subheader'>BACK</span></td>
+              <td className='important nextPage' onClick={this.handleRedirect.bind(this)}><i className="fa fa-arrow-left" /> <span className='subheader'>BACK</span></td>
               <td className='important'>TRANSACTION {tx.hash}</td>
             </tr>
           </tbody>
