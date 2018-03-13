@@ -38,8 +38,9 @@ class SignAndVerify extends Component {
       this.props.updateValue('message1Error', privateKeyWIF);
       return false;
     }
-    let signature = BitcoinCash.signMessage(this.props.signAndVerify.message1, privateKeyWIF);
-    this.props.updateValue('signature1', signature.toString('base64'));
+
+    let signature = bitbox.BitcoinCash.signMessageWithPrivKey(privateKeyWIF, this.props.signAndVerify.message1);
+    this.props.updateValue('signature1', signature);
   }
 
   verifyMessage() {

@@ -1331,8 +1331,8 @@ class Server {
       }
 
       let message = req.body.params[1];
-      let signature = BitcoinCash.signMessage(message, privateKeyWIF);
-      res.send(signature.toString('base64'));
+      let signature = bitbox.BitcoinCash.signMessageWithPrivKey(privateKeyWIF, message);
+      res.send(signature);
     });
 
     server.post('/signmessagewithprivkey', (req, res) => {

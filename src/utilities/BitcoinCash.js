@@ -3,42 +3,20 @@ import Address from '../models/Address';
 import Bitcoin from 'bitcoinjs-lib';
 let BITBOXCli = require('bitbox-cli/lib/bitboxcli').default;
 let bitbox = new BITBOXCli();
-
+import underscore from 'underscore';
 
 class BitcoinCash {
-  static signMessage(message, privateKeyWIF) {
-
-    let keyPair;
-    let errorMsg = '';
-    try {
-      keyPair = bitbox.BitcoinCash.fromWIF(privateKeyWIF);
-    } catch (e) {
-      errorMsg = e.message;
-    }
-
-    if(errorMsg !== '') {
-      return errorMsg;
-    }
-
-    let privateKey = keyPair.d.toBuffer(32);
-    let signature = BitcoinCash.sign(message, privateKeyWIF);
-    let signature1 = signature.toString('base64')
-    return signature1;
-  }
-
-  static sign(message, privateKeyWIF) {
-    return bitbox.BitcoinCash.signMessageWithPrivKey(privateKeyWIF, message);
-  }
-
   static returnPrivateKeyWIF(pubAddress, addresses) {
+    let encoding;
+    if(bitbox.BitcoinCash.isCashAddress(pubAddress)) {
+      encoding = 'cashAddr';
+    } else {
+      encoding = 'legacy';
+    }
     let privateKeyWIF;
     let errorMsg = '';
     try {
-      addresses.forEach((address, index) => {
-        if(bitbox.BitcoinCash.toLegacyAddress(pubAddress) === bitbox.BitcoinCash.fromWIF(address.privateKeyWIF).getAddress()) {
-          privateKeyWIF = address.privateKeyWIF;
-        }
-      });
+      privateKeyWIF = (encoding === 'cashAddr') ? underscore.findWhere(addresses, ({cashAddr: pubAddress})) : underscore.findWhere(addresses, ({legacy: pubAddress}));
     } catch (e) {
       errorMsg = e.message;
     }
@@ -46,7 +24,7 @@ class BitcoinCash {
     if(errorMsg !== '') {
       return errorMsg;
     } else {
-      return privateKeyWIF;
+      return privateKeyWIF.privateKeyWIF;
     }
   }
 
