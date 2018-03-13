@@ -105,7 +105,7 @@ class SignAndVerify extends Component {
               <label>Address</label>
               <input id="address1" type='text' value={this.props.signAndVerify.address1} onChange={this.handleInputChange.bind(this)}/>
               <label>Signature</label>
-              <textarea disabled id="signature1" value={this.props.signAndVerify.signature1} onChange={this.handleInputChange.bind(this)}></textarea>
+              <textarea readOnly id="signature1" value={this.props.signAndVerify.signature1} onChange={this.handleInputChange.bind(this)}></textarea>
             </form>
             <button className="pure-button" onClick={this.handleClear.bind(this, 'sign')}>Clear</button>
             <button className="pure-button" onClick={this.signMessage.bind(this)}>Sign</button>

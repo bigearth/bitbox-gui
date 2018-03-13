@@ -18,7 +18,8 @@ class Configuration {
         change: "0",
         address_index: "0"
       },
-      password: ''
+      password: '',
+      language: 'english'
     };
   }
 }
