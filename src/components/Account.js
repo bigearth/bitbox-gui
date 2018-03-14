@@ -1,8 +1,23 @@
 import React, { Component } from 'react';
+import {
+  Redirect
+} from 'react-router-dom';
 
 class Account extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+    }
+  }
+
+  handleRedirect(e) {
+    if(e.target.nodeName === 'BUTTON' || e.target.nodeName === 'path') {
+      this.props.showAccountModal(this.props.account)
+    } else {
+    this.setState({
+      redirect: true
+    });
+    }
   }
 
   render() {
@@ -21,13 +36,19 @@ class Account extends Component {
 
     let index = this.props.account.index;
 
+    if(this.state.redirect) {
+      return (<Redirect to={{
+        pathname: `/accounts/${index}`
+      }} />)
+    }
+
     return (
-      <tr className="Account">
+      <tr className="Account" onClick={this.handleRedirect.bind(this)}>
         <td className='important'><span className='subheader'>ADDRESS{coinbase}</span> <br />{address}</td>
         <td className='important'><span className='subheader'>BALANCE</span> <br />0 BCH</td>
         <td><span className='subheader'>TX COUNT</span> <br />0</td>
         <td><span className='subheader'>INDEX</span> <br />{index}</td>
-        <td><button className="pure-button" onClick={this.props.showAccountModal.bind(this, this.props.account)}><i className="fas fa-key" /></button></td>
+        <td><button className="pure-button openModal"><i className="fas fa-key openModal" /></button></td>
       </tr>
     );
   }

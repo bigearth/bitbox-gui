@@ -10,7 +10,6 @@ import {
 
 const mapStateToProps = (state) => {
   return {
-    configuration: state.configuration.wallet,
     blockchain: state.blockchain,
     wallet: state.wallet,
     explorer: state.explorer

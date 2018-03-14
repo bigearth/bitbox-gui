@@ -368,7 +368,12 @@ a.pure-button-primary {
   padding: 1em 0;
 }
 
-.Wallet.content, .Blocks, .WrapperBlockDetails, .Configuration, .Transaction, .Convert, .SignAndVerify {
+.Wallet tr:hover {
+  background: #eee;
+  cursor: pointer;
+}
+
+.Wallet.content, .Blocks, .WrapperBlockDetails, .Configuration, .Transaction, .Convert, .SignAndVerify, .AccountDetails {
   background: $white;
 }
 

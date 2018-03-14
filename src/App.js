@@ -22,6 +22,7 @@ import Utxo from './models/Utxo';
 import WalletContainer from './containers/WalletContainer'
 import BlocksContainer from './containers/BlocksContainer';
 import BlockContainer from './containers/BlockContainer';
+import AccountDetailsContainer from './containers/AccountDetailsContainer';
 import TransactionContainer from './containers/TransactionContainer';
 import SignAndVerifyContainer from './containers/SignAndVerifyContainer'
 import ImportAndExportContainer from './containers/ImportAndExportContainer'
@@ -325,6 +326,7 @@ class App extends Component {
               <Route exact path="/blocks" component={BlocksContainer}/>
               <Route path="/blocks/:block_id/transactions/:transaction_id" component={TransactionContainer}/>
               <Route path="/blocks/:block_id" component={BlockContainer}/>
+              <Route path="/accounts/:account_id" component={AccountDetailsContainer}/>
               <Route path="/convert" component={ConvertContainer}/>
               <Route path="/signandverify" component={SignAndVerifyContainer}/>
               <Route path="/configuration" component={ConfigurationPage}/>

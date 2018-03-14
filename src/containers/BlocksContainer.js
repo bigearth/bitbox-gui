@@ -3,7 +3,6 @@ import Blocks from '../components/Blocks'
 
 const mapStateToProps = (state) => {
   return {
-    configuration: state.configuration.wallet,
     blockchain: state.blockchain
   }
 }
