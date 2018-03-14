@@ -466,7 +466,7 @@ a.pure-button-primary {
   background-color: $danger;
 }
 
-.Blocks td:first-of-type, .DetailsHeader td:first-of-type {
+.Blocks td:first-of-type, .DetailsHeader td:first-of-type, .AccountDetailsHeader td:first-of-type {
   background-color: $medBlue;
   color: $white;
   text-align: center;
@@ -474,7 +474,7 @@ a.pure-button-primary {
   width: 5%;
 }
 
-.DetailsHeader.pure-table td:first-of-type .subheader {
+.DetailsHeader.pure-table td:first-of-type .subheader, .AccountDetailsHeader.pure-table td:first-of-type .subheader {
   color: $white;
 }
 
@@ -486,15 +486,15 @@ a.pure-button-primary {
   background: $danger;
 }
 
-.DetailsHeader.pure-table tr:first-of-type td {
+.DetailsHeader.pure-table tr:first-of-type td, .AccountDetailsHeader.pure-table tr:first-of-type td {
   font-size: 1.5em;
 }
 
-.DetailsHeader.pure-table tr:first-of-type td:first-of-type {
+.DetailsHeader.pure-table tr:first-of-type td:first-of-type, .AccountDetailsHeader.pure-table tr:first-of-type td:first-of-type {
   font-size: 1em;
 }
 
-.DetailsHeader.pure-table tr:first-of-type td:first-of-type:hover {
+.DetailsHeader.pure-table tr:first-of-type td:first-of-type:hover, .AccountDetailsHeader.pure-table tr:first-of-type td:first-of-type:hover {
   background-color: $danger;
 }
 

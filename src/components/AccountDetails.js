@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import BitcoinCash from '../utilities/BitcoinCash'
 import {
   withRouter,
-  Redirect
+  Redirect,
+  Route,
+  NavLink
 } from 'react-router-dom';
 
-import Bitcoin from 'bitcoinjs-lib';
-import moment from 'moment';
+import AccountSendContainer from '../containers/AccountSendContainer';
+import AccountReceiveContainer from '../containers/AccountReceiveContainer';
 import underscore from 'underscore';
 
 class AccountDetails extends Component {
@@ -22,9 +24,15 @@ class AccountDetails extends Component {
       redirect: true
     })
   }
+
   render() {
     let account = underscore.findWhere(this.props.wallet.accounts, {index: +this.props.match.params.account_id});
 
+    if (this.state.redirect) {
+      return (<Redirect to={{
+        pathname: `/`
+      }} />)
+    }
 
     return (
       <div className="AccountDetails">
@@ -36,6 +44,31 @@ class AccountDetails extends Component {
             </tr>
           </tbody>
         </table>
+        <table className="pure-table tableFormatting">
+          <tbody>
+            <tr>
+              <td><span className='subheader'>BALANCE</span> <br /></td>
+            </tr>
+            <tr>
+              <td>RECEIVED <br /></td>
+              <td>SENT <br /></td>
+              <td>
+                <NavLink
+                  to={`/accounts/${account.index}/receive`}>
+                  <i className="far fa-check-circle"></i> RECEIVE
+                </NavLink>
+              <br /></td>
+              <td>
+                <NavLink
+                  to={`/accounts/${account.index}/send`}>
+                  <i className="far fa-check-circle"></i> SEND
+                </NavLink>
+              <br /></td>
+            </tr>
+          </tbody>
+        </table>
+        <Route path="/accounts/:account_id/send" component={AccountSendContainer}/>
+        <Route path="/accounts/:account_id/receive" component={AccountReceiveContainer}/>
       </div>
     );
   }
