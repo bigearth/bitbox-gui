@@ -27,6 +27,7 @@ import SignAndVerifyContainer from './containers/SignAndVerifyContainer'
 import ImportAndExportContainer from './containers/ImportAndExportContainer'
 import ConvertContainer from './containers/ConvertContainer';
 import StatusBarContainer from './containers/StatusBarContainer';
+import ExplorerContainer from './containers/ExplorerContainer'
 
 // custom components
 import BlockDetails from './components/BlockDetails';
@@ -78,6 +79,10 @@ import {
   createSignAndVerify
 } from './actions/SignAndVerifyActions';
 
+import {
+  createExplorer
+} from './actions/ExplorerActions';
+
 let reduxStore = createStore(bitboxReducer)
 
 // const unsubscribe = reduxStore.subscribe(() =>{
@@ -92,12 +97,14 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    // Write default config top reduxStore
+
+    // Set up default redux store
     reduxStore.dispatch(createConfig());
     reduxStore.dispatch(createImportAndExport());
     reduxStore.dispatch(createConvert());
     reduxStore.dispatch(createBlockchain());
     reduxStore.dispatch(createSignAndVerify());
+    reduxStore.dispatch(createExplorer());
   }
 
   componentDidMount() {
@@ -240,6 +247,8 @@ class App extends Component {
 
     let chainlength = reduxStore.getState().blockchain.chain.length;
 
+
+
     return (
       <Provider store={reduxStore}>
         <Router>
@@ -286,6 +295,9 @@ class App extends Component {
                 </li>
               </ul>
               <ul className="pure-menu-list right">
+                <li className="pure-menu-item Explorer">
+                  <ExplorerContainer />
+                </li>
                 <li className="pure-menu-item">
                   <button className="importAndExportBtn" onClick={this.showExport.bind(this)}>
                     <i className="fas fa-upload" />

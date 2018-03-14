@@ -6,6 +6,7 @@ import importAndExport from './importAndExport';
 import convert from './convert';
 import blockchain from './blockchain';
 import signandverify from './signandverify';
+import explorer from './explorer';
  
 const bitboxReducer = combineReducers({
   configuration,
@@ -13,7 +14,8 @@ const bitboxReducer = combineReducers({
   importAndExport,
   convert,
   blockchain,
-  signandverify
+  signandverify,
+  explorer
 })
 
 const rootReducer = (state, action) => {
