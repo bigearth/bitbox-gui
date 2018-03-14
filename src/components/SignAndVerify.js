@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import BitcoinCash from '../utilities/BitcoinCash';
 
 class SignAndVerify extends Component {
-  constructor(props) {
-    super(props);
+  handleSubmit(event) {
+    event.preventDefault();
   }
 
   handleClear(formId) {
@@ -100,7 +100,7 @@ class SignAndVerify extends Component {
         <div className="pure-g">
           <div className="l-box-lrg pure-u-1-2">
             <h3>Sign Message</h3>
-            <form className="pure-form pure-form-stacked">
+            <form className="pure-form pure-form-stacked" onSubmit={this.handleSubmit}>
               <label>Message</label>
               <textarea id="message1" value={this.props.signAndVerify.message1} onChange={this.handleInputChange.bind(this)}></textarea>
               <label>Address</label>
@@ -115,7 +115,7 @@ class SignAndVerify extends Component {
           </div>
           <div className="l-box-lrg pure-u-1-2">
             <h3>Verify Message</h3>
-            <form className="pure-form pure-form-stacked">
+            <form className="pure-form pure-form-stacked" onSubmit={this.handleSubmit}>
               <label>Message</label>
               <textarea id="message2" value={this.props.signAndVerify.message2} onChange={this.handleInputChange.bind(this)}></textarea>
               <label>Address</label>
