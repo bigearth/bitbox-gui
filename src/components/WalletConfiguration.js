@@ -23,6 +23,10 @@ class WalletConfiguration extends Component {
     })
   }
 
+  handleSubmit(event) {
+    event.preventDefault();
+  }
+
   render() {
     if (this.state.redirect) {
       return <Redirect to='/'/>;
@@ -67,7 +71,7 @@ class WalletConfiguration extends Component {
         <h2 className="content-head is-center">Accounts & Keys</h2>
         <div className="pure-g">
           <div className="l-box-lrg pure-u-1-2">
-            <form className="pure-form pure-form-stacked">
+            <form className="pure-form pure-form-stacked" onSubmit={this.handleSubmit}>
               <fieldset>
                 <button className="pure-button" onClick={this.resetBitbox.bind(this, this.props.configuration.wallet)}><i className="fas fa-redo" /> Restart</button>
 
@@ -91,7 +95,7 @@ class WalletConfiguration extends Component {
             </form>
           </div>
           <div className="l-box-lrg pure-u-1-2">
-            <form className="pure-form pure-form-stacked">
+            <form className="pure-form pure-form-stacked" onSubmit={this.handleSubmit}>
               <fieldset>
 
                 <label>Autogenerate HD Mnemonic</label>
