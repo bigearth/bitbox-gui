@@ -704,6 +704,34 @@ a.pure-button-primary {
   display: none;
 }
 
-.Explorer input {
+.Explorer {
+  padding-right: 10px;
+}
+
+.input-icon-wrap {
+  border: 1px solid $lightGrey;
   border-radius: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+.input-icon {
+  background: $slate;
+  color: $medBlue;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.input-with-icon {
+  background: $slate;
+  border: none;
+  flex: 1;
+  line-height: inherit;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  width: 400px;
+}
+
+.input-icon, .input-with-icon {
+  padding: 10px;
 }

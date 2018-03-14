@@ -12,7 +12,7 @@ class Explorer extends Component {
     }
   }
 
-  handleSubmit(searchTerm, blockchain, wallet) {
+  handleSubmit(searchTerm, blockchain, wallet, event) {
     let index;
     let result;
     if(searchTerm !== '') {
@@ -48,9 +48,11 @@ class Explorer extends Component {
 
   render() {
     return (
-      <span>
-        <button onClick={this.handleSubmit.bind(this, this.props.explorer.searchTerm, this.props.blockchain, this.props.wallet)} type="submit" className="pure-button danger-background">Search</button>
-        <input onChange={this.props.updateValue.bind(this)} value={this.props.explorer.searchTerm} placeholder="SEARCH BLOCKS/ADDRESSES/TXS" type="text" className="pure-input-rounded" />
+      <span className="input-icon-wrap">
+        <form onSubmit={this.handleSubmit.bind(this, this.props.explorer.searchTerm, this.props.blockchain, this.props.wallet)}>
+          <input id="form-name" onChange={this.props.updateValue.bind(this)} value={this.props.explorer.searchTerm} placeholder="SEARCH BLOCK AND TRANSACTIONS" type="text" className="pure-input-rounded input-with-icon" />
+        </form>
+        <span className="input-icon"><i className="fas fa-search" /></span>
       </span>
     );
   }
