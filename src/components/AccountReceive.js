@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import underscore from 'underscore';
+import QRCode from 'qrcode.react';
+
 class AccountReceive extends Component {
   moreAddresses() {
 
@@ -12,18 +14,24 @@ class AccountReceive extends Component {
     })
     let freshXpub = bitbox.BitcoinCash.fromXPub(account.xpub, account.previousAddresses.length);
     return (
-      <div className="AccountReceive">
-        <h2><i className="fas fa-chevron-right" /> Receive Bitcoin Cash</h2>
-        <h3><i className="fas fa-chevron-right" /> Previous Addresses</h3>
-        <ul>
-          {extendedPublicKeys}
-        </ul>
-        <h3><i className="fas fa-chevron-right" /> Fresh Addresses</h3>
-        <ul>
-          <li>
-            /{account.previousAddresses.length} {freshXpub}
-          </li>
-        </ul>
+      <div className="AccountReceive content pure-g">
+        <div className="pure-u-1-2">
+          <h2><i className="fas fa-chevron-right" /> Receive Bitcoin Cash</h2>
+          <h3><i className="fas fa-chevron-right" /> Previous Addresses</h3>
+          <ul>
+            {extendedPublicKeys}
+          </ul>
+          <h3><i className="fas fa-chevron-right" /> Fresh Addresses</h3>
+          <ul>
+            <li>
+              /{account.previousAddresses.length} {freshXpub}
+            </li>
+          </ul>
+        </div>
+        <div className="pure-u-1-2">
+          <p><QRCode value={account.cashAddr} /></p>
+          <p>Mnemonic: <code>m / 44&rsquo; / 145&rsquo; / {account.index}&rsquo; / 0 / {account.previousAddresses.length}</code></p>
+        </div>
       </div>
     );
   }

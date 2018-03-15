@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import BitcoinCash from '../utilities/BitcoinCash';
-var QRCode = require('qrcode.react');
+import QRCode from 'qrcode.react';
 
 class Convert extends Component {
   constructor(props) {
