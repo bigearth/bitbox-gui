@@ -17,20 +17,20 @@ class AccountReceive extends Component {
       <div className="AccountReceive content pure-g">
         <div className="pure-u-1-2">
           <h2><i className="fas fa-chevron-right" /> Receive Bitcoin Cash</h2>
-          <h3><i className="fas fa-chevron-right" /> Previous Addresses</h3>
-          <ul>
-            {extendedPublicKeys}
-          </ul>
-          <h3><i className="fas fa-chevron-right" /> Fresh Addresses</h3>
+          <h3><i className="far fa-clock" /> Fresh Addresses</h3>
           <ul>
             <li>
               /{account.previousAddresses.length} {freshXpub}
             </li>
           </ul>
+          <h3><i className="fas fa-clock" /> Previous Addresses</h3>
+          <ul>
+            {extendedPublicKeys}
+          </ul>
         </div>
-        <div className="pure-u-1-2">
+        <div className="pure-u-1-2 qr">
           <p><QRCode value={account.cashAddr} /></p>
-          <p>Mnemonic: <code>m / 44&rsquo; / 145&rsquo; / {account.index}&rsquo; / 0 / {account.previousAddresses.length}</code></p>
+          <p><code>m / 44&rsquo; / 145&rsquo; / {account.index}&rsquo; / 0 / {account.previousAddresses.length}</code></p>
         </div>
       </div>
     );
