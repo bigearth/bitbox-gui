@@ -50,7 +50,7 @@ class Explorer extends Component {
     return (
       <span className="input-icon-wrap">
         <form onSubmit={this.handleSubmit.bind(this, this.props.explorer.searchTerm, this.props.blockchain, this.props.wallet)}>
-          <input id="form-name" onChange={this.props.updateValue.bind(this)} value={this.props.explorer.searchTerm} placeholder="SEARCH BLOCK AND TRANSACTIONS" type="text" className="pure-input-rounded input-with-icon" />
+          <input id="form-name" onChange={this.props.updateExplorerValue.bind(this)} value={this.props.explorer.searchTerm} placeholder="SEARCH BLOCK AND TRANSACTIONS" type="text" className="pure-input-rounded input-with-icon" />
         </form>
         <span className="input-icon"><i className="fas fa-search" /></span>
       </span>

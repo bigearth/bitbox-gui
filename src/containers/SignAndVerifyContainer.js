@@ -2,8 +2,8 @@ import { connect } from 'react-redux'
 import SignAndVerify from '../components/SignAndVerify'
 
 import {
-  updateValue
-} from '../actions/ConvertActions';
+  updateSignAndVerifyValue
+} from '../actions/SignAndVerifyActions';
 
 const mapStateToProps = state => {
   return {
@@ -14,8 +14,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    updateValue: (prop, value) => {
-      dispatch(updateValue(prop, value))
+    updateSignAndVerifyValue: (prop, value) => {
+      dispatch(updateSignAndVerifyValue(prop, value))
     }
   }
 }

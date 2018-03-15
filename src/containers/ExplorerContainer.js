@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom';
 
 import {
-  updateValue
+  updateExplorerValue
 } from '../actions/ExplorerActions';
 
 const mapStateToProps = (state) => {
@@ -19,10 +19,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     resetValue: () => {
-      dispatch(updateValue(''))
+      dispatch(updateExplorerValue(''))
     },
-    updateValue: (e) => {
-      dispatch(updateValue(e.target.value))
+    updateExplorerValue: (e) => {
+      dispatch(updateExplorerValue(e.target.value))
     }
   }
 }

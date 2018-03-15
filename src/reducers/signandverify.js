@@ -1,6 +1,6 @@
 import {
   CREATE_SIGN_AND_VERIFY,
-  UPDATE_VALUE
+  UPDATE_SIGN_AND_VERIFY_VALUE
 } from '../actions/SignAndVerifyActions';
 import SignAndVerify from '../models/SignAndVerify';
 
@@ -10,7 +10,7 @@ export default function signandverify(state = {}, action) {
     case CREATE_SIGN_AND_VERIFY:
       signAndVerifyConfig = new SignAndVerify();
       return Object.assign({}, state, signAndVerifyConfig)
-    case UPDATE_VALUE:
+    case UPDATE_SIGN_AND_VERIFY_VALUE:
       signAndVerifyConfig[action.prop] = action.value;
       return Object.assign({}, state, signAndVerifyConfig)
     default:

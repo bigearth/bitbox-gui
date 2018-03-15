@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import Convert from '../components/Convert'
 import {
   createConvert,
-  updateValue
+  updateConvertValue
 } from '../actions/ConvertActions';
 
 const mapStateToProps = (state) => {
@@ -17,8 +17,8 @@ const mapDispatchToProps = (dispatch) => {
     createConvert: () => {
       dispatch(createConvert())
     },
-    updateValue: (prop, value) => {
-      dispatch(updateValue(prop, value))
+    updateConvertValue: (prop, value) => {
+      dispatch(updateConvertValue(prop, value))
     }
   }
 }

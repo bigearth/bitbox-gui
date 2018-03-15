@@ -20,37 +20,37 @@ class Convert extends Component {
     let error = this.props.convert.error;
     let errorMsg = this.props.convert.errorMsg;
     let privateKeyWIF = this.props.convert.privateKeyWIF;
-    this.props.updateValue('inputValue', inputValue);
-    this.props.updateValue('error', null);
-    this.props.updateValue('errorMsg', '');
+    this.props.updateConvertValue('inputValue', inputValue);
+    this.props.updateConvertValue('error', null);
+    this.props.updateConvertValue('errorMsg', '');
     try {
       keyPair = bitbox.BitcoinCash.fromWIF(inputValue, this.props.configuration.network);
       privateKeyWIF = inputValue;
-      this.props.updateValue('privateKeyWIF', inputValue);
+      this.props.updateConvertValue('privateKeyWIF', inputValue);
 
       cashaddr = bitbox.BitcoinCash.toCashAddress(keyPair.getAddress());
-      this.props.updateValue('cashaddr', cashaddr);
+      this.props.updateConvertValue('cashaddr', cashaddr);
 
       base58Check = bitbox.BitcoinCash.toLegacyAddress(keyPair.getAddress());
-      this.props.updateValue('base58Check', base58Check);
+      this.props.updateConvertValue('base58Check', base58Check);
     }
     catch (e) {
       try {
         cashaddr = bitbox.BitcoinCash.toCashAddress(inputValue);
-        this.props.updateValue('cashaddr', cashaddr);
+        this.props.updateConvertValue('cashaddr', cashaddr);
 
         base58Check = bitbox.BitcoinCash.toLegacyAddress(inputValue);
-        this.props.updateValue('base58Check', base58Check);
+        this.props.updateConvertValue('base58Check', base58Check);
       }
       catch (e) {
         error = true;
-        this.props.updateValue('error', error);
+        this.props.updateConvertValue('error', error);
         errorMsg = 'Invalid address';
-        this.props.updateValue('errorMsg', errorMsg);
+        this.props.updateConvertValue('errorMsg', errorMsg);
 
-        this.props.updateValue('privateKeyWIF', '');
-        this.props.updateValue('cashaddr', '');
-        this.props.updateValue('base58Check', '');
+        this.props.updateConvertValue('privateKeyWIF', '');
+        this.props.updateConvertValue('cashaddr', '');
+        this.props.updateConvertValue('base58Check', '');
       }
     }
   }

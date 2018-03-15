@@ -8,44 +8,44 @@ class SignAndVerify extends Component {
 
   handleClear(formId) {
     if(formId === 'sign') {
-      this.props.updateValue('message1', '');
-      this.props.updateValue('address1', '');
-      this.props.updateValue('signature1', '');
-      this.props.updateValue('message1Success', '');
-      this.props.updateValue('message1Error', '');
+      this.props.updateSignAndVerifyValue('message1', '');
+      this.props.updateSignAndVerifyValue('address1', '');
+      this.props.updateSignAndVerifyValue('signature1', '');
+      this.props.updateSignAndVerifyValue('message1Success', '');
+      this.props.updateSignAndVerifyValue('message1Error', '');
     } else {
-      this.props.updateValue('message2', '');
-      this.props.updateValue('address2', '');
-      this.props.updateValue('signature2', '');
-      this.props.updateValue('message2Success', '');
-      this.props.updateValue('message2Error', '');
+      this.props.updateSignAndVerifyValue('message2', '');
+      this.props.updateSignAndVerifyValue('address2', '');
+      this.props.updateSignAndVerifyValue('signature2', '');
+      this.props.updateSignAndVerifyValue('message2Success', '');
+      this.props.updateSignAndVerifyValue('message2Error', '');
     }
   }
 
   handleInputChange(e) {
     let value = e.target.value;
     let id = e.target.id;
-    this.props.updateValue(id, value);
+    this.props.updateSignAndVerifyValue(id, value);
   }
 
   signMessage() {
-    this.props.updateValue('message1Success', '');
-    this.props.updateValue('message1Error', '');
+    this.props.updateSignAndVerifyValue('message1Success', '');
+    this.props.updateSignAndVerifyValue('message1Error', '');
 
     let privateKeyWIF = BitcoinCash.returnPrivateKeyWIF(this.props.signAndVerify.address1, this.props.wallet.accounts);
     if(privateKeyWIF === 'Received an invalid Bitcoin Cash address as input.') {
-      this.props.updateValue('message1Success', '');
-      this.props.updateValue('message1Error', privateKeyWIF);
+      this.props.updateSignAndVerifyValue('message1Success', '');
+      this.props.updateSignAndVerifyValue('message1Error', privateKeyWIF);
       return false;
     }
 
     let signature = bitbox.BitcoinCash.signMessageWithPrivKey(privateKeyWIF, this.props.signAndVerify.message1);
-    this.props.updateValue('signature1', signature);
+    this.props.updateSignAndVerifyValue('signature1', signature);
   }
 
   verifyMessage() {
-    this.props.updateValue('message2Success', '');
-    this.props.updateValue('message2Error', '');
+    this.props.updateSignAndVerifyValue('message2Success', '');
+    this.props.updateSignAndVerifyValue('message2Error', '');
 
     let address = bitbox.BitcoinCash.toLegacyAddress(this.props.signAndVerify.address2);
     let signature = this.props.signAndVerify.signature2;
@@ -57,17 +57,17 @@ class SignAndVerify extends Component {
     }
     catch (e) {
       error = true;
-      this.props.updateValue('message2Success', '');
-      this.props.updateValue('message2Error', e.message);
+      this.props.updateSignAndVerifyValue('message2Success', '');
+      this.props.updateSignAndVerifyValue('message2Error', e.message);
     }
 
     if(!error) {
       if(verified) {
-        this.props.updateValue('message2Success', 'true');
-        this.props.updateValue('message2Error', '');
+        this.props.updateSignAndVerifyValue('message2Success', 'true');
+        this.props.updateSignAndVerifyValue('message2Error', '');
       } else {
-        this.props.updateValue('message2Error', 'Failed to verify message: Invalid signature');
-        this.props.updateValue('message2Success', '');
+        this.props.updateSignAndVerifyValue('message2Error', 'Failed to verify message: Invalid signature');
+        this.props.updateSignAndVerifyValue('message2Success', '');
       }
     }
   }
