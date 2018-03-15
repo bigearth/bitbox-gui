@@ -604,6 +604,12 @@ a.pure-button-primary {
   }
 }
 
+.Convert, .Configuration {
+  input {
+    width: 100%;
+  }
+}
+
 .SignAndVerify {
   textarea, input {
     width: 100%;
