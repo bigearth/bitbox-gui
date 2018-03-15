@@ -2,6 +2,12 @@ import React, { Component } from 'react';
 import BitcoinCash from '../utilities/BitcoinCash';
 
 class SignAndVerify extends Component {
+  constructor(props) {
+    super(props);
+    this.handleClear('verify');
+    this.handleClear('sign');
+  }
+
   handleSubmit(event) {
     event.preventDefault();
   }
@@ -47,11 +53,20 @@ class SignAndVerify extends Component {
     this.props.updateSignAndVerifyValue('message2Success', '');
     this.props.updateSignAndVerifyValue('message2Error', '');
 
-    let address = bitbox.BitcoinCash.toLegacyAddress(this.props.signAndVerify.address2);
+    let address;
+    let error = false;
+    try {
+      address = bitbox.BitcoinCash.toLegacyAddress(this.props.signAndVerify.address2);
+    }
+    catch (e) {
+      error = true;
+      this.props.updateSignAndVerifyValue('message2Success', '');
+      this.props.updateSignAndVerifyValue('message2Error', e.message);
+    }
+    
     let signature = this.props.signAndVerify.signature2;
     let message = this.props.signAndVerify.message2;
     let verified;
-    let error = false;
     try {
       verified = bitbox.BitcoinCash.verifyMessage(address, signature, message)
     }
