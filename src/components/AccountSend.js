@@ -1,6 +1,17 @@
 import React, { Component } from 'react';
 import underscore from 'underscore';
 class AccountSend extends Component {
+
+  handleSubmit(e) {
+    e.preventDefault();
+  }
+
+  handleInputChange(e) {
+    let value = e.target.value;
+    let id = e.target.id;
+    this.props.updateAccountSendValue(id, value);
+  }
+
   render() {
 
     return (
@@ -8,22 +19,21 @@ class AccountSend extends Component {
         <div className="pure-u-1-1">
           <h2><i className="fas fa-chevron-right" /> Send Bitcoin Cash</h2>
 
-          <form className="pure-form pure-form-aligned">
+          <form className="pure-form pure-form-aligned" onSubmit={this.handleSubmit.bind(this)}>
               <fieldset>
                   <div className="pure-control-group">
-                      <label htmlFor="name">Address</label>
-                      <input id="name" type="text" placeholder="Username" />
-                      <span className="pure-form-message-inline">This is a required field.</span>
+                      <label htmlFor="address">Address</label>
+                      <input onChange={this.handleInputChange.bind(this)} id="to" type="text" placeholder="Address" />
                   </div>
 
                   <div className="pure-control-group">
                       <label htmlFor="password">Amount</label>
-                      <input id="password" type="password" placeholder="Password" />
+                      <input onChange={this.handleInputChange.bind(this)} id="amount" type="number" placeholder="Amount" />
                   </div>
 
                   <div className="pure-control-group">
                       <label htmlFor="email">Fee</label>
-                      <input id="email" type="email" placeholder="Email Address" />
+                      <input onChange={this.handleInputChange.bind(this)} id="fee" type="number" placeholder="Fee" />
                   </div>
                   <div className="pure-controls">
                       <button type="submit" className="pure-button pure-button-primary">Submit</button>

@@ -1,24 +1,20 @@
 import { connect } from 'react-redux'
 import AccountSend from '../components/AccountSend'
-// import {
-//   createConvert,
-//   updateValue
-// } from '../actions/ConvertActions';
+import {
+  updateAccountSendValue
+} from '../actions/AccountSendActions';
 
 const mapStateToProps = (state) => {
   return {
-    // wallet: state.wallet
+    accountSend: state.accountsend
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    // createConvert: () => {
-    //   dispatch(createConvert())
-    // },
-    // updateValue: (prop, value) => {
-    //   dispatch(updateValue(prop, value))
-    // }
+    updateAccountSendValue: (prop, value) => {
+      dispatch(updateAccountSendValue(prop, value))
+    }
   }
 }
  

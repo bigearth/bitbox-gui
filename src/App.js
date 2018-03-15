@@ -85,6 +85,10 @@ import {
   createExplorer
 } from './actions/ExplorerActions';
 
+import {
+  createAccountSend
+} from './actions/AccountSendActions';
+
 let reduxStore = createStore(bitboxReducer)
 
 // const unsubscribe = reduxStore.subscribe(() =>{
@@ -122,6 +126,7 @@ class App extends Component {
     reduxStore.dispatch(addMasterPrivateKey(masterPrivateKey.chainCode));
     reduxStore.dispatch(updateWalletConfig('mnemonic', mnemonic));
     reduxStore.dispatch(updateWalletConfig('HDPath', HDPath));
+    reduxStore.dispatch(createAccountSend());
 
     accounts.forEach((account, index) => {
 

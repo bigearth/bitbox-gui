@@ -7,6 +7,7 @@ import convert from './convert';
 import blockchain from './blockchain';
 import signandverify from './signandverify';
 import explorer from './explorer';
+import accountsend from './accountsend';
  
 const bitboxReducer = combineReducers({
   configuration,
@@ -15,7 +16,8 @@ const bitboxReducer = combineReducers({
   convert,
   blockchain,
   signandverify,
-  explorer
+  explorer,
+  accountsend
 })
 
 const rootReducer = (state, action) => {
