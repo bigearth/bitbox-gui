@@ -133,9 +133,9 @@ class App extends Component {
         xpriv: account.xpriv,
         xpub: account.xpub,
         legacy: bitbox.BitcoinCash.toLegacyAddress(address),
-        cashAddr: address
+        cashAddr: address,
+        freshAddresses: [address]
       };
-
       reduxStore.dispatch(createAccount(formattedAccount));
     });
 
@@ -194,10 +194,12 @@ class App extends Component {
       let newChain = blockchain;
       reduxStore.dispatch(addBlock(newChain));
       reduxStore.dispatch(updateStore());
+
       account1.previousAddresses.push(account1.cashAddr)
       let newCashAddr = bitbox.BitcoinCash.fromXPub(account1.xpub, account1.previousAddresses.length);
       account1.cashAddr = newCashAddr;
       account1.legacy = bitbox.BitcoinCash.toLegacyAddress(newCashAddr);
+      account1.freshAddresses.push(account1.cashAddr)
       reduxStore.dispatch(updateAccount(account1));
     }, (err) => { console.log(err);
     });

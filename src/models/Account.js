@@ -3,6 +3,7 @@ class Account {
     this.title = config.title;
     this.index = config.index;
     this.previousAddresses = [];
+    this.freshAddresses = config.freshAddresses;
     this.privateKeyWIF = config.privateKeyWIF;
     this.xpriv = config.xpriv;
     this.xpub = config.xpub;

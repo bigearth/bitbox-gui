@@ -80,10 +80,11 @@ class StatusBar extends Component {
       this.props.addBlock(newChain);
       this.props.updateStore();
 
-      account1.previousAddresses.push(account1.cashAddr)
+      account1.previousAddresses.push(account1.freshAddresses.shift());
       let newCashAddr = bitbox.BitcoinCash.fromXPub(account1.xpub, account1.previousAddresses.length);
       account1.cashAddr = newCashAddr;
       account1.legacy = bitbox.BitcoinCash.toLegacyAddress(newCashAddr);
+      account1.freshAddresses.push(account1.cashAddr)
       this.props.updateAccount(account1);
     }, (err) => { console.log(err);
     });

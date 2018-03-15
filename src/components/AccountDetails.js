@@ -55,16 +55,28 @@ class AccountDetails extends Component {
               <td>SENT <br /></td>
               <td>
                 <NavLink
-                  to={`/accounts/${account.index}/receive`}>
-                  <i className="far fa-check-circle"></i> RECEIVE
+                  to={`/accounts/${account.index}/transactions`}>
+                  <button className='pure-button pure-button-primary'>
+                    <i className="fas fa-qrcode" /> TRANSACTIONS
+                  </button>
                 </NavLink>
-              <br /></td>
+              </td>
+              <td>
+                <NavLink
+                  to={`/accounts/${account.index}/receive`}>
+                  <button className='pure-button pure-button-primary'>
+                    <i className="fas fa-qrcode" /> RECEIVE
+                  </button>
+                </NavLink>
+              </td>
               <td>
                 <NavLink
                   to={`/accounts/${account.index}/send`}>
-                  <i className="far fa-check-circle"></i> SEND
+                  <button className='pure-button pure-button-primary'>
+                    <i className="far fa-check-circle"></i> SEND
+                  </button>
                 </NavLink>
-              <br /></td>
+              </td>
             </tr>
           </tbody>
         </table>
