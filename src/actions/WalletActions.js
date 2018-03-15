@@ -8,6 +8,7 @@ export const ADD_ROOT_SEED = 'ADD_ROOT_SEED';
 export const ADD_MASTER_PRIVATE_KEY = 'ADD_MASTER_PRIVATE_KEY';
 export const CREATE_ACCOUNT = 'CREATE_ACCOUNT';
 export const TOGGLE_DISPLAY_ACCOUNT = 'TOGGLE_DISPLAY_ACCOUNT';
+export const UPDATE_ACCOUNT = 'UPDATE_ACCOUNT';
 
 /*
  * action creators
@@ -35,4 +36,8 @@ export function createAccount(account) {
 
 export function toggleDisplayAccount(account) {
   return { type: TOGGLE_DISPLAY_ACCOUNT, account }
+}
+
+export function updateAccount(account) {
+  return { type: UPDATE_ACCOUNT, account }
 }

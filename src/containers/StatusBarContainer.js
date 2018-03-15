@@ -8,6 +8,9 @@ import {
   updateStore
 } from '../actions/ConfigurationActions';
 
+import {
+  updateAccount
+} from '../actions/WalletActions';
 
 const mapStateToProps = (state) => {
   return {
@@ -24,6 +27,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     updateStore: () => {
       dispatch(updateStore())
+    },
+    updateAccount: (account) => {
+      dispatch(updateAccount(account))
     }
   }
 }

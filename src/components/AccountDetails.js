@@ -7,6 +7,7 @@ import {
   NavLink
 } from 'react-router-dom';
 
+import AccountTransactionsContainer from '../containers/AccountTransactionsContainer';
 import AccountSendContainer from '../containers/AccountSendContainer';
 import AccountReceiveContainer from '../containers/AccountReceiveContainer';
 import underscore from 'underscore';
@@ -67,6 +68,7 @@ class AccountDetails extends Component {
             </tr>
           </tbody>
         </table>
+        <Route path="/accounts/:account_id/transactions" component={AccountTransactionsContainer}/>
         <Route path="/accounts/:account_id/send" component={AccountSendContainer}/>
         <Route path="/accounts/:account_id/receive" component={AccountReceiveContainer}/>
       </div>

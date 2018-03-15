@@ -38,7 +38,7 @@ class Account extends Component {
 
     if(this.state.redirect) {
       return (<Redirect to={{
-        pathname: `/accounts/${index}`
+        pathname: `/accounts/${index}/transactions`
       }} />)
     }
 

@@ -2,7 +2,7 @@ class Account {
   constructor(config) {
     this.title = config.title;
     this.index = config.index;
-    this.activeAddressIndex = 0;
+    this.previousAddresses = [];
     this.privateKeyWIF = config.privateKeyWIF;
     this.xpriv = config.xpriv;
     this.xpub = config.xpub;
