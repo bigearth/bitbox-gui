@@ -19,7 +19,8 @@ class Configuration {
         address_index: "0"
       },
       password: '',
-      language: 'english'
+      language: 'english',
+      mnemonicValidationMsg: ''
     };
   }
 }
