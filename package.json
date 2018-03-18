@@ -21,7 +21,9 @@
   ],
   "author": "Gabriel Cardona w/ EARTH",
   "license": "MIT",
-  "devDependencies": {},
+  "devDependencies": {
+    "babel-preset-env": "^1.6.1"
+  },
   "dependencies": {
     "axios": "^0.18.0",
     "babel-core": "^6.26.0",
