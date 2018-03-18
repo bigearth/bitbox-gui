@@ -35,7 +35,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(updateWalletConfig('entropy', value))
     },
     resetBitbox: (configuration) => {
-      let [mnemonic, HDPath, accounts] = bitbox.BitcoinCash.createHDWallet(configuration);
+      let [mnemonic, HDPath, accounts] = BitcoinCash.createHDWallet(configuration);
 
       dispatch(resetWallet());
       dispatch(updateWalletConfig('mnemonic', mnemonic));

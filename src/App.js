@@ -118,7 +118,7 @@ class App extends Component {
 
   createHDWallet() {
     let walletConfig = reduxStore.getState().configuration.wallet;
-    let [mnemonic, HDPath, accounts] = bitbox.BitcoinCash.createHDWallet(walletConfig);
+    let [mnemonic, HDPath, accounts] = BitcoinCash.createHDWallet(walletConfig);
     reduxStore.dispatch(createWallet());
     reduxStore.dispatch(updateWalletConfig('mnemonic', mnemonic));
     reduxStore.dispatch(updateWalletConfig('HDPath', HDPath));
