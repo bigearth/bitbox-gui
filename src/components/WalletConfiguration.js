@@ -66,6 +66,22 @@ class WalletConfiguration extends Component {
         <div className='value'>{this.props.configuration.wallet.entropy} bytes/{this.props.configuration.wallet.entropy * 8} bits</div></div>;
     }
 
+    let languageSelect;
+    if(this.props.configuration.wallet.autogenerateHDMnemonic) {
+      languageSelect = <div> <label>Mnemonic Language</label>
+        <select value={this.props.configuration.wallet.language} id='language' onChange={this.props.handleConfigChange.bind(this)}>
+          <option value="english">English</option>
+          <option value="chinese_simplified">Chinese simplified</option>
+          <option value="chinese_traditional">Chinese traditional</option>
+          <option value="french">French</option>
+          <option value="italian">Italian</option>
+          <option value="japanese">Japanese</option>
+          <option value="korean">Korean</option>
+          <option value="spanish">Spanish</option>
+        </select>
+      </div>
+    }
+
     return (
       <div className="AccountsAndKeys">
         <h2 className="content-head is-center">Accounts & Keys</h2>
@@ -77,20 +93,8 @@ class WalletConfiguration extends Component {
 
                 <label>Total number of accounts to generate</label>
                 <input id='totalAccounts' type='number' placeholder="Number of accounts" value={this.props.configuration.wallet.totalAccounts} onChange={this.props.handleConfigChange.bind(this)} />
-
                 {entropySlider}
-
-                <label>Mnemonic Language</label>
-                <select value={this.props.configuration.wallet.language} id='language' onChange={this.props.handleConfigChange.bind(this)}>
-                  <option value="english">English</option>
-                  <option value="chinese_simplified">Chinese simplified</option>
-                  <option value="chinese_traditional">Chinese traditional</option>
-                  <option value="french">French</option>
-                  <option value="italian">Italian</option>
-                  <option value="japanese">Japanese</option>
-                  <option value="korean">Korean</option>
-                  <option value="spanish">Spanish</option>
-                </select>
+                {languageSelect}
               </fieldset>
             </form>
           </div>

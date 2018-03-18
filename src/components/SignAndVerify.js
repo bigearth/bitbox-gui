@@ -15,13 +15,13 @@ class SignAndVerify extends Component {
   handleClear(formId) {
     if(formId === 'sign') {
       this.props.updateSignAndVerifyValue('message1', '');
-      this.props.updateSignAndVerifyValue('address1', '');
+      this.props.updateSignAndVerifyValue('signAddress', '');
       this.props.updateSignAndVerifyValue('signature1', '');
       this.props.updateSignAndVerifyValue('message1Success', '');
       this.props.updateSignAndVerifyValue('message1Error', '');
     } else {
       this.props.updateSignAndVerifyValue('message2', '');
-      this.props.updateSignAndVerifyValue('address2', '');
+      this.props.updateSignAndVerifyValue('verifyAddress', '');
       this.props.updateSignAndVerifyValue('signature2', '');
       this.props.updateSignAndVerifyValue('message2Success', '');
       this.props.updateSignAndVerifyValue('message2Error', '');
@@ -38,7 +38,15 @@ class SignAndVerify extends Component {
     this.props.updateSignAndVerifyValue('message1Success', '');
     this.props.updateSignAndVerifyValue('message1Error', '');
 
-    let privateKeyWIF = BitcoinCash.returnPrivateKeyWIF(this.props.signAndVerify.address1, this.props.wallet.accounts);
+    let privateKeyWIF
+    try {
+      privateKeyWIF = BitcoinCash.returnPrivateKeyWIF(this.props.signAndVerify.signAddress, this.props.wallet.accounts);
+    }
+    catch (e) {
+      this.props.updateSignAndVerifyValue('message1Success', '');
+      this.props.updateSignAndVerifyValue('message1Error', e.message);
+    }
+
     if(privateKeyWIF === 'Received an invalid Bitcoin Cash address as input.') {
       this.props.updateSignAndVerifyValue('message1Success', '');
       this.props.updateSignAndVerifyValue('message1Error', privateKeyWIF);
@@ -56,16 +64,17 @@ class SignAndVerify extends Component {
     let address;
     let error = false;
     try {
-      address = bitbox.BitcoinCash.toLegacyAddress(this.props.signAndVerify.address2);
+      address = bitbox.BitcoinCash.Address.toLegacyAddress(this.props.signAndVerify.verifyAddress);
     }
     catch (e) {
       error = true;
       this.props.updateSignAndVerifyValue('message2Success', '');
       this.props.updateSignAndVerifyValue('message2Error', e.message);
     }
-    
+
     let signature = this.props.signAndVerify.signature2;
     let message = this.props.signAndVerify.message2;
+    console.log('priv', address, signature, message)
     let verified;
     try {
       verified = bitbox.BitcoinCash.verifyMessage(address, signature, message)
@@ -119,7 +128,7 @@ class SignAndVerify extends Component {
               <label>Message</label>
               <textarea id="message1" value={this.props.signAndVerify.message1} onChange={this.handleInputChange.bind(this)}></textarea>
               <label>Address</label>
-              <input id="address1" type='text' value={this.props.signAndVerify.address1} onChange={this.handleInputChange.bind(this)}/>
+              <input id="signAddress" type='text' value={this.props.signAndVerify.signAddress} onChange={this.handleInputChange.bind(this)}/>
               <label>Signature</label>
               <textarea readOnly id="signature1" value={this.props.signAndVerify.signature1} onChange={this.handleInputChange.bind(this)}></textarea>
             </form>
@@ -134,7 +143,7 @@ class SignAndVerify extends Component {
               <label>Message</label>
               <textarea id="message2" value={this.props.signAndVerify.message2} onChange={this.handleInputChange.bind(this)}></textarea>
               <label>Address</label>
-              <input id="address2" type='text' value={this.props.signAndVerify.address2} onChange={this.handleInputChange.bind(this)}/>
+              <input id="verifyAddress" type='text' value={this.props.signAndVerify.verifyAddress} onChange={this.handleInputChange.bind(this)}/>
               <label>Signature</label>
               <textarea id="signature2" value={this.props.signAndVerify.signature2} onChange={this.handleInputChange.bind(this)}></textarea>
             </form>

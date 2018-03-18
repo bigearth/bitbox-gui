@@ -56,7 +56,7 @@ const mapDispatchToProps = (dispatch) => {
           xpriv: account.xpriv,
           xpub: account.xpub,
           legacy: address,
-          cashAddr: bitbox.BitcoinCash.toCashAddress(address)
+          cashAddr: bitbox.BitcoinCash.Address.toCashAddress(address)
         }))
       });
       dispatch(updateStore());

@@ -48,7 +48,7 @@ class BlockDetails extends Component {
       let ins = [];
       tx.inputs.forEach((inp, ind) => {
         if(this.props.configuration.displayCashaddr) {
-          inp = bitbox.BitcoinCash.toCashAddress(inp.inputPubKey);
+          inp = bitbox.BitcoinCash.Address.toCashAddress(inp.inputPubKey);
         } else {
           inp = inp.inputPubKey;
         }
@@ -59,7 +59,7 @@ class BlockDetails extends Component {
       let outs = [];
       tx.outputs.forEach((outp, ind) => {
         if(this.props.configuration.displayCashaddr) {
-          outp = bitbox.BitcoinCash.toCashAddress(outp.outputPubKey);
+          outp = bitbox.BitcoinCash.Address.toCashAddress(outp.outputPubKey);
         } else {
           outp = outp.outputPubKey;
         }

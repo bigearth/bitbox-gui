@@ -4,10 +4,10 @@ import underscore from 'underscore';
 class SignAndVerify {
   constructor() {
     this.message1 = '';
-    this.address1 = '';
+    this.signAddress = '';
     this.signature1 = '';
     this.message2 = '';
-    this.address2 = '';
+    this.verifyAddress = '';
     this.signature2 = '';
     this.message1Error = '';
     this.message2Error = '';

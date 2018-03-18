@@ -22,13 +22,13 @@ class AccountReceive extends Component {
 
     this.account.freshAddresses.forEach((address, i) => {
       freshAddresses.push(<li key={i}>
-        /{this.account.previousAddresses.length + i} {this.props.configuration.displayCashaddr ? address : bitbox.BitcoinCash.toLegacyAddress(address)}<br />
+        /{this.account.previousAddresses.length + i} {this.props.configuration.displayCashaddr ? address : bitbox.BitcoinCash.Address.toLegacyAddress(address)}<br />
       </li>);
     })
 
     this.account.previousAddresses.forEach((address, i) => {
       previousAddresses.push(<li key={i}>
-        /{i} {this.props.configuration.displayCashaddr ? address : bitbox.BitcoinCash.toLegacyAddress(address)}<br />
+        /{i} {this.props.configuration.displayCashaddr ? address : bitbox.BitcoinCash.Address.toLegacyAddress(address)}<br />
         <span className='totalReceived'>Total received: 0 BCH</span>
       </li>);
     })
@@ -48,7 +48,7 @@ class AccountReceive extends Component {
           </ul>
         </div>
         <div className="pure-u-1-2 qr">
-          <p><QRCode value={this.props.configuration.displayCashaddr ? this.account.cashAddr : bitbox.BitcoinCash.toLegacyAddress(this.account.cashAddr)} /></p>
+          <p><QRCode value={this.props.configuration.displayCashaddr ? this.account.cashAddr : bitbox.BitcoinCash.Address.toLegacyAddress(this.account.cashAddr)} /></p>
           <p><code>m / 44&rsquo; / 145&rsquo; / {this.account.index}&rsquo; / 0 / {this.account.previousAddresses.length}</code></p>
         </div>
       </div>

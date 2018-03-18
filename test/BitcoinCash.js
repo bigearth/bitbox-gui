@@ -22,13 +22,13 @@ describe('price conversion', () => {
 describe('address conversion', () => {
   it('should convert base58Check address to cashaddr', () => {
     let base58Check = fixtures.base58check;
-    let cashaddr = bitbox.BitcoinCash.toCashAddress(base58Check);
+    let cashaddr = bitbox.BitcoinCash.Address.toCashAddress(base58Check);
     assert.equal(cashaddr, fixtures.cashaddr);
   });
 
   it('should convert cashaddr address to base58Check', () => {
     let cashaddr = fixtures.cashaddr;
-    let base58Check = bitbox.BitcoinCash.toLegacyAddress(cashaddr);
+    let base58Check = bitbox.BitcoinCash.Address.toLegacyAddress(cashaddr);
     assert.equal(base58Check, fixtures.base58check);
   });
 });

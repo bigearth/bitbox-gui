@@ -137,7 +137,7 @@ class App extends Component {
         privateKeyWIF: account.privateKeyWIF,
         xpriv: account.xpriv,
         xpub: account.xpub,
-        legacy: bitbox.BitcoinCash.toLegacyAddress(address),
+        legacy: bitbox.BitcoinCash.Address.toLegacyAddress(address),
         cashAddr: address,
         freshAddresses: [address]
       };
@@ -203,7 +203,7 @@ class App extends Component {
       account1.previousAddresses.push(account1.cashAddr)
       let newCashAddr = bitbox.BitcoinCash.fromXPub(account1.xpub, account1.previousAddresses.length);
       account1.cashAddr = newCashAddr;
-      account1.legacy = bitbox.BitcoinCash.toLegacyAddress(newCashAddr);
+      account1.legacy = bitbox.BitcoinCash.Address.toLegacyAddress(newCashAddr);
       account1.freshAddresses.push(account1.cashAddr)
       reduxStore.dispatch(updateAccount(account1));
     }, (err) => { console.log(err);

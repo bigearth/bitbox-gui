@@ -6,25 +6,29 @@ let bitbox = new BITBOXCli();
 import underscore from 'underscore';
 
 class BitcoinCash {
-  static returnPrivateKeyWIF(pubAddress, addresses) {
-    let encoding;
-    if(bitbox.BitcoinCash.isCashAddress(pubAddress)) {
-      encoding = 'cashAddr';
-    } else {
-      encoding = 'legacy';
-    }
+  static returnPrivateKeyWIF(pubAddress, accounts) {
+    let address = bitbox.BitcoinCash.Address.toCashAddress(pubAddress);
     let privateKeyWIF;
-    let errorMsg = '';
-    try {
-      privateKeyWIF = (encoding === 'cashAddr') ? underscore.findWhere(addresses, ({cashAddr: pubAddress})) : underscore.findWhere(addresses, ({legacy: pubAddress}));
-    } catch (e) {
-      errorMsg = e.message;
-    }
 
+    let errorMsg = '';
+    accounts.forEach((account, index) => {
+      account.previousAddresses.forEach((addy, i) => {
+        if(address === addy) {
+          privateKeyWIF = account.privateKeyWIF
+        }
+      });
+    });
+    //
+    // try {
+    //   privateKeyWIF = (encoding === 'cashAddr') ? underscore.findWhere(accounts, ({cashAddr: pubAddress})) : underscore.findWhere(accounts, ({legacy: pubAddress}));
+    // } catch (e) {
+    //   errorMsg = e.message;
+    // }
+    //
     if(errorMsg !== '') {
       return errorMsg;
     } else {
-      return privateKeyWIF.privateKeyWIF;
+      return privateKeyWIF;
     }
   }
 
