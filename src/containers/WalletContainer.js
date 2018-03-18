@@ -1,8 +1,6 @@
 import { connect } from 'react-redux'
 import Wallet from '../components/Wallet'
 import {
-  addRootSeed,
-  addMasterPrivateKey,
   createAccount,
   toggleDisplayAccount
 } from '../actions/WalletActions';

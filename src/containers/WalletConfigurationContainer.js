@@ -9,8 +9,6 @@ import {
 
 import {
   resetWallet,
-  addRootSeed,
-  addMasterPrivateKey,
   createAccount
 } from '../actions/WalletActions';
 
@@ -37,11 +35,9 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(updateWalletConfig('entropy', value))
     },
     resetBitbox: (configuration) => {
-      let [rootSeed, masterPrivateKey, mnemonic, HDPath, accounts] = bitbox.BitcoinCash.createHDWallet(configuration);
+      let [mnemonic, HDPath, accounts] = bitbox.BitcoinCash.createHDWallet(configuration);
 
       dispatch(resetWallet());
-      dispatch(addRootSeed(rootSeed));
-      dispatch(addMasterPrivateKey(masterPrivateKey.chainCode));
       dispatch(updateWalletConfig('mnemonic', mnemonic));
       dispatch(updateWalletConfig('HDPath', HDPath));
 

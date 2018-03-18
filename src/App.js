@@ -56,8 +56,6 @@ import {
 
 import {
   createWallet,
-  addRootSeed,
-  addMasterPrivateKey,
   createAccount,
   updateAccount
 } from './actions/WalletActions';
@@ -120,10 +118,8 @@ class App extends Component {
 
   createHDWallet() {
     let walletConfig = reduxStore.getState().configuration.wallet;
-    let [rootSeed, masterPrivateKey, mnemonic, HDPath, accounts] = bitbox.BitcoinCash.createHDWallet(walletConfig);
+    let [mnemonic, HDPath, accounts] = bitbox.BitcoinCash.createHDWallet(walletConfig);
     reduxStore.dispatch(createWallet());
-    reduxStore.dispatch(addRootSeed(rootSeed));
-    reduxStore.dispatch(addMasterPrivateKey(masterPrivateKey.chainCode));
     reduxStore.dispatch(updateWalletConfig('mnemonic', mnemonic));
     reduxStore.dispatch(updateWalletConfig('HDPath', HDPath));
     reduxStore.dispatch(createAccountSend());
