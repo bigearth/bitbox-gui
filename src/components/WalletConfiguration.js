@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom';
 
 import PropTypes from 'prop-types'
+import Toggle from 'react-toggle'
 import Slider from 'react-rangeslider'
 import 'react-rangeslider/lib/index.css'
 
@@ -126,29 +127,45 @@ class WalletConfiguration extends Component {
             <form className="pure-form pure-form-stacked" onSubmit={this.handleSubmit}>
               <fieldset>
 
-                <label>Autogenerate HD Mnemonic</label>
-                <input id='autogenerateHDMnemonic' type="checkbox" checked={this.props.configuration.wallet.autogenerateHDMnemonic} onChange={this.props.handleConfigToggle.bind(this)} />
+                <label htmlFor='autogenerateHDMnemonic'>Autogenerate HD Mnemonic</label>
+                <Toggle
+                  id='autogenerateHDMnemonic'
+                  defaultChecked={this.props.configuration.wallet.autogenerateHDMnemonic}
+                  onChange={this.props.handleConfigToggle.bind(this)} />
+
                 {customMnemonicLabel}
                 {customMnemonic}
                 {customMnemonicMsg}
 
-                <label>Autogenerate HD Path</label>
-                <input id='autogenerateHDPath' type="checkbox" checked={this.props.configuration.wallet.autogenerateHDPath} onChange={this.props.handleConfigToggle.bind(this)} />
+                <label htmlFor='autogenerateHDPath'>Autogenerate HD Path</label>
+                <Toggle
+                  id='autogenerateHDPath'
+                  defaultChecked={this.props.configuration.wallet.autogenerateHDPath}
+                  onChange={this.props.handleConfigToggle.bind(this)} />
 
                 {customPathLabel}
                 {customPath}
 
-                <label>Use password</label>
-                <input id='usePassword' type="checkbox" checked={this.props.configuration.wallet.usePassword} onChange={this.props.handleConfigToggle.bind(this)} />
+                <label htmlFor='usePassword'>Use password</label>
+                <Toggle
+                  id='usePassword'
+                  defaultChecked={this.props.configuration.wallet.usePassword}
+                  onChange={this.props.handleConfigToggle.bind(this)} />
 
                 {customPasswordLabel}
                 {customPassword}
 
-                <label>Display in Cashaddr format</label>
-                <input id='displayCashaddr' type="checkbox" checked={this.props.configuration.wallet.displayCashaddr} onChange={this.props.handleConfigToggle.bind(this)} />
+                <label htmlFor='displayCashaddr'>Display in Cashaddr format</label>
+                <Toggle
+                  id='displayCashaddr'
+                  defaultChecked={this.props.configuration.wallet.displayCashaddr}
+                  onChange={this.props.handleConfigToggle.bind(this)} />
 
-                <label>Display on testnet</label>
-                <input id='displayTestnet' type="checkbox" checked={this.props.configuration.wallet.displayTestnet} onChange={this.props.handleConfigToggle.bind(this)} />
+                <label htmlFor='displayTestnet'>Display on testnet</label>
+                <Toggle
+                  id='displayTestnet'
+                  defaultChecked={this.props.configuration.wallet.displayTestnet}
+                  onChange={this.props.handleConfigToggle.bind(this)} />
               </fieldset>
             </form>
           </div>
