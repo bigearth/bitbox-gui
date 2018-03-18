@@ -30,18 +30,22 @@ class WalletConfiguration extends Component {
 
   handleConfigChange(e) {
     this.props.handleConfigChange(e);
+
     if(e.target.id === 'mnemonic' || e.target.id === 'language') {
       let val;
+
       if(e.target.id === 'mnemonic') {
         val = e.target.value;
       } else {
         val = this.props.configuration.wallet.mnemonic;
       }
 
+      let msg = (val === '') ? val : bitbox.BitcoinCash.Mnemonic.validateMnemonic(val, bitbox.BitcoinCash.Mnemonic.mnemonicWordLists()[this.props.configuration.wallet.language]);
+
       e = {
         target: {
           id: 'mnemonicValidationMsg',
-          value: bitbox.BitcoinCash.Mnemonic.validateMnemonic(val, bitbox.BitcoinCash.Mnemonic.mnemonicWordLists()[this.props.configuration.wallet.language])
+          value: msg
         }
       }
       this.props.handleConfigChange(e);
@@ -55,10 +59,13 @@ class WalletConfiguration extends Component {
 
     let customMnemonicLabel;
     let customMnemonic;
-    let customMnemonicMsg;
     if(!this.props.configuration.wallet.autogenerateHDMnemonic) {
       customMnemonicLabel = <label>Enter the Mnemonic you wish to use</label>;
-      customMnemonic = <input id='mnemonic' type='text' placeholder={this.props.configuration.wallet.mnemonic} onChange={this.handleConfigChange.bind(this)} />;
+      customMnemonic = <input id='mnemonic' type='text' placeholder="Enter mnemonic" onChange={this.handleConfigChange.bind(this)} />;
+    }
+
+    let customMnemonicMsg;
+    if(!this.props.configuration.wallet.autogenerateHDMnemonic && (this.props.configuration.wallet.mnemonicValidationMsg !== 0)) {
       customMnemonicMsg = <p>{this.props.configuration.wallet.mnemonicValidationMsg}</p>;
     }
 
