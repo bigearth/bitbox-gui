@@ -12,6 +12,19 @@ import 'react-rangeslider/lib/index.css'
 class WalletConfiguration extends Component {
   constructor(props) {
     super(props);
+    this.props.handleConfigToggle({
+      target: {
+        id: 'autogenerateHDMnemonic',
+        checked: true
+      }
+    })
+
+    this.props.handleConfigToggle({
+      target: {
+        id: 'newMnemonic',
+        value: 0
+      }
+    })
     this.state = {
       redirect: false
     };
@@ -31,10 +44,10 @@ class WalletConfiguration extends Component {
   handleConfigChange(e) {
     this.props.handleConfigChange(e);
 
-    if(e.target.id === 'mnemonic' || e.target.id === 'language') {
+    if(e.target.id === 'newMnemonic' || e.target.id === 'language') {
       let val;
 
-      if(e.target.id === 'mnemonic') {
+      if(e.target.id === 'newMnemonic') {
         val = e.target.value;
       } else {
         val = this.props.configuration.wallet.mnemonic;
@@ -61,7 +74,7 @@ class WalletConfiguration extends Component {
     let customMnemonic;
     if(!this.props.configuration.wallet.autogenerateHDMnemonic) {
       customMnemonicLabel = <label>Enter the Mnemonic you wish to use</label>;
-      customMnemonic = <input id='mnemonic' type='text' placeholder="Enter mnemonic" onChange={this.handleConfigChange.bind(this)} />;
+      customMnemonic = <input id='newMnemonic' type='text' placeholder="Enter mnemonic" onChange={this.handleConfigChange.bind(this)} />;
     }
 
     let customMnemonicMsg;
