@@ -22,11 +22,10 @@ class Account extends Component {
 
   render() {
     let address;
-
     if(this.props.displayCashaddr) {
-      address = <span>{this.props.account.cashAddr}</span>;
+      address = <span>{bitbox.BitcoinCash.Address.toCashAddress(this.props.account.addresses.getChainAddress(0))}</span>;
     } else {
-      address = <span>{this.props.account.legacy}</span>;
+      address = <span>{bitbox.BitcoinCash.Address.toLegacyAddress(this.props.account.addresses.getChainAddress(0))}</span>;
     }
 
     let coinbase;

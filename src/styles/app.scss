@@ -465,13 +465,14 @@ a.pure-button-primary {
   background-color: $danger;
 }
 
-.Blocks td:first-of-type, .DetailsHeader td:first-of-type, .AccountDetailsHeader td:first-of-type {
+.Blocks td:first-of-type, .DetailsHeader td:first-of-type, .AccountDetails td.nextPage:first-of-type {
   background-color: $medBlue;
   color: $white;
   text-align: center;
   padding: 0.75em;
   width: 5%;
 }
+
 
 .DetailsHeader.pure-table td:first-of-type .subheader, .AccountDetailsHeader.pure-table td:first-of-type .subheader {
   color: $white;

@@ -3,14 +3,6 @@ import underscore from 'underscore';
 import QRCode from 'qrcode.react';
 
 class AccountReceive extends Component {
-  constructor(props) {
-    super(props);
-    this.account = underscore.findWhere(this.props.wallet.accounts, {index: +this.props.match.params.account_id});
-    this.account.freshAddresses = [];
-    this.account.freshAddresses.push(bitbox.BitcoinCash.fromXPub(this.account.xpub, 0));
-    this.props.updateAccount(this.account);
-  }
-
   moreAddresses(account) {
     account.freshAddresses.push(bitbox.BitcoinCash.fromXPub(account.xpub, account.freshAddresses.length));
     this.props.updateAccount(account);
@@ -20,18 +12,23 @@ class AccountReceive extends Component {
     let freshAddresses = [];
     let previousAddresses = [];
 
-    this.account.freshAddresses.forEach((address, i) => {
-      freshAddresses.push(<li key={i}>
-        /{this.account.previousAddresses.length + i} {this.props.configuration.displayCashaddr ? address : bitbox.BitcoinCash.Address.toLegacyAddress(address)}<br />
-      </li>);
-    })
+    let account = underscore.findWhere(this.props.wallet.accounts, {index: +this.props.match.params.account_id});
+    let addy = account.addresses.getChainAddress(0);
+    let addressHeight = account.addresses.chains[0].find(addy)
 
-    this.account.previousAddresses.forEach((address, i) => {
+    let address = account.addresses.chains[0].addresses[addressHeight];
+    freshAddresses.push(<li key={addressHeight}>
+      /{addressHeight} {this.props.configuration.displayCashaddr ? bitbox.BitcoinCash.Address.toCashAddress(address) : address}<br />
+    </li>);
+
+    for (let i = 0; i < addressHeight; ++i) {
+      let address = account.addresses.chains[0].addresses[i];
       previousAddresses.push(<li key={i}>
-        /{i} {this.props.configuration.displayCashaddr ? address : bitbox.BitcoinCash.Address.toLegacyAddress(address)}<br />
+        /{i} {this.props.configuration.displayCashaddr ? bitbox.BitcoinCash.Address.toCashAddress(address) : address}<br />
         <span className='totalReceived'>Total received: 0 BCH</span>
       </li>);
-    })
+    }
+
     return (
       <div className="AccountReceive content pure-g">
         <div className="pure-u-1-2">
@@ -40,7 +37,7 @@ class AccountReceive extends Component {
           <ul>
             {freshAddresses}
           </ul>
-          <button className='pure-button pure-button-primary' onClick={this.moreAddresses.bind(this, this.account)}>More Addresses</button>
+          <button className='pure-button pure-button-primary' onClick={this.moreAddresses.bind(this, account)}>More Addresses</button>
 
           <h3><i className="fas fa-clock" /> Previous Addresses</h3>
           <ul>
@@ -48,8 +45,8 @@ class AccountReceive extends Component {
           </ul>
         </div>
         <div className="pure-u-1-2 qr">
-          <p><QRCode value={this.props.configuration.displayCashaddr ? this.account.cashAddr : bitbox.BitcoinCash.Address.toLegacyAddress(this.account.cashAddr)} /></p>
-          <p><code>m / 44&rsquo; / 145&rsquo; / {this.account.index}&rsquo; / 0 / {this.account.previousAddresses.length}</code></p>
+          <p><QRCode value={this.props.configuration.displayCashaddr ? account.cashAddr : bitbox.BitcoinCash.Address.toLegacyAddress(account.cashAddr)} /></p>
+          <p><code>m / 44&rsquo; / 145&rsquo; / {account.index}&rsquo; / 0 / {previousAddresses.length}</code></p>
         </div>
       </div>
     );

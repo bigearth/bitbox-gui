@@ -112,30 +112,38 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.createHDWallet();
+    this.createAccounts();
   }
 
 
-  createHDWallet() {
+  createAccounts() {
     let walletConfig = reduxStore.getState().configuration.wallet;
-    let [mnemonic, HDPath, accounts] = BitcoinCash.createHDWallet(walletConfig);
+
+    if(walletConfig.autogenerateHDMnemonic) {
+      // create a random mnemonic w/ user provided entropy size
+      let randomBytes = bitbox.Crypto.randomBytes(walletConfig.entropy);
+      walletConfig.mnemonic = bitbox.BitcoinCash.Mnemonic.entropyToMnemonic(randomBytes, bitbox.BitcoinCash.Mnemonic.mnemonicWordLists()[walletConfig.language]);
+    }
+    let accounts = BitcoinCash.createAccounts(walletConfig);
     reduxStore.dispatch(createWallet());
-    reduxStore.dispatch(updateWalletConfig('mnemonic', mnemonic));
-    reduxStore.dispatch(updateWalletConfig('HDPath', HDPath));
+    reduxStore.dispatch(updateWalletConfig('mnemonic', walletConfig.mnemonic));
+    reduxStore.dispatch(updateWalletConfig('HDPath', walletConfig.HDPath));
     reduxStore.dispatch(createAccountSend());
 
     accounts.forEach((account, index) => {
+      let xpriv = bitbox.BitcoinCash.HDNode.toXPriv(account);
+      let xpub = bitbox.BitcoinCash.HDNode.toXPub(account);
+      let address = account.derivePath(`${walletConfig.HDPath.change}/${walletConfig.HDPath.address_index}`);
 
-      let address = bitbox.BitcoinCash.fromXPub(account.xpub, 0);
       let formattedAccount = {
-        title: account.title,
-        index: account.index,
-        privateKeyWIF: account.privateKeyWIF,
-        xpriv: account.xpriv,
-        xpub: account.xpub,
-        legacy: bitbox.BitcoinCash.Address.toLegacyAddress(address),
-        cashAddr: address,
-        freshAddresses: [address]
+        addresses: account.addresses,
+        title: '',
+        index: index,
+        privateKeyWIF:  bitbox.BitcoinCash.HDNode.getPrivateKeyWIF(account),
+        xpriv: xpriv,
+        xpub: xpub,
+        legacy: bitbox.BitcoinCash.HDNode.getLegacyAddress(address),
+        cashAddr: bitbox.BitcoinCash.HDNode.getCashAddress(address)
       };
       reduxStore.dispatch(createAccount(formattedAccount));
     });
@@ -149,9 +157,41 @@ class App extends Component {
     let txb = bitbox.BitcoinCash.transactionBuilder(walletConfig.network);
     txb.addInput('61d520ccb74288c96bc1a2b20ea1c0d5a704776dd0164a396efec3ea7040349d', 0);
     let value = 1250000000;
-    txb.addOutput(account2.legacy, value);
+    let addy = account1.addresses.getChainAddress(0);
+    txb.addOutput(addy, value);
     txb.sign(0, alice);
     let hex = txb.build().toHex();
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
+    account1.addresses.nextChainAddress(0);
 
     bitbox.RawTransactions.decodeRawTransaction(hex)
     .then((result) => {
@@ -195,12 +235,6 @@ class App extends Component {
       let newChain = blockchain;
       reduxStore.dispatch(addBlock(newChain));
       reduxStore.dispatch(updateStore());
-
-      account1.previousAddresses.push(account1.cashAddr)
-      let newCashAddr = bitbox.BitcoinCash.fromXPub(account1.xpub, account1.previousAddresses.length);
-      account1.cashAddr = newCashAddr;
-      account1.legacy = bitbox.BitcoinCash.Address.toLegacyAddress(newCashAddr);
-      account1.freshAddresses.push(account1.cashAddr)
       reduxStore.dispatch(updateAccount(account1));
     }, (err) => { console.log(err);
     });

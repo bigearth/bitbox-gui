@@ -8,6 +8,10 @@ import {
 } from '../actions/ConfigurationActions';
 
 import {
+  createBlockchain
+} from '../actions/BlockchainActions';
+
+import {
   resetWallet,
   createAccount
 } from '../actions/WalletActions';
@@ -36,22 +40,31 @@ const mapDispatchToProps = (dispatch) => {
     },
     resetBitbox: (configuration) => {
       configuration.mnemonic = configuration.newMnemonic;
-      let [mnemonic, HDPath, accounts] = BitcoinCash.createHDWallet(configuration);
+      if(configuration.autogenerateHDMnemonic) {
+        // create a random mnemonic w/ user provided entropy size
+        let randomBytes = bitbox.Crypto.randomBytes(configuration.entropy);
+        configuration.mnemonic = bitbox.BitcoinCash.Mnemonic.entropyToMnemonic(randomBytes, bitbox.BitcoinCash.Mnemonic.mnemonicWordLists()[configuration.language]);
+      }
+
+      let accounts = BitcoinCash.createAccounts(configuration);
 
       dispatch(resetWallet());
-      dispatch(updateWalletConfig('mnemonic', mnemonic));
-      dispatch(updateWalletConfig('HDPath', HDPath));
+      dispatch(updateWalletConfig('mnemonic', configuration.mnemonic));
+      dispatch(updateWalletConfig('HDPath', configuration.HDPath));
+      dispatch(createBlockchain());
 
       accounts.forEach((account, index) => {
 
-        let address = bitbox.BitcoinCash.Address.fromWIF(account.privateKeyWIF, configuration.network);
+        let xpriv = bitbox.BitcoinCash.HDNode.toXPriv(account);
+        let xpub = bitbox.BitcoinCash.HDNode.toXPub(account);
+        let address = account.derivePath(`${configuration.HDPath.change}/${configuration.HDPath.address_index}`);
 
         dispatch(createAccount({
-          title: account.title,
-          index: account.index,
-          privateKeyWIF: account.privateKeyWIF,
-          xpriv: account.xpriv,
-          xpub: account.xpub,
+          title: '',
+          index: index,
+          privateKeyWIF: bitbox.BitcoinCash.HDNode.getPrivateKeyWIF(account),
+          xpriv: xpriv,
+          xpub: xpub,
           legacy: bitbox.BitcoinCash.HDNode.getLegacyAddress(address),
           cashAddr: bitbox.BitcoinCash.HDNode.getCashAddress(address)
         }))

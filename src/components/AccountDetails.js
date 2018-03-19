@@ -88,8 +88,8 @@ class AccountDetails extends Component {
           </div>
         </div>
         <Route path="/accounts/:account_id/transactions" component={AccountTransactionsContainer}/>
-        <Route path="/accounts/:account_id/send" component={AccountSendContainer}/>
         <Route path="/accounts/:account_id/receive" component={AccountReceiveContainer}/>
+        <Route path="/accounts/:account_id/send" component={AccountSendContainer}/>
       </div>
     );
   }

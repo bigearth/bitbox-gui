@@ -18,13 +18,7 @@ class BitcoinCash {
         }
       });
     });
-    //
-    // try {
-    //   privateKeyWIF = (encoding === 'cashAddr') ? underscore.findWhere(accounts, ({cashAddr: pubAddress})) : underscore.findWhere(accounts, ({legacy: pubAddress}));
-    // } catch (e) {
-    //   errorMsg = e.message;
-    // }
-    //
+    
     if(errorMsg !== '') {
       return errorMsg;
     } else {
@@ -59,22 +53,15 @@ class BitcoinCash {
     };
   }
 
-  static createHDWallet(config) {
+  static createAccounts(config) {
     let language = config.language;
 
     if(!language || (language !== 'chinese_simplified' && language !== 'chinese_traditional' && language !== 'english' && language !== 'french' && language !== 'italian' && language !== 'japanese' && language !== 'korean' && language !== 'spanish')) {
       config.language = 'english';
     }
 
-    let mnemonic = config.mnemonic;
-    if(config.autogenerateHDMnemonic) {
-      // create a random mnemonic w/ user provided entropy size
-      let randomBytes = bitbox.Crypto.randomBytes(config.entropy);
-      mnemonic = bitbox.BitcoinCash.Mnemonic.entropyToMnemonic(randomBytes, bitbox.BitcoinCash.Mnemonic.mnemonicWordLists()[config.language]);
-    }
-
     // create root seed buffer
-    let rootSeedBuffer = bitbox.BitcoinCash.Mnemonic.mnemonicToSeedBuffer(mnemonic, config.password);
+    let rootSeedBuffer = bitbox.BitcoinCash.Mnemonic.mnemonicToSeedBuffer(config.mnemonic, config.password);
 
     // create master hd node
     let masterHDNode = bitbox.BitcoinCash.HDNode.fromSeedBuffer(rootSeedBuffer, config.network);
@@ -86,20 +73,12 @@ class BitcoinCash {
     for (let i = 0; i < config.totalAccounts; i++) {
       // create accounts
       let account = masterHDNode.derivePath(`${HDPath.replace(/\/$/, "")}/${i}'`);
-      let xpriv = bitbox.BitcoinCash.HDNode.toXPriv(account);
-      let xpub = bitbox.BitcoinCash.HDNode.toXPub(account);
-      let address = account.derivePath(`${config.HDPath.change}/${config.HDPath.address_index}`);
-
-      accounts.push({
-        title: '',
-        privateKeyWIF: address.keyPair.toWIF(),
-        xpriv: xpriv,
-        xpub: xpub,
-        index: i
-      });
+      let external = account.derivePath("0")
+      account.addresses = bitbox.BitcoinCash.HDNode.createAccount([external]);
+      accounts.push(account);
     };
 
-    return [mnemonic, config.HDPath, accounts];
+    return accounts;
   }
 }
 
