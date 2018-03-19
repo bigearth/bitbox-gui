@@ -44,16 +44,14 @@ class WalletConfiguration extends Component {
   handleConfigChange(e) {
     this.props.handleConfigChange(e);
 
-    if(e.target.id === 'newMnemonic' || e.target.id === 'language') {
-      let val;
-
-      if(e.target.id === 'newMnemonic') {
-        val = e.target.value;
+    if(e.target.id === 'newMnemonic') {
+      let val = e.target.value;
+      let msg;
+      if(val === '') {
+        msg = val;
       } else {
-        val = this.props.configuration.wallet.mnemonic;
+        msg = bitbox.BitcoinCash.Mnemonic.validateMnemonic(val, bitbox.BitcoinCash.Mnemonic.mnemonicWordLists()[this.props.configuration.wallet.language]);
       }
-
-      let msg = (val === '') ? val : bitbox.BitcoinCash.Mnemonic.validateMnemonic(val, bitbox.BitcoinCash.Mnemonic.mnemonicWordLists()[this.props.configuration.wallet.language]);
 
       e = {
         target: {
