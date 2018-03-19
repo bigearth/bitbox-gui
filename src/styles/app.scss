@@ -910,3 +910,70 @@ a.pure-button-primary {
   -moz-box-shadow: 0px 0px 5px 5px #0099E0;
   box-shadow: 0px 0px 5px 5px #0099E0;
 }
+
+.AccountTransactions {
+  background: #eee;
+
+  h2 {
+    margin: 0;
+  }
+
+  .plus {
+    color: green;
+  }
+
+  .minus {
+    color: red;
+  }
+
+  table {
+    tbody {
+      border-width: 0 0 1px 0;
+      border-style: solid;
+      border-color: #d3d3d3;
+    }
+
+    th {
+      text-align: left;
+      border: none;
+    }
+
+    tr:first-of-type {
+      border: none;
+    }
+
+    tr {
+      border-color: #d3d3d3;
+    }
+
+    tr:nth-child(2) {
+      box-shadow: 0px 0px 2px 0px #aaa;
+      background: $white;
+    }
+
+    tr:last-of-type {
+      box-shadow: 0px 1px 2px 0px #aaa;
+      background: $white;
+    }
+
+    td {
+      color: $lightGrey;
+    }
+  }
+
+  h2 {
+    padding: 1em;
+  }
+
+  th, td {
+    padding: 1.5em 2em;
+    font-weight: normal;
+  }
+  th:last-of-type, td:last-of-type {
+    text-align: right;
+  }
+
+  td:last-of-type {
+    color: black;
+  }
+}

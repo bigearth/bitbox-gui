@@ -44,7 +44,7 @@ const mapDispatchToProps = (dispatch) => {
 
       accounts.forEach((account, index) => {
 
-        let address = bitbox.BitcoinCash.fromWIF(account.privateKeyWIF, configuration.network).getAddress();
+        let address = bitbox.BitcoinCash.Address.fromWIF(account.privateKeyWIF, configuration.network);
 
         dispatch(createAccount({
           title: account.title,
@@ -52,8 +52,8 @@ const mapDispatchToProps = (dispatch) => {
           privateKeyWIF: account.privateKeyWIF,
           xpriv: account.xpriv,
           xpub: account.xpub,
-          legacy: address,
-          cashAddr: bitbox.BitcoinCash.Address.toCashAddress(address)
+          legacy: bitbox.BitcoinCash.HDNode.getLegacyAddress(address),
+          cashAddr: bitbox.BitcoinCash.HDNode.getCashAddress(address)
         }))
       });
       dispatch(updateStore());

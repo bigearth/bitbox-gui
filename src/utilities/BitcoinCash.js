@@ -40,7 +40,7 @@ class BitcoinCash {
         pubKeys.push(key);
       } else {
         let privkeyWIF = BitcoinCash.returnPrivateKeyWIF(key, addresses);
-        keyPairs.push(bitbox.BitcoinCash.fromWIF(privkeyWIF, wallet.network))
+        keyPairs.push(bitbox.BitcoinCash.Address.fromWIF(privkeyWIF, wallet.network))
       }
     })
 
