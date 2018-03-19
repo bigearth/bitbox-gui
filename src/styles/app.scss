@@ -911,6 +911,24 @@ a.pure-button-primary {
   box-shadow: 0px 0px 5px 5px #0099E0;
 }
 
+.AccountDetailsHeader {
+  .subheader {
+    font-size: .8em;
+    margin-bottom: 0;
+  }
+
+  .balance {
+    margin-top: 0;
+    color: black;
+    font-weight: bold;
+    font-size: 1.75em;
+  }
+
+  div {
+    padding: 2em;
+  }
+}
+
 .AccountTransactions {
   background: #eee;
 

@@ -51,10 +51,12 @@ function createWindow () {
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1550,
+    width: 1281,
     height: 1000,
     minWidth: 1281,
+    maxWidth: 1500,
     minHeight: 800,
+    maxHeight: 1400,
     icon: path.join(__dirname, './assets/icons/mac/icon.icns'),
     backgroundColor: '#6FBEF3',
     show: false,
