@@ -57,16 +57,13 @@ const mapDispatchToProps = (dispatch) => {
 
         let xpriv = bitbox.BitcoinCash.HDNode.toXPriv(account);
         let xpub = bitbox.BitcoinCash.HDNode.toXPub(account);
-        let address = account.derivePath(`${configuration.HDPath.change}/${configuration.HDPath.address_index}`);
-
+        
         dispatch(createAccount({
           title: '',
           index: index,
           privateKeyWIF: bitbox.BitcoinCash.HDNode.getPrivateKeyWIF(account),
           xpriv: xpriv,
-          xpub: xpub,
-          legacy: bitbox.BitcoinCash.HDNode.getLegacyAddress(address),
-          cashAddr: bitbox.BitcoinCash.HDNode.getCashAddress(address)
+          xpub: xpub
         }))
       });
       dispatch(updateStore());

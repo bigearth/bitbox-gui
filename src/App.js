@@ -133,7 +133,6 @@ class App extends Component {
     accounts.forEach((account, index) => {
       let xpriv = bitbox.BitcoinCash.HDNode.toXPriv(account);
       let xpub = bitbox.BitcoinCash.HDNode.toXPub(account);
-      let address = account.derivePath(`${walletConfig.HDPath.change}/${walletConfig.HDPath.address_index}`);
 
       let formattedAccount = {
         addresses: account.addresses,
@@ -141,9 +140,7 @@ class App extends Component {
         index: index,
         privateKeyWIF:  bitbox.BitcoinCash.HDNode.getPrivateKeyWIF(account),
         xpriv: xpriv,
-        xpub: xpub,
-        legacy: bitbox.BitcoinCash.HDNode.getLegacyAddress(address),
-        cashAddr: bitbox.BitcoinCash.HDNode.getCashAddress(address)
+        xpub: xpub
       };
       reduxStore.dispatch(createAccount(formattedAccount));
     });
@@ -162,37 +159,6 @@ class App extends Component {
     txb.sign(0, alice);
     let hex = txb.build().toHex();
     account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-    account1.addresses.nextChainAddress(0);
-
     bitbox.RawTransactions.decodeRawTransaction(hex)
     .then((result) => {
       let inputs = [];

@@ -13,10 +13,9 @@ class AccountReceive extends Component {
     let previousAddresses = [];
 
     let account = underscore.findWhere(this.props.wallet.accounts, {index: +this.props.match.params.account_id});
-    let addy = account.addresses.getChainAddress(0);
-    let addressHeight = account.addresses.chains[0].find(addy)
+    let address = account.addresses.getChainAddress(0);
+    let addressHeight = account.addresses.chains[0].find(address)
 
-    let address = account.addresses.chains[0].addresses[addressHeight];
     freshAddresses.push(<li key={addressHeight}>
       /{addressHeight} {this.props.configuration.displayCashaddr ? bitbox.BitcoinCash.Address.toCashAddress(address) : address}<br />
     </li>);
@@ -45,7 +44,7 @@ class AccountReceive extends Component {
           </ul>
         </div>
         <div className="pure-u-1-2 qr">
-          <p><QRCode value={this.props.configuration.displayCashaddr ? account.cashAddr : bitbox.BitcoinCash.Address.toLegacyAddress(account.cashAddr)} /></p>
+          <p><QRCode value={this.props.configuration.displayCashaddr ? bitbox.BitcoinCash.Address.toCashAddress(address) : address} /></p>
           <p><code>m / 44&rsquo; / 145&rsquo; / {account.index}&rsquo; / 0 / {previousAddresses.length}</code></p>
         </div>
       </div>

@@ -33,9 +33,11 @@ class StatusBar extends Component {
     let txb = bitbox.BitcoinCash.transactionBuilder(walletConfig.network)
     txb.addInput('61d520ccb74288c96bc1a2b20ea1c0d5a704776dd0164a396efec3ea7040349d', 0);
     let value = 1250000000;
-    txb.addOutput(account2.legacy, value);
+    let addy = account1.addresses.getChainAddress(0);
+    txb.addOutput(addy, value);
     txb.sign(0, alice)
     let hex = txb.build().toHex();
+    account1.addresses.nextChainAddress(0);
 
     bitbox.RawTransactions.decodeRawTransaction(hex)
     .then((result) => {
@@ -79,6 +81,7 @@ class StatusBar extends Component {
       let newChain = blockchain;
       this.props.addBlock(newChain);
       this.props.updateStore();
+      this.props.updateAccount(account1);
     }, (err) => { console.log(err);
     });
     // utxoSet.addUtxo(address, output.value);
