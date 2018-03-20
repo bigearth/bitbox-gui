@@ -7,8 +7,6 @@ class Account {
     this.xpriv = config.xpriv;
     this.xpub = config.xpub;
     this.displayAccount = false;
-    this.legacy = config.legacy;
-    this.cashAddr = config.cashAddr;
   }
 }
 

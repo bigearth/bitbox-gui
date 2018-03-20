@@ -3,9 +3,18 @@ import underscore from 'underscore';
 import QRCode from 'qrcode.react';
 
 class AccountReceive extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      freshAddressIndex: 0
+    }
+  }
+
   moreAddresses(account) {
-    account.freshAddresses.push(bitbox.BitcoinCash.fromXPub(account.xpub, account.freshAddresses.length));
-    this.props.updateAccount(account);
+    let newIndex = this.state.freshAddressIndex + 1;
+    this.setState({
+      freshAddressIndex: newIndex
+    })
   }
 
   render() {
@@ -13,14 +22,19 @@ class AccountReceive extends Component {
     let previousAddresses = [];
 
     let account = underscore.findWhere(this.props.wallet.accounts, {index: +this.props.match.params.account_id});
-    let address = account.addresses.getChainAddress(0);
-    let addressHeight = account.addresses.chains[0].find(address)
+    let addy = account.addresses.getChainAddress(0);
+    let addressHeight = account.addresses.chains[0].find(addy)
 
-    freshAddresses.push(<li key={addressHeight}>
-      /{addressHeight} {this.props.configuration.displayCashaddr ? bitbox.BitcoinCash.Address.toCashAddress(address) : address}<br />
-    </li>);
+    let hdNode = bitbox.BitcoinCash.HDNode.fromXPub(account.xpub)
+    for (let i = addressHeight; i <= (addressHeight + this.state.freshAddressIndex); i++) {
+      let child = hdNode.derivePath(`0/${i}`)
+      let address = bitbox.BitcoinCash.HDNode.getLegacyAddress(child);
+      freshAddresses.push(<li key={i}>
+        /{i} {this.props.configuration.displayCashaddr ? bitbox.BitcoinCash.Address.toCashAddress(address) : address}<br />
+      </li>);
+    }
 
-    for (let i = 0; i < addressHeight; ++i) {
+    for (let i = 0; i < addressHeight; i++) {
       let address = account.addresses.chains[0].addresses[i];
       previousAddresses.push(<li key={i}>
         /{i} {this.props.configuration.displayCashaddr ? bitbox.BitcoinCash.Address.toCashAddress(address) : address}<br />
@@ -44,7 +58,7 @@ class AccountReceive extends Component {
           </ul>
         </div>
         <div className="pure-u-1-2 qr">
-          <p><QRCode value={this.props.configuration.displayCashaddr ? bitbox.BitcoinCash.Address.toCashAddress(address) : address} /></p>
+          <p><QRCode value={this.props.configuration.displayCashaddr ? bitbox.BitcoinCash.Address.toCashAddress(addy) : addy} /></p>
           <p><code>m / 44&rsquo; / 145&rsquo; / {account.index}&rsquo; / 0 / {previousAddresses.length}</code></p>
         </div>
       </div>

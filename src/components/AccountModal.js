@@ -7,13 +7,14 @@ class AccountModal extends Component {
   }
 
   render() {
+    let address = this.props.account.addresses.getChainAddress(0);
 
     return (
       <div id="keyAccountModal" className="modal">
         <div className="modal-content">
           <div className="modal-header">
             <span onClick={this.hideAccountModal.bind(this, this.props.account)} className="close">&times;</span>
-            <h2><i className="fas fa-qrcode" /> {this.props.configuration.displayCashaddr ? this.props.account.cashAddr : this.props.account.legacy}</h2>
+            <h2><i className="fas fa-qrcode" /> {this.props.configuration.displayCashaddr ? bitbox.BitcoinCash.Address.toCashAddress(address) : address}</h2>
           </div>
           <div className="modal-body">
             <h3><i className="fas fa-key" /> Private Key WIF</h3>
