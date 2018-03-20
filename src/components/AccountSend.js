@@ -8,7 +8,7 @@ class AccountSend extends Component {
     let privateKeyWIF = this.props.wallet.accounts[0].privateKeyWIF;
     let account2 = this.props.wallet.accounts[1];
 
-    let account1 = bitbox.Address.fromWIF(privateKeyWIF)
+    let account1 = bitbox.HDNode.fromWIF(privateKeyWIF)
     let txb = bitbox.BitcoinCash.transactionBuilder(walletConfig.network)
     txb.addInput('61d520ccb74288c96bc1a2b20ea1c0d5a704776dd0164a396efec3ea7040349d', 0);
     let amount = this.props.accountSend.amount;

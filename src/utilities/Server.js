@@ -160,7 +160,7 @@ class Server {
       let accounts = state.wallet.accounts;
 
       accounts.forEach((account, index) => {
-        let tmp = bitbox.Address.fromWIF(account.privateKeyWIF).getAddress();
+        let tmp = bitbox.HDNode.fromWIF(account.privateKeyWIF).getAddress();
         if(tmp === bitbox.Address.toLegacyAddress(req.body.params[0])) {
           res.send(account.privateKeyWIF);
         }
@@ -251,7 +251,7 @@ class Server {
     server.post('/getaccountaddress', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      res.send(bitbox.Address.toCashAddress(bitbox.Address.fromWIF(store.get('addresses')[0].privateKeyWIF).getAddress()));
+      res.send(bitbox.Address.toCashAddress(bitbox.HDNode.fromWIF(store.get('addresses')[0].privateKeyWIF).getAddress()));
     });
 
     server.post('/getaccount', (req, res) => {

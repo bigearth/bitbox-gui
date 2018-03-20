@@ -29,7 +29,7 @@ class StatusBar extends Component {
     let account1 = this.props.wallet.accounts[0];
     let account2 = this.props.wallet.accounts[1];
 
-    let alice = bitbox.Address.fromWIF(account1.privateKeyWIF)
+    let alice = bitbox.HDNode.fromWIF(account1.privateKeyWIF)
     let txb = bitbox.BitcoinCash.transactionBuilder(walletConfig.network)
     txb.addInput('61d520ccb74288c96bc1a2b20ea1c0d5a704776dd0164a396efec3ea7040349d', 0);
     let value = 1250000000;

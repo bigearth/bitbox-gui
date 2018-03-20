@@ -24,7 +24,7 @@ class Convert extends Component {
     this.props.updateConvertValue('error', null);
     this.props.updateConvertValue('errorMsg', '');
     try {
-      keyPair = bitbox.Address.fromWIF(inputValue, this.props.configuration.network);
+      keyPair = bitbox.HDNode.fromWIF(inputValue, this.props.configuration.network);
       privateKeyWIF = inputValue;
       this.props.updateConvertValue('privateKeyWIF', inputValue);
 
