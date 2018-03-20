@@ -50,7 +50,7 @@ class WalletConfiguration extends Component {
       if(val === '') {
         msg = val;
       } else {
-        msg = bitbox.BitcoinCash.Mnemonic.validateMnemonic(val, bitbox.BitcoinCash.Mnemonic.mnemonicWordLists()[this.props.configuration.wallet.language]);
+        msg = bitbox.Mnemonic.validateMnemonic(val, bitbox.Mnemonic.mnemonicWordLists()[this.props.configuration.wallet.language]);
       }
 
       e = {

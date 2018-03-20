@@ -64,7 +64,7 @@ class SignAndVerify extends Component {
     let address;
     let error = false;
     try {
-      address = bitbox.BitcoinCash.Address.toLegacyAddress(this.props.signAndVerify.verifyAddress);
+      address = bitbox.Address.toLegacyAddress(this.props.signAndVerify.verifyAddress);
     }
     catch (e) {
       error = true;

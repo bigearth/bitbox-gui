@@ -24,22 +24,22 @@ class Convert extends Component {
     this.props.updateConvertValue('error', null);
     this.props.updateConvertValue('errorMsg', '');
     try {
-      keyPair = bitbox.BitcoinCash.Address.fromWIF(inputValue, this.props.configuration.network);
+      keyPair = bitbox.Address.fromWIF(inputValue, this.props.configuration.network);
       privateKeyWIF = inputValue;
       this.props.updateConvertValue('privateKeyWIF', inputValue);
 
-      cashaddr = bitbox.BitcoinCash.Address.toCashAddress(keyPair.getAddress());
+      cashaddr = bitbox.Address.toCashAddress(keyPair.getAddress());
       this.props.updateConvertValue('cashaddr', cashaddr);
 
-      base58Check = bitbox.BitcoinCash.Address.toLegacyAddress(keyPair.getAddress());
+      base58Check = bitbox.Address.toLegacyAddress(keyPair.getAddress());
       this.props.updateConvertValue('base58Check', base58Check);
     }
     catch (e) {
       try {
-        cashaddr = bitbox.BitcoinCash.Address.toCashAddress(inputValue);
+        cashaddr = bitbox.Address.toCashAddress(inputValue);
         this.props.updateConvertValue('cashaddr', cashaddr);
 
-        base58Check = bitbox.BitcoinCash.Address.toLegacyAddress(inputValue);
+        base58Check = bitbox.Address.toLegacyAddress(inputValue);
         this.props.updateConvertValue('base58Check', base58Check);
       }
       catch (e) {

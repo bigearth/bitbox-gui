@@ -43,7 +43,7 @@ const mapDispatchToProps = (dispatch) => {
       if(configuration.autogenerateHDMnemonic) {
         // create a random mnemonic w/ user provided entropy size
         let randomBytes = bitbox.Crypto.randomBytes(configuration.entropy);
-        configuration.mnemonic = bitbox.BitcoinCash.Mnemonic.entropyToMnemonic(randomBytes, bitbox.BitcoinCash.Mnemonic.mnemonicWordLists()[configuration.language]);
+        configuration.mnemonic = bitbox.Mnemonic.entropyToMnemonic(randomBytes, bitbox.Mnemonic.mnemonicWordLists()[configuration.language]);
       }
 
       let accounts = BitcoinCash.createAccounts(configuration);
@@ -55,13 +55,13 @@ const mapDispatchToProps = (dispatch) => {
 
       accounts.forEach((account, index) => {
 
-        let xpriv = bitbox.BitcoinCash.HDNode.toXPriv(account);
-        let xpub = bitbox.BitcoinCash.HDNode.toXPub(account);
+        let xpriv = bitbox.HDNode.toXPriv(account);
+        let xpub = bitbox.HDNode.toXPub(account);
         
         dispatch(createAccount({
           title: '',
           index: index,
-          privateKeyWIF: bitbox.BitcoinCash.HDNode.getPrivateKeyWIF(account),
+          privateKeyWIF: bitbox.HDNode.getPrivateKeyWIF(account),
           xpriv: xpriv,
           xpub: xpub
         }))

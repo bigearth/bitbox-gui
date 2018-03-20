@@ -23,9 +23,9 @@ class Account extends Component {
   render() {
     let address;
     if(this.props.displayCashaddr) {
-      address = <span>{bitbox.BitcoinCash.Address.toCashAddress(this.props.account.addresses.getChainAddress(0))}</span>;
+      address = <span>{bitbox.Address.toCashAddress(this.props.account.addresses.getChainAddress(0))}</span>;
     } else {
-      address = <span>{bitbox.BitcoinCash.Address.toLegacyAddress(this.props.account.addresses.getChainAddress(0))}</span>;
+      address = <span>{bitbox.Address.toLegacyAddress(this.props.account.addresses.getChainAddress(0))}</span>;
     }
 
     let coinbase;

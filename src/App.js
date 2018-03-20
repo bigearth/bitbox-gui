@@ -22,6 +22,7 @@ import Utxo from './models/Utxo';
 import WalletContainer from './containers/WalletContainer'
 import BlocksContainer from './containers/BlocksContainer';
 import BlockContainer from './containers/BlockContainer';
+import AddressContainer from './containers/AddressContainer';
 import AccountDetailsContainer from './containers/AccountDetailsContainer';
 import TransactionContainer from './containers/TransactionContainer';
 import SignAndVerifyContainer from './containers/SignAndVerifyContainer'
@@ -122,7 +123,7 @@ class App extends Component {
     if(walletConfig.autogenerateHDMnemonic) {
       // create a random mnemonic w/ user provided entropy size
       let randomBytes = bitbox.Crypto.randomBytes(walletConfig.entropy);
-      walletConfig.mnemonic = bitbox.BitcoinCash.Mnemonic.entropyToMnemonic(randomBytes, bitbox.BitcoinCash.Mnemonic.mnemonicWordLists()[walletConfig.language]);
+      walletConfig.mnemonic = bitbox.Mnemonic.entropyToMnemonic(randomBytes, bitbox.Mnemonic.mnemonicWordLists()[walletConfig.language]);
     }
     let accounts = BitcoinCash.createAccounts(walletConfig);
     reduxStore.dispatch(createWallet());
@@ -131,14 +132,14 @@ class App extends Component {
     reduxStore.dispatch(createAccountSend());
 
     accounts.forEach((account, index) => {
-      let xpriv = bitbox.BitcoinCash.HDNode.toXPriv(account);
-      let xpub = bitbox.BitcoinCash.HDNode.toXPub(account);
+      let xpriv = bitbox.HDNode.toXPriv(account);
+      let xpub = bitbox.HDNode.toXPub(account);
 
       let formattedAccount = {
         addresses: account.addresses,
         title: '',
         index: index,
-        privateKeyWIF:  bitbox.BitcoinCash.HDNode.getPrivateKeyWIF(account),
+        privateKeyWIF:  bitbox.HDNode.getPrivateKeyWIF(account),
         xpriv: xpriv,
         xpub: xpub
       };
@@ -150,7 +151,7 @@ class App extends Component {
     let account1 = reduxStore.getState().wallet.accounts[0];
     let account2 = reduxStore.getState().wallet.accounts[1];
 
-    let alice = bitbox.BitcoinCash.Address.fromWIF(account1.privateKeyWIF);
+    let alice = bitbox.Address.fromWIF(account1.privateKeyWIF);
     let txb = bitbox.BitcoinCash.transactionBuilder(walletConfig.network);
     txb.addInput('61d520ccb74288c96bc1a2b20ea1c0d5a704776dd0164a396efec3ea7040349d', 0);
     let value = 1250000000;
@@ -336,6 +337,7 @@ class App extends Component {
               <Route path="/blocks/:block_id/transactions/:transaction_id" component={TransactionContainer}/>
               <Route path="/blocks/:block_id" component={BlockContainer}/>
               <Route path="/accounts/:account_id" component={AccountDetailsContainer}/>
+              <Route path="/addresses/:address_id" component={AddressContainer}/>
               <Route path="/convert" component={ConvertContainer}/>
               <Route path="/signandverify" component={SignAndVerifyContainer}/>
               <Route path="/configuration" component={ConfigurationPage}/>

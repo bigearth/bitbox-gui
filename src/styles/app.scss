@@ -372,7 +372,7 @@ a.pure-button-primary {
   cursor: pointer;
 }
 
-.Wallet.content, .Blocks, .WrapperBlockDetails, .Configuration, .Transaction, .Convert, .SignAndVerify, .AccountDetails {
+.Wallet.content, .Blocks, .WrapperBlockDetails, .Configuration, .Transaction, .Convert, .SignAndVerify, .AccountDetails, .Address {
   background: $white;
 }
 
@@ -749,6 +749,12 @@ a.pure-button-primary {
 
 .AccountReceive .qr {
   text-align: center;
+  p {
+    canvas {
+      width: 256px !important;
+      height: 256px !important;
+    }
+  }
 }
 
 .AccountReceive ul {
@@ -764,6 +770,7 @@ a.pure-button-primary {
 
 .AccountReceive li:hover {
   background: #eee;
+  cursor: pointer;
 }
 
 .AccountReceive .totalReceived {

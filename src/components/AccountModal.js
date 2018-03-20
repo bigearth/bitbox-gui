@@ -14,7 +14,7 @@ class AccountModal extends Component {
         <div className="modal-content">
           <div className="modal-header">
             <span onClick={this.hideAccountModal.bind(this, this.props.account)} className="close">&times;</span>
-            <h2><i className="fas fa-qrcode" /> {this.props.configuration.displayCashaddr ? bitbox.BitcoinCash.Address.toCashAddress(address) : address}</h2>
+            <h2><i className="fas fa-qrcode" /> {this.props.configuration.displayCashaddr ? bitbox.Address.toCashAddress(address) : address}</h2>
           </div>
           <div className="modal-body">
             <h3><i className="fas fa-key" /> Private Key WIF</h3>

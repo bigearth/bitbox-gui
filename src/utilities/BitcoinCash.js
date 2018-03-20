@@ -7,7 +7,7 @@ import underscore from 'underscore';
 
 class BitcoinCash {
   static returnPrivateKeyWIF(pubAddress, accounts) {
-    let address = bitbox.BitcoinCash.Address.toCashAddress(pubAddress);
+    let address = bitbox.Address.toCashAddress(pubAddress);
     let privateKeyWIF;
 
     let errorMsg = '';
@@ -34,7 +34,7 @@ class BitcoinCash {
         pubKeys.push(key);
       } else {
         let privkeyWIF = BitcoinCash.returnPrivateKeyWIF(key, addresses);
-        keyPairs.push(bitbox.BitcoinCash.Address.fromWIF(privkeyWIF, wallet.network))
+        keyPairs.push(bitbox.Address.fromWIF(privkeyWIF, wallet.network))
       }
     })
 
@@ -61,10 +61,10 @@ class BitcoinCash {
     }
 
     // create root seed buffer
-    let rootSeedBuffer = bitbox.BitcoinCash.Mnemonic.mnemonicToSeedBuffer(config.mnemonic, config.password);
+    let rootSeedBuffer = bitbox.Mnemonic.mnemonicToSeedBuffer(config.mnemonic, config.password);
 
     // create master hd node
-    let masterHDNode = bitbox.BitcoinCash.HDNode.fromSeedBuffer(rootSeedBuffer, config.network);
+    let masterHDNode = bitbox.HDNode.fromSeedBuffer(rootSeedBuffer, config.network);
 
     let HDPath = `m/${config.HDPath.purpose}/${config.HDPath.coinCode}`
 
@@ -74,7 +74,7 @@ class BitcoinCash {
       // create accounts
       let account = masterHDNode.derivePath(`${HDPath.replace(/\/$/, "")}/${i}'`);
       let external = account.derivePath("0")
-      account.addresses = bitbox.BitcoinCash.HDNode.createAccount([external]);
+      account.addresses = bitbox.HDNode.createAccount([external]);
       accounts.push(account);
     };
 
