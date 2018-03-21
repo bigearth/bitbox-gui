@@ -20,7 +20,9 @@ class Configuration {
       },
       password: '',
       language: 'english',
-      mnemonicValidationMsg: ''
+      mnemonicValidationMsg: '',
+      exchangeRate: '',
+      exchangeCurrency: 'USD'
     };
   }
 }

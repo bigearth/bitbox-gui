@@ -1,20 +1,23 @@
+import axios from 'axios';
+
 import {
   CREATE_CONFIG,
   TOGGLE_WALLET_CONFIG,
-  UPDATE_WALLET_CONFIG
+  UPDATE_WALLET_CONFIG,
+  SET_EXCHANGE_RATE
 } from '../actions/ConfigurationActions';
 import Configuration from '../models/Configuration';
 
 export default function configuration(state = {}, action) {
-  let walletConfig;
+  let config;
   switch (action.type) {
     case CREATE_CONFIG:
-      walletConfig = new Configuration();
-      return Object.assign({}, state, walletConfig)
+      config = new Configuration();
+      return Object.assign({}, state, config)
     case TOGGLE_WALLET_CONFIG:
-      walletConfig = state;
+      config = state;
       if(action.prop === 'autogenerateHDPath' && action.checked) {
-        walletConfig.wallet.HDPath = {
+        config.wallet.HDPath = {
           masterKey: "m",
           purpose: "44'",
           coinCode: "145'",
@@ -25,19 +28,19 @@ export default function configuration(state = {}, action) {
       }
 
       if(action.prop === 'usePassword' && !action.checked) {
-        walletConfig.wallet.password = "";
+        config.wallet.password = "";
       }
 
       if(action.prop === 'displayTestnet' && action.checked) {
-        walletConfig.wallet.network = 'testnet';
+        config.wallet.network = 'testnet';
       } else if(action.prop === 'displayTestnet' && !action.checked) {
-        walletConfig.wallet.network = 'bitcoin';
+        config.wallet.network = 'bitcoin';
       }
 
-      walletConfig.wallet[action.prop] = action.checked;
-      return Object.assign({}, state, walletConfig)
+      config.wallet[action.prop] = action.checked;
+      return Object.assign({}, state, config)
     case UPDATE_WALLET_CONFIG:
-      walletConfig = state;
+      config = state;
 
       if(isNaN(action.value) === false) {
         action.value = +action.value;
@@ -54,8 +57,15 @@ export default function configuration(state = {}, action) {
         };
       }
 
-      walletConfig.wallet[action.prop] = action.value;
-      return Object.assign({}, state, walletConfig)
+      config.wallet[action.prop] = action.value;
+      return Object.assign({}, state, config)
+    case SET_EXCHANGE_RATE:
+      config = state;
+      axios.get(`https://api.coinmarketcap.com/v1/ticker/bitcoin-cash/?convert=${config.wallet.exchangeCurrency}`)
+      .then((response) => {
+        config.wallet.exchangeRate = response.data[0].price_usd;
+        return Object.assign({}, state, config)
+      });
     default:
       return state
   }

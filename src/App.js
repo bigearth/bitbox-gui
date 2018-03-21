@@ -53,7 +53,8 @@ import {
   createConfig,
   toggleWalletConfig,
   updateWalletConfig,
-  updateStore
+  updateStore,
+  setExchangeRate
 } from './actions/ConfigurationActions';
 
 import {
@@ -111,6 +112,7 @@ class App extends Component {
     reduxStore.dispatch(createBlockchain());
     reduxStore.dispatch(createSignAndVerify());
     reduxStore.dispatch(createExplorer());
+    reduxStore.dispatch(setExchangeRate());
   }
 
   componentDidMount() {

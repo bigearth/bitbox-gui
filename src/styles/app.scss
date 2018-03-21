@@ -931,10 +931,19 @@ a.pure-button-primary {
   }
 
   .balance {
-    margin-top: 0;
+    margin: 10px 0;
     color: black;
-    font-weight: bold;
     font-size: 1.75em;
+  }
+
+  .balance:first-of-type {
+    font-weight: bold;
+  }
+
+  .subbalance {
+    margin-top: 0;
+    color: $lightGrey;
+    font-size: 1em;
   }
 
   div {
@@ -942,19 +951,19 @@ a.pure-button-primary {
   }
 }
 
+.plus {
+  color: green;
+}
+
+.minus {
+  color: red;
+}
+
 .AccountTransactions {
   background: #eee;
 
   h2 {
     margin: 0;
-  }
-
-  .plus {
-    color: green;
-  }
-
-  .minus {
-    color: red;
   }
 
   table {

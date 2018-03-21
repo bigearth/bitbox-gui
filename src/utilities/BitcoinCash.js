@@ -18,7 +18,7 @@ class BitcoinCash {
         }
       });
     });
-    
+
     if(errorMsg !== '') {
       return errorMsg;
     } else {
@@ -74,7 +74,8 @@ class BitcoinCash {
       // create accounts
       let account = masterHDNode.derivePath(`${HDPath.replace(/\/$/, "")}/${i}'`);
       let external = account.derivePath("0")
-      account.addresses = bitbox.HDNode.createAccount([external]);
+      let internal = account.derivePath("1")
+      account.addresses = bitbox.HDNode.createAccount([external, internal]);
       accounts.push(account);
     };
 
