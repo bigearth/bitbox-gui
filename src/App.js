@@ -211,7 +211,7 @@ class App extends Component {
   }
 
   handlePathMatch(path) {
-    if(path === '/' || path === '/blocks' || path === '/transactions' || path === '/configuration/wallet') {
+    if(path === '/wallet' || path === '/blocks' || path === '/transactions' || path === '/convert' || path === '/signandverify' || path === '/configuration/wallet') {
       return true;
     } else {
       return false;
@@ -227,6 +227,7 @@ class App extends Component {
   }
 
   render() {
+
 
     const pathMatch = (match, location) => {
       if (!match) {
@@ -268,7 +269,7 @@ class App extends Component {
         <Router>
           <div className="header main-header">
             <div className="pure-menu pure-menu-horizontal">
-              <Link className="pure-menu-heading" to="/">BitBox</Link>
+              <Link className="pure-menu-heading" to="/wallet">BitBox</Link>
               <ul className="pure-menu-list">
 
                 <li className="pure-menu-item">
@@ -276,7 +277,7 @@ class App extends Component {
                     isActive={pathMatch}
                     activeClassName="pure-menu-selected"
                     className="pure-menu-link"
-                    to="/">
+                    to="/wallet">
                     <i className="fas fa-user"></i> Wallet
                   </NavLink>
                 </li>
@@ -344,8 +345,8 @@ class App extends Component {
               <Route path="/convert" component={ConvertContainer}/>
               <Route path="/signandverify" component={SignAndVerifyContainer}/>
               <Route path="/configuration" component={ConfigurationPage}/>
-              <Route exact path="/" component={WalletContainer}/>
-              <Redirect from='*' to='/' />
+              <Route path="/wallet" component={WalletContainer}/>
+              <Redirect from='*' to='/wallet' />
             </Switch>
           </div>
         </Router>
