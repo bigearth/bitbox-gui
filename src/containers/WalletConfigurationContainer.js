@@ -52,19 +52,19 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(updateWalletConfig('mnemonic', configuration.mnemonic));
       dispatch(updateWalletConfig('HDPath', configuration.HDPath));
       dispatch(createBlockchain());
-
       accounts.forEach((account, index) => {
-
         let xpriv = bitbox.HDNode.toXPriv(account);
         let xpub = bitbox.HDNode.toXPub(account);
-        
-        dispatch(createAccount({
+
+        let formattedAccount = {
+          addresses: account.addresses,
           title: '',
           index: index,
-          privateKeyWIF: bitbox.HDNode.getPrivateKeyWIF(account),
+          privateKeyWIF:  bitbox.HDNode.toWIF(account),
           xpriv: xpriv,
           xpub: xpub
-        }))
+        };
+        dispatch(createAccount(formattedAccount));
       });
       dispatch(updateStore());
     }

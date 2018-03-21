@@ -1,4 +1,5 @@
 // react imports
+
 import React, { Component } from 'react';
 import {
   BrowserRouter as Router,
@@ -139,7 +140,7 @@ class App extends Component {
         addresses: account.addresses,
         title: '',
         index: index,
-        privateKeyWIF:  bitbox.HDNode.getPrivateKeyWIF(account),
+        privateKeyWIF:  bitbox.HDNode.toWIF(account),
         xpriv: xpriv,
         xpub: xpub
       };

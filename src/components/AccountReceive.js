@@ -56,7 +56,7 @@ class AccountReceive extends Component {
     let hdNode = bitbox.HDNode.fromXPub(account.xpub)
     for (let i = addressHeight; i <= (addressHeight + this.state.freshAddressIndex); i++) {
       let child = hdNode.derivePath(`0/${i}`)
-      let address = bitbox.HDNode.getLegacyAddress(child);
+      let address = bitbox.HDNode.toLegacyAddress(child);
       freshAddresses.push(<li id={address} key={i} onClick={this.handleRedirect.bind(this)}>
         /{i} {this.props.configuration.displayCashaddr ? bitbox.Address.toCashAddress(address) : address}
       </li>);

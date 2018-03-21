@@ -96,6 +96,7 @@ class Wallet extends Component {
             key={account.index}
             displayCashaddr={this.props.configuration.displayCashaddr}
             showAccountModal={this.showAccountModal.bind(this)}
+            configuration={this.props.configuration}
           />
         );
       });
@@ -123,7 +124,7 @@ class Wallet extends Component {
           </ul>
           <ul className='subheader'>
             <li className='content-head'>{this.props.configuration.mnemonic}</li>
-            <li className='content-head right'>{HDPath}/account_index&rsquo;/0/0</li>
+            <li className='content-head right'>{HDPath}/account_index&rsquo;/0/address_index</li>
           </ul>
           <table className="pure-table">
             <tbody>

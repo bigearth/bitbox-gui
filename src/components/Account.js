@@ -41,12 +41,14 @@ class Account extends Component {
       }} />)
     }
 
+    let HDPath = `m/${this.props.configuration.HDPath.purpose}/${this.props.configuration.HDPath.coinCode}`;
+    let addressHeight = this.props.account.addresses.chains[0].find(this.props.account.addresses.getChainAddress(0))
     return (
       <tr className="Account" onClick={this.handleRedirect.bind(this)}>
-        <td className='important'><span className='subheader'>ADDRESS{coinbase}</span> <br />{address}</td>
+        <td className='important'><span className='subheader'>ADDRESS{coinbase}</span> <br />{address} <br /><span className='hdPath'>{HDPath}/{index}&rsquo;/0/{addressHeight}</span></td>
         <td className='important'><span className='subheader'>BALANCE</span> <br />0 BCH</td>
         <td><span className='subheader'>TX COUNT</span> <br />0</td>
-        <td><span className='subheader'>INDEX</span> <br />{index}</td>
+        <td><span className='subheader'>ACCOUNT</span> <br />{index}</td>
         <td><button className="pure-button openModal"><i className="fas fa-key openModal" /></button></td>
       </tr>
     );
