@@ -138,6 +138,42 @@ class WalletConfiguration extends Component {
                     <option value="spanish">Spanish</option>
                   </select>
                 </div>
+                <div> <label>Exchange Currency</label>
+                  <select value={this.props.configuration.wallet.exchangeCurrency} id='exchangeCurrency' onChange={this.handleConfigChange.bind(this)}>
+                    <option value="USD">US Dollar</option>
+                    <option value="AUD">Australian Dollar</option>
+                    <option value="BRL">Brazilian Real</option>
+                    <option value="CAD">Canadian Dollar</option>
+                    <option value="CHF">Swiss Franc</option>
+                    <option value="CLP">Chilean Peso</option>
+                    <option value="CNY">Chinese Yuan</option>
+                    <option value="CZK">Czech Koruna</option>
+                    <option value="DKK">Danish Krone</option>
+                    <option value="EUR">Euro</option>
+                    <option value="GBP">British Pound</option>
+                    <option value="HKD">Hong Kong Dollar</option>
+                    <option value="HUF">Hungarian Forint</option>
+                    <option value="IDR">Indonesian Rupiah</option>
+                    <option value="ILS">Israeli Shekel</option>
+                    <option value="INR">Indian rupee</option>
+                    <option value="JPY">Japanese Yen</option>
+                    <option value="KRW">South Korean Won</option>
+                    <option value="MXN">Mexican Peso</option>
+                    <option value="MYR">Malaysian Ringgit</option>
+                    <option value="NOK">Norwegian Krone</option>
+                    <option value="NZD">New Zealand Dollar</option>
+                    <option value="PHP">Philippine Piso</option>
+                    <option value="PKR">Pakistani rupee</option>
+                    <option value="PLN">Polish Zloty</option>
+                    <option value="RUB">Russian Ruble</option>
+                    <option value="SEK">Swedish Krona</option>
+                    <option value="SGD">Singapore Dollar</option>
+                    <option value="THB">Thai Baht</option>
+                    <option value="TRY">Turkish Lira</option>
+                    <option value="TWD">Taiwan New Dollar</option>
+                    <option value="ZAR">South African Rand</option>
+                  </select>
+                </div>
               </fieldset>
             </form>
           </div>

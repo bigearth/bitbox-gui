@@ -4,7 +4,8 @@ import BitcoinCash from '../utilities/BitcoinCash';
 import {
   toggleWalletConfig,
   updateWalletConfig,
-  updateStore
+  updateStore,
+  setExchangeRate
 } from '../actions/ConfigurationActions';
 
 import {
@@ -34,6 +35,9 @@ const mapDispatchToProps = (dispatch) => {
       let prop = e.target.id;
       let value = e.target.value;
       dispatch(updateWalletConfig(prop, value))
+      if(prop === 'exchangeCurrency') {
+        dispatch(setExchangeRate());
+      }
     },
     handleEntropySliderChange: (value) => {
       dispatch(updateWalletConfig('entropy', value))
@@ -52,6 +56,8 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(updateWalletConfig('mnemonic', configuration.mnemonic));
       dispatch(updateWalletConfig('HDPath', configuration.HDPath));
       dispatch(createBlockchain());
+      dispatch(setExchangeRate());
+
       accounts.forEach((account, index) => {
         let xpriv = bitbox.HDNode.toXPriv(account);
         let xpub = bitbox.HDNode.toXPub(account);

@@ -83,7 +83,7 @@ class AccountDetails extends Component {
           </div>
           <div className="pure-u-1-4">
             <p className='subheader'>Rate</p>
-            <p className='balance'>${this.props.configuration.exchangeRate}</p>
+            <p className='balance'><FormattedNumber value={this.props.configuration.exchangeRate} style="currency" currency={this.props.configuration.exchangeCurrency} /></p>
             <p className='subbalance'>1 BCH</p>
           </div>
           <div className="pure-u-1-4">

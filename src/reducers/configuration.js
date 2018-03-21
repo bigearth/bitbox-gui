@@ -63,7 +63,7 @@ export default function configuration(state = {}, action) {
       config = state;
       axios.get(`https://api.coinmarketcap.com/v1/ticker/bitcoin-cash/?convert=${config.wallet.exchangeCurrency}`)
       .then((response) => {
-        config.wallet.exchangeRate = response.data[0].price_usd;
+        config.wallet.exchangeRate = response.data[0][`price_${config.wallet.exchangeCurrency.toLowerCase()}`];
         return Object.assign({}, state, config)
       });
     default:
