@@ -8,6 +8,13 @@ class AccountModal extends Component {
 
   render() {
     let address = this.props.account.addresses.getChainAddress(0);
+    let addressHeight = this.props.account.addresses.chains[0].find(bitbox.Address.toLegacyAddress(address))
+    let hdNode = bitbox.HDNode.fromXPriv(this.props.account.xpriv);
+    let childNode = hdNode.derivePath(`0/${addressHeight}`);
+    let privateKeyWIF = bitbox.HDNode.toWIF(childNode);
+    let xpriv = bitbox.HDNode.toXPriv(childNode);
+    let xpub = bitbox.HDNode.toXPub(childNode);
+
 
     return (
       <div id="keyAccountModal" className="modal">
@@ -18,11 +25,11 @@ class AccountModal extends Component {
           </div>
           <div className="modal-body">
             <h3><i className="fas fa-key" /> Private Key WIF</h3>
-            <p>{this.props.account.privateKeyWIF}</p>
+            <p>{privateKeyWIF}</p>
             <h4><i className="fas fa-lock" /> Extended Private</h4>
-            <p>{this.props.account.xpriv}</p>
+            <p>{xpriv}</p>
             <h4><i className="fas fa-lock-open" /> Extended Public</h4>
-            <p>{this.props.account.xpub}</p>
+            <p>{xpub}</p>
           </div>
         </div>
       </div>
