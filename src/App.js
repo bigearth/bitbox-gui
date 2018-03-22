@@ -81,12 +81,18 @@ import {
   createAccountSend
 } from './actions/AccountSendActions';
 
+import {
+  createMempool,
+  addTx,
+  emptyMempool
+} from './actions/MempoolActions';
+
 let reduxStore = createStore(bitboxReducer)
 
-// const unsubscribe = reduxStore.subscribe(() =>{
-//   console.log(JSON.stringify(reduxStore.getState(), null, 2))
-//   console.log('*********************************************');
-// })
+const unsubscribe = reduxStore.subscribe(() =>{
+  console.log(JSON.stringify(reduxStore.getState(), null, 2))
+  console.log('*********************************************');
+})
 
 // stop listening to state updates
 // unsubscribe()
@@ -101,6 +107,7 @@ class App extends Component {
     reduxStore.dispatch(createImportAndExport());
     reduxStore.dispatch(createConvert());
     reduxStore.dispatch(createBlockchain());
+    reduxStore.dispatch(createMempool());
     reduxStore.dispatch(createSignAndVerify());
     reduxStore.dispatch(createExplorer());
     reduxStore.dispatch(setExchangeRate());
@@ -153,8 +160,14 @@ class App extends Component {
     txb.addOutput(addy, value);
     txb.sign(0, alice);
     let hex = txb.build().toHex();
+    // add tx to mempool
+    reduxStore.dispatch(addTx(hex));
+
+    // bump address counter to next address
     account1.addresses.nextChainAddress(0);
-    bitbox.RawTransactions.decodeRawTransaction(hex)
+
+    let mempool = reduxStore.getState().mempool;
+    bitbox.RawTransactions.decodeRawTransaction(mempool.transactions[0])
     .then((result) => {
       let inputs = [];
       result.ins.forEach((vin, index) => {
@@ -195,8 +208,13 @@ class App extends Component {
       blockchain.chain.push(block);
       let newChain = blockchain;
       reduxStore.dispatch(addBlock(newChain));
-      reduxStore.dispatch(updateStore());
       reduxStore.dispatch(updateAccount(account1));
+
+      // flush mempool
+      reduxStore.dispatch(emptyMempool());
+
+      // update store
+      reduxStore.dispatch(updateStore());
     }, (err) => { console.log(err);
     });
   }
@@ -218,7 +236,6 @@ class App extends Component {
   }
 
   render() {
-
 
     const pathMatch = (match, location) => {
       if (!match) {

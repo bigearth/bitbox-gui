@@ -17,6 +17,10 @@ import {
   createAccount
 } from '../actions/WalletActions';
 
+import {
+  createMempool
+} from '../actions/MempoolActions';
+
 const mapStateToProps = (state) => {
   return {
     configuration: state.configuration
@@ -56,6 +60,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(updateWalletConfig('mnemonic', configuration.mnemonic));
       dispatch(updateWalletConfig('HDPath', configuration.HDPath));
       dispatch(createBlockchain());
+      dispatch(createMempool());
       dispatch(setExchangeRate());
 
       accounts.forEach((account, index) => {

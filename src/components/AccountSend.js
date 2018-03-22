@@ -15,6 +15,7 @@ class AccountSend extends Component {
     txb.addOutput(bitbox.Address.toLegacyAddress(this.props.accountSend.to), bitbox.BitcoinCash.toSatoshi(amount));
     txb.sign(0, account1)
     let hex = txb.build().toHex();
+    this.props.addTx(hex);
     bitbox.RawTransactions.decodeRawTransaction(hex)
     .then((result) => {
       console.log('woohoo', result)

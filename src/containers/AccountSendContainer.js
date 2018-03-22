@@ -4,6 +4,11 @@ import {
   updateAccountSendValue
 } from '../actions/AccountSendActions';
 
+import {
+  addTx
+} from '../actions/MempoolActions';
+
+
 const mapStateToProps = (state) => {
   return {
     configuration: state.configuration.wallet,
@@ -16,6 +21,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     updateAccountSendValue: (prop, value) => {
       dispatch(updateAccountSendValue(prop, value))
+    },
+    addTx: (tx) => {
+      dispatch(addTx(tx))
     }
   }
 }
