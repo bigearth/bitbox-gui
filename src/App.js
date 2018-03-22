@@ -33,6 +33,7 @@ import Configuration from './components/Configuration';
 
 // utilities
 import BitcoinCash from './utilities/BitcoinCash';
+import Miner from './utilities/Miner';
 
 // css
 import './styles/app.scss';
@@ -43,47 +44,19 @@ import bitboxReducer from './reducers/bitbox'
 
 // redux actions
 import {
-  createConfig,
-  updateWalletConfig,
-  updateStore,
-  setExchangeRate
+  updateWalletConfig
 } from './actions/ConfigurationActions';
 
 import {
-  createWallet,
   createAccount,
   updateAccount
 } from './actions/WalletActions';
 
 import {
-  createImportAndExport,
   toggleVisibility
 } from './actions/ImportAndExportActions';
 
 import {
-  createConvert
-} from './actions/ConvertActions';
-
-import {
-  createBlockchain,
-  addBlock
-} from './actions/BlockchainActions';
-
-import {
-  createSignAndVerify
-} from './actions/SignAndVerifyActions';
-
-import {
-  createExplorer
-} from './actions/ExplorerActions';
-
-import {
-  createAccountSend
-} from './actions/AccountSendActions';
-
-import {
-  createMempool,
-  emptyMempool,
   addTx
 } from './actions/MempoolActions';
 
@@ -101,22 +74,10 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-
     // Set up default redux store
-    reduxStore.dispatch(createConfig());
-    reduxStore.dispatch(createImportAndExport());
-    reduxStore.dispatch(createConvert());
-    reduxStore.dispatch(createBlockchain());
-    reduxStore.dispatch(createMempool());
-    reduxStore.dispatch(createSignAndVerify());
-    reduxStore.dispatch(createExplorer());
-    reduxStore.dispatch(setExchangeRate());
-  }
-
-  componentDidMount() {
+    Miner.setUpStore(reduxStore.dispatch)
     this.createAccounts();
   }
-
 
   createAccounts() {
     let walletConfig = reduxStore.getState().configuration.wallet;
@@ -127,10 +88,8 @@ class App extends Component {
       walletConfig.mnemonic = bitbox.Mnemonic.entropyToMnemonic(randomBytes, bitbox.Mnemonic.mnemonicWordLists()[walletConfig.language]);
     }
     let accounts = BitcoinCash.createAccounts(walletConfig);
-    reduxStore.dispatch(createWallet());
     reduxStore.dispatch(updateWalletConfig('mnemonic', walletConfig.mnemonic));
     reduxStore.dispatch(updateWalletConfig('HDPath', walletConfig.HDPath));
-    reduxStore.dispatch(createAccountSend());
 
     accounts.forEach((account, index) => {
       let xpriv = bitbox.HDNode.toXPriv(account);
@@ -209,15 +168,7 @@ class App extends Component {
       reduxStore.dispatch(updateAccount(account1));
       blockchain.chain.push(block);
 
-      let newChain = blockchain;
-      reduxStore.dispatch(addBlock(newChain));
-
-      // flush mempool
-      reduxStore.dispatch(emptyMempool());
-
-      // update store
-      reduxStore.dispatch(updateStore());
-
+      Miner.mineBlock(reduxStore.dispatch, blockchain)
     }, (err) => { console.log(err);
     });
   }

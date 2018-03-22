@@ -1,5 +1,6 @@
 import { connect } from 'react-redux'
 import StatusBar from '../components/StatusBar'
+import Miner from '../utilities/Miner';
 import {
   updateStore
 } from '../actions/ConfigurationActions';
@@ -9,17 +10,8 @@ import {
 } from '../actions/MempoolActions';
 
 import {
-  addBlock
-} from '../actions/BlockchainActions';
-
-import {
-  emptyMempool
-} from '../actions/MempoolActions';
-
-import {
   updateAccount
 } from '../actions/WalletActions';
-
 
 const mapStateToProps = (state) => {
   return {
@@ -42,14 +34,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(addTx(tx))
     },
     mineBlock: (blockchain) => {
-      let newChain = blockchain;
-      dispatch(addBlock(newChain));
-
-      // flush mempool
-      dispatch(emptyMempool());
-
-      // update store
-      dispatch(updateStore());
+      Miner.mineBlock(dispatch, blockchain)
     }
   }
 }

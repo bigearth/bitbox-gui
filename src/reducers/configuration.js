@@ -12,8 +12,7 @@ export default function configuration(state = {}, action) {
   let config;
   switch (action.type) {
     case CREATE_CONFIG:
-      config = new Configuration();
-      return Object.assign({}, state, config)
+      return Object.assign({}, state, new Configuration())
     case TOGGLE_WALLET_CONFIG:
       config = state;
       if(action.prop === 'autogenerateHDPath' && action.checked) {

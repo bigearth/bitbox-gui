@@ -1,35 +1,94 @@
 import BitcoinCash from './BitcoinCash'
 import Bitcoin from 'bitcoinjs-lib';
 import Block from '../models/Block';
+import {
+  createConfig,
+  updateStore,
+  setExchangeRate
+} from '../actions/ConfigurationActions';
+
+import {
+  createImportAndExport
+} from '../actions/ImportAndExportActions';
+
+import {
+  createConvert
+} from '../actions/ConvertActions';
+
+import {
+  createBlockchain,
+  addBlock
+} from '../actions/BlockchainActions';
+
+import {
+  createSignAndVerify
+} from '../actions/SignAndVerifyActions';
+
+import {
+  createMempool,
+  emptyMempool
+} from '../actions/MempoolActions';
+
+import {
+  createExplorer
+} from '../actions/ExplorerActions';
+
+import {
+  createWallet
+} from '../actions/WalletActions';
+
+import {
+  createAccountSend
+} from '../actions/AccountSendActions';
 
 
 class Miner {
-  constructor(blockchain, utxoSet, network) {
-    this.blockchain = blockchain;
-    this.utxoSet = utxoSet;
-    this.network = network;
+  static setUpStore(dispatch) {
+    console.log('called', dispatch)
+    // Set up default redux store
+    // configuration
+    dispatch(createConfig());
+
+    // import/export
+    dispatch(createImportAndExport());
+
+    // conversion
+    dispatch(createConvert());
+
+    // blockchain
+    dispatch(createBlockchain());
+
+    // mempool
+    dispatch(createMempool());
+
+    // sign/verify
+    dispatch(createSignAndVerify());
+
+    // expolorer
+    dispatch(createExplorer());
+
+    // exchange rate
+    dispatch(setExchangeRate());
+
+    // wallet
+    dispatch(createWallet());
+
+    // account send
+    dispatch(createAccountSend());
   }
 
-  pushGenesisBlock(genesisBlock) {
-    genesisBlock.forEach((transaction, index) => {
-      let t = bitbox.BitcoinCash.transaction();
-      let decodedTx = t.fromHex(transaction.rawHex);
-      let a = bitbox.BitcoinCash.address();
+  static mineBlock(dispatch, blockchain) {
+    dispatch(addBlock(blockchain));
 
-      decodedTx.outs.forEach((output, index) => {
-        let outputPubKey = a.fromOutputScript(output.script, Bitcoin.networks[this.network]);
-        this.utxoSet.addUtxo(outputPubKey, output.value);
-      })
-    });
+    // flush mempool
+    dispatch(emptyMempool());
 
-    this.mineBlock(genesisBlock, 0);
+    // update store
+    dispatch(updateStore());
   }
 
-  mineBlock(transactions, index) {
-    this.blockchain.addBlock(new Block({
-      transactions: transactions,
-      index: index
-    }));
+  static createCoinbaseTx() {
+    console.log('creating')
   }
 }
 
