@@ -13,79 +13,78 @@ import underscore from 'underscore';
 class StatusBar extends Component {
 
   createBlock() {
-    let accounts = this.props.wallet.accounts;
+    let mempool = this.props.mempool;
     let blockchain = this.props.blockchain;
     let previousBlock = underscore.last(blockchain.chain) || {};
-    let newIndex
-    if(previousBlock.index || previousBlock.index === 0) {
-      newIndex = previousBlock.index + 1;
-    } else {
-      newIndex = 0;
-    }
 
-
-    let walletConfig = this.props.configuration.wallet;
+    let blockData = {
+      index: this.props.blockchain.chain.length,
+      transactions: [],
+      timestamp: Date()
+    };
 
     let account1 = this.props.wallet.accounts[0];
     let account2 = this.props.wallet.accounts[1];
 
-    let alice = bitbox.HDNode.fromWIF(account1.privateKeyWIF)
-    let txb = bitbox.BitcoinCash.transactionBuilder(walletConfig.network)
+    let alice = bitbox.HDNode.fromWIF(account1.privateKeyWIF);
+    let txb = bitbox.BitcoinCash.transactionBuilder(this.props.configuration.wallet.network);
     txb.addInput('61d520ccb74288c96bc1a2b20ea1c0d5a704776dd0164a396efec3ea7040349d', 0);
     let value = 1250000000;
     let addy = account1.addresses.getChainAddress(0);
     txb.addOutput(addy, value);
-    txb.sign(0, alice)
+    txb.sign(0, alice);
     let hex = txb.build().toHex();
+    // add tx to mempool
+    this.props.addTx(hex);
+
+    // bump address counter to next address
     account1.addresses.nextChainAddress(0);
+    this.props.updateAccount(account1);
 
-    bitbox.RawTransactions.decodeRawTransaction(hex)
-    .then((result) => {
-      let inputs = [];
-      result.ins.forEach((vin, index) => {
-        inputs.push(new Input({
-          hex: vin.hex,
-          inputPubKey: vin.inputPubKey,
-          script: vin.script
-        }));
-      })
+    mempool.transactions.forEach((tx, index) => {
+      bitbox.RawTransactions.decodeRawTransaction(tx)
+      .then((result) => {
+        let inputs = [];
+        result.ins.forEach((vin, index) => {
+          inputs.push(new Input({
+            hex: vin.hex,
+            inputPubKey: vin.inputPubKey,
+            script: vin.script
+          }));
+        })
 
-      let outputs = [];
-      result.outs.forEach((vout, index) => {
-        outputs.push(new Output({
-          hex: vout.hex,
-          outputPubKey: vout.outputPubKey,
-          script: vout.script
-        }));
-      })
+        let outputs = [];
+        let total = 0;
+        result.outs.forEach((vout, index) => {
+          total += vout.value;
+          outputs.push(new Output({
+            hex: vout.hex,
+            outputPubKey: vout.outputPubKey,
+            script: vout.script,
+            value: vout.value
+          }));
+        })
 
-      let tx = new Transaction({
-        value: value,
-        rawHex: hex,
-        timestamp: Date(),
-        hash: bitbox.Crypto.createSHA256Hash(hex),
-        inputs: inputs,
-        outputs: outputs
+        let transaction = new Transaction({
+          value: total,
+          rawHex: tx,
+          timestamp: Date(),
+          hash: bitbox.Crypto.createSHA256Hash(tx),
+          inputs: inputs,
+          outputs: outputs
+        });
+
+        blockData.transactions.push(transaction);
+
+        if((index + 1) === mempool.transactions.length) {
+          let block = new Block(blockData)
+          block.previousBlockHeader = previousBlock.header || "#BCHForEveryone";
+          block.header = bitbox.Crypto.createSHA256Hash(`${block.index}${block.previousBlockHeader}${JSON.stringify(block.transactions)}${block.timestamp}`);
+          this.props.mineBlock(blockchain.chain.push(block));
+        }
+      }, (err) => { console.log(err);
       });
-
-      let blockData = {
-        index: newIndex,
-        transactions: [tx],
-        timestamp: Date()
-      };
-
-      let block = new Block(blockData)
-      block.previousBlockHeader = previousBlock.header || "#BCHForEveryone";
-      block.header = bitbox.Crypto.createSHA256Hash(`${block.index}${block.previousBlockHeader}${JSON.stringify(block.transactions)}${block.timestamp}`);
-      blockchain.chain.push(block);
-      let newChain = blockchain;
-      this.props.addBlock(newChain);
-      this.props.updateStore();
-      this.props.updateAccount(account1);
-    }, (err) => { console.log(err);
-    });
-    // utxoSet.addUtxo(address, output.value);
-    // this.handleUtxoUpdate(utxoSet);
+    })
   }
 
   render() {

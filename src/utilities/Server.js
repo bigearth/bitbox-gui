@@ -117,7 +117,8 @@ class Server {
         outs.push({
           outputPubKey: outputPubKey,
           hex: output.script.toString('hex'),
-          script: s.toASM(chunksIn)
+          script: s.toASM(chunksIn),
+          value: output.value
         });
       })
       decodedTx.outs = outs;

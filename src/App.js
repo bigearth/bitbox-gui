@@ -83,16 +83,16 @@ import {
 
 import {
   createMempool,
-  addTx,
-  emptyMempool
+  emptyMempool,
+  addTx
 } from './actions/MempoolActions';
 
 let reduxStore = createStore(bitboxReducer)
 
-const unsubscribe = reduxStore.subscribe(() =>{
-  console.log(JSON.stringify(reduxStore.getState(), null, 2))
-  console.log('*********************************************');
-})
+// const unsubscribe = reduxStore.subscribe(() =>{
+//   console.log(JSON.stringify(reduxStore.getState(), null, 2))
+//   console.log('*********************************************');
+// })
 
 // stop listening to state updates
 // unsubscribe()
@@ -205,16 +205,19 @@ class App extends Component {
       let block = new Block(blockData)
       block.previousBlockHeader = previousBlock.header || "#BCHForEveryone";
       block.header = bitbox.Crypto.createSHA256Hash(`${block.index}${block.previousBlockHeader}${JSON.stringify(block.transactions)}${block.timestamp}`);
+
+      reduxStore.dispatch(updateAccount(account1));
       blockchain.chain.push(block);
+
       let newChain = blockchain;
       reduxStore.dispatch(addBlock(newChain));
-      reduxStore.dispatch(updateAccount(account1));
 
       // flush mempool
       reduxStore.dispatch(emptyMempool());
 
       // update store
       reduxStore.dispatch(updateStore());
+
     }, (err) => { console.log(err);
     });
   }

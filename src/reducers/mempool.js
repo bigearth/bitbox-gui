@@ -15,7 +15,6 @@ export default function wallet(state = {}, action) {
     mempoolConfig.transactions.push(action.tx)
       return Object.assign({}, state, mempoolConfig);
     case EMPTY_MEMPOOL:
-    console.log('asdf')
       return Object.assign({}, state,  new Mempool());
     default:
       return state

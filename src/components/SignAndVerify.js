@@ -81,7 +81,6 @@ class SignAndVerify extends Component {
 
     let signature = this.props.signAndVerify.signature2;
     let message = this.props.signAndVerify.message2;
-    console.log('priv', address, signature, message)
     let verified;
     try {
       verified = bitbox.BitcoinCash.verifyMessage(address, signature, message)
