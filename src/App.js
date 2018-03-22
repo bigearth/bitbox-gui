@@ -1,5 +1,4 @@
 // react imports
-
 import React, { Component } from 'react';
 import {
   BrowserRouter as Router,
@@ -9,7 +8,6 @@ import {
   Redirect,
   NavLink
 } from 'react-router-dom';
-import Bitcoin from 'bitcoinjs-lib';
 
 // custom models
 import Block from './models/Block';
@@ -17,8 +15,6 @@ import Transaction from './models/Transaction';
 import Output from './models/Output';
 import Input from './models/Input';
 import underscore from 'underscore';
-
-import Utxo from './models/Utxo';
 
 import WalletContainer from './containers/WalletContainer'
 import BlocksContainer from './containers/BlocksContainer';
@@ -33,13 +29,10 @@ import StatusBarContainer from './containers/StatusBarContainer';
 import ExplorerContainer from './containers/ExplorerContainer'
 
 // custom components
-import BlockDetails from './components/BlockDetails';
-// import Account from './components/Account';
 import Configuration from './components/Configuration';
 
 // utilities
 import BitcoinCash from './utilities/BitcoinCash';
-import Miner from './utilities/Miner';
 
 // css
 import './styles/app.scss';
@@ -51,7 +44,6 @@ import bitboxReducer from './reducers/bitbox'
 // redux actions
 import {
   createConfig,
-  toggleWalletConfig,
   updateWalletConfig,
   updateStore,
   setExchangeRate
@@ -65,8 +57,7 @@ import {
 
 import {
   createImportAndExport,
-  toggleVisibility,
-  toggleExportCopied
+  toggleVisibility
 } from './actions/ImportAndExportActions';
 
 import {
@@ -261,8 +252,6 @@ class App extends Component {
     };
 
     let chainlength = reduxStore.getState().blockchain.chain.length;
-
-
 
     return (
       <Provider store={reduxStore}>

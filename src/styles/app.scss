@@ -947,7 +947,7 @@ a.pure-button-primary {
   }
 
   div {
-    padding: 2em;
+    padding: 1em 2em;
   }
 }
 
@@ -959,8 +959,11 @@ a.pure-button-primary {
   color: red;
 }
 
-.AccountTransactions {
+.AccountTransactions, .AccountReceive, .AccountSend {
   background: #eee;
+}
+
+.AccountTransactions {
 
   h2 {
     margin: 0;
@@ -1015,5 +1018,23 @@ a.pure-button-primary {
 
   td:last-of-type {
     color: black;
+  }
+}
+
+.AccountDetails {
+  .pure-menu.pure-menu-horizontal {
+    padding-bottom: 0;
+
+    a.pure-menu-link:hover {
+      color: $medBlue;
+    }
+
+    a.pure-menu-link.pure-menu-selected {
+      color: $slate;
+    }
+  }
+
+  .account {
+    font-size: 1.75em;
   }
 }

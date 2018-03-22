@@ -22,7 +22,18 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(toggleExportCopied(val));
     },
     importStore: (store) => {
-      dispatch(importStore(store));
+      let parsedStore = JSON.parse(store);
+      let seedHex = bitbox.Mnemonic.mnemonicToSeedHex(parsedStore.configuration.wallet.mnemonic)
+      let hdnode = bitbox.HDNode.fromSeedHex(seedHex)
+      parsedStore.wallet.accounts.forEach((account, index) => {
+        let ac = hdnode.derivePath(`m/44'/145'/${index}'`);
+        let external = ac.derivePath("0")
+        let internal = ac.derivePath("1")
+
+        let a = bitbox.HDNode.createAccount([external, internal]);
+        account.addresses = a;
+      })
+      dispatch(importStore(parsedStore));
     }
   }
 }

@@ -25,55 +25,70 @@ class AccountDetails extends Component {
     };
   }
 
-  handleRedirect() {
-    this.setState({
-      redirect: true
-    })
+  handlePathMatch(path) {
+    if(path === '/wallet' || path === '/blocks' || path === '/transactions' || path === '/convert' || path === '/signandverify' || path === '/configuration/wallet') {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   render() {
-    let account = underscore.findWhere(this.props.wallet.accounts, {index: +this.props.match.params.account_id});
-
-    if (this.state.redirect) {
-      return (<Redirect to={{
-        pathname: `/`
-      }} />)
+    const pathMatch = (match, location) => {
+      if (!match) {
+        return false
+      }
+      return true;
+      // return this.handlePathMatch(match.path);
     }
+
+    let account = underscore.findWhere(this.props.wallet.accounts, {index: +this.props.match.params.account_id});
 
     return (
       <div className="AccountDetails">
-        <table className="pure-table">
-          <tbody>
-            <tr className="">
-              <td className='important nextPage' onClick={this.handleRedirect.bind(this)}><i className="fa fa-arrow-left" /> <span className='subheader'>BACK</span></td>
-              <td className='important'>ACCOUNT {account.index}</td>
-              <td className='important'>
-                <NavLink
-                  to={`/accounts/${account.index}/transactions`}>
-                  <button className='pure-button pure-button-primary'>
-                    <i className="fas fa-qrcode" /> TRANSACTIONS
-                  </button>
-                </NavLink>
-              </td>
-              <td className='important'>
-                <NavLink
-                  to={`/accounts/${account.index}/receive`}>
-                  <button className='pure-button pure-button-primary'>
-                    <i className="fas fa-qrcode" /> RECEIVE
-                  </button>
-                </NavLink>
-              </td>
-              <td className='important'>
-                <NavLink
-                  to={`/accounts/${account.index}/send`}>
-                  <button className='pure-button pure-button-primary'>
-                    <i className="far fa-check-circle"></i> SEND
-                  </button>
-                </NavLink>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="pure-menu pure-menu-horizontal">
+          <ul className="pure-menu-list">
+            <li className="pure-menu-item">
+              <NavLink
+                to={`/`}
+                className="pure-menu-link">
+                <i className="fa fa-arrow-left" /> Back
+              </NavLink>
+            </li>
+            <li className="pure-menu-item account">
+              ACCOUNT {account.index}
+            </li>
+          </ul>
+          <ul className="pure-menu-list right">
+            <li className="pure-menu-item">
+              <NavLink
+                isActive={pathMatch}
+                activeClassName="pure-menu-selected"
+                to={`/accounts/${account.index}/transactions`}
+                className="pure-menu-link">
+                <i className="fas fa-qrcode" /> TRANSACTIONS
+              </NavLink>
+            </li>
+            <li className="pure-menu-item">
+              <NavLink
+                isActive={pathMatch}
+                activeClassName="pure-menu-selected"
+                to={`/accounts/${account.index}/receive`}
+                className="pure-menu-link">
+                <i className="fas fa-qrcode" /> RECEIVE
+              </NavLink>
+            </li>
+            <li className="pure-menu-item">
+              <NavLink
+                isActive={pathMatch}
+                activeClassName="pure-menu-selected"
+                to={`/accounts/${account.index}/send`}
+                className="pure-menu-link">
+                <i className="far fa-check-circle"></i> SEND
+              </NavLink>
+            </li>
+          </ul>
+        </div>
         <div className="pure-g AccountDetailsHeader">
           <div className="pure-u-1-4">
             <p className='subheader'>Balance</p>

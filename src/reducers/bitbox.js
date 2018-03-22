@@ -22,7 +22,7 @@ const bitboxReducer = combineReducers({
 
 const rootReducer = (state, action) => {
   if (action.type === 'IMPORT_STORE') {
-    state = JSON.parse(action.store)
+    state = action.store;
     state.importAndExport.importState = true;
     state.importAndExport.activePane = 'import';
   } else if(action.type === 'UPDATE_STORE') {
