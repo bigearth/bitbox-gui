@@ -56,7 +56,7 @@ class AccountDetails extends Component {
               </NavLink>
             </li>
             <li className="pure-menu-item account">
-              ACCOUNT {account.index}
+              <i className="far fa-id-card" /> ACCOUNT {account.index}
             </li>
           </ul>
           <ul className="pure-menu-list right">
@@ -66,7 +66,7 @@ class AccountDetails extends Component {
                 activeClassName="pure-menu-selected"
                 to={`/accounts/${account.index}/transactions`}
                 className="pure-menu-link">
-                <i className="fas fa-qrcode" /> TRANSACTIONS
+                <i className="fas fa-exchange-alt" /> TRANSACTIONS
               </NavLink>
             </li>
             <li className="pure-menu-item">
@@ -84,7 +84,7 @@ class AccountDetails extends Component {
                 activeClassName="pure-menu-selected"
                 to={`/accounts/${account.index}/send`}
                 className="pure-menu-link">
-                <i className="far fa-check-circle"></i> SEND
+                <i className="fas fa-chevron-up"></i> SEND
               </NavLink>
             </li>
           </ul>

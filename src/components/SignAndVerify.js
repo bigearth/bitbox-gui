@@ -38,19 +38,26 @@ class SignAndVerify extends Component {
     this.props.updateSignAndVerifyValue('message1Success', '');
     this.props.updateSignAndVerifyValue('message1Error', '');
 
-    let privateKeyWIF
+    let addressHeight;
+    let account;
+    let hdNode;
+    let childNode;
+    let privateKeyWIF;
+    this.props.wallet.accounts.forEach((a, index) => {
+      let tmp = a.addresses.chains[0].find(bitbox.Address.toLegacyAddress(this.props.signAndVerify.signAddress))
+      if(tmp !== undefined) {
+        account = a;
+        addressHeight = tmp;
+      }
+    })
     try {
-      privateKeyWIF = BitcoinCash.returnPrivateKeyWIF(this.props.signAndVerify.signAddress, this.props.wallet.accounts);
+      hdNode = bitbox.HDNode.fromXPriv(account.xpriv);
+      childNode = hdNode.derivePath(`0/${addressHeight}`);
+      privateKeyWIF = bitbox.HDNode.toWIF(childNode);
     }
     catch (e) {
       this.props.updateSignAndVerifyValue('message1Success', '');
       this.props.updateSignAndVerifyValue('message1Error', e.message);
-    }
-
-    if(privateKeyWIF === 'Received an invalid Bitcoin Cash address as input.') {
-      this.props.updateSignAndVerifyValue('message1Success', '');
-      this.props.updateSignAndVerifyValue('message1Error', privateKeyWIF);
-      return false;
     }
 
     let signature = bitbox.BitcoinCash.signMessageWithPrivKey(privateKeyWIF, this.props.signAndVerify.message1);

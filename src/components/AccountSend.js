@@ -34,7 +34,7 @@ class AccountSend extends Component {
     return (
       <div className="AccountSend content pure-g">
         <div className="pure-u-1-1">
-          <h2><i className="fas fa-chevron-right" /> Send Bitcoin Cash</h2>
+          <h2><i className="fas fa-chevron-up" /> Send Bitcoin Cash</h2>
 
           <form className="pure-form pure-form-aligned" onSubmit={this.handleSubmit.bind(this)}>
               <fieldset>

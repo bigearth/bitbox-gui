@@ -1,15 +1,40 @@
 import React, { Component } from 'react';
 import underscore from 'underscore';
 import moment from 'moment';
+import {
+  withRouter,
+  Redirect
+} from 'react-router-dom';
+
 class AccountTransactions extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      redirect: false
+    };
+  }
+
+  handlexTransactionDetails(transaction) {
+    this.setState({
+      transaction: transaction,
+      redirect: true
+    })
+  }
+
   render() {
+    if (this.state.redirect) {
+      return (<Redirect to={{
+        pathname: `/blocks/0/transactions/${this.state.transaction.hash}`
+      }} />)
+    }
+
     let account = underscore.findWhere(this.props.wallet.accounts, {index: +this.props.match.params.account_id});
     return (
       <div className="AccountTransactions pure-g">
         <div className="pure-u-1-1">
           <h2>Transactions</h2>
           <table className="pure-table">
-            <tbody>
+            <tbody onClick={this.handlexTransactionDetails.bind(this, {hash: '4a335a59f2a76c94f3de9fe365f97408bd9d225e4b7f4998c4f08f040f167f9c'})}>
               <tr>
                 <th colSpan="2" className='important'>{moment(Date.now()).format('MMMM Do YYYY')}</th>
                 <th>0.507 BCH</th>

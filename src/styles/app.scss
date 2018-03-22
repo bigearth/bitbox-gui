@@ -774,7 +774,7 @@ a.pure-button-primary {
 }
 
 .AccountReceive li:hover {
-  background: #eee;
+  background: $white;
   cursor: pointer;
 }
 
@@ -974,6 +974,7 @@ a.pure-button-primary {
       border-width: 0 0 1px 0;
       border-style: solid;
       border-color: #d3d3d3;
+      cursor: pointer;
     }
 
     th {
@@ -997,6 +998,10 @@ a.pure-button-primary {
     tr:last-of-type {
       box-shadow: 0px 1px 2px 0px #aaa;
       background: $white;
+    }
+
+    tr:hover {
+      background: #eee;
     }
 
     td {
@@ -1023,7 +1028,7 @@ a.pure-button-primary {
 
 .AccountDetails {
   .pure-menu.pure-menu-horizontal {
-    padding-bottom: 0;
+    padding-bottom: 5px;
 
     a.pure-menu-link:hover {
       color: $medBlue;
@@ -1031,10 +1036,16 @@ a.pure-button-primary {
 
     a.pure-menu-link.pure-menu-selected {
       color: $slate;
+      border-style: solid;
+      border-width: 0 0 1px 0;
     }
   }
 
   .account {
     font-size: 1.75em;
   }
+}
+
+.AccountSend {
+
 }
