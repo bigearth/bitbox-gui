@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import BitcoinCash from '../utilities/BitcoinCash';
 import QRCode from 'qrcode.react';
 
+import '../styles/convert.scss';
+
 class Convert extends Component {
   constructor(props) {
     super(props);
