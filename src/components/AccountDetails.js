@@ -18,6 +18,8 @@ import AccountSendContainer from '../containers/AccountSendContainer';
 import AccountReceiveContainer from '../containers/AccountReceiveContainer';
 import underscore from 'underscore';
 
+import '../styles/accountDetails.scss';
+
 class AccountDetails extends Component {
 
   constructor(props) {

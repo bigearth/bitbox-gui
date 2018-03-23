@@ -179,50 +179,62 @@ body {
       }
     }
   }
+
+  .plus {
+    color: green;
+  }
+
+  .minus {
+    color: red;
+  }
+
+  .AccountTransactions, .AccountReceive, .AccountSend {
+    background: #eee;
+  }
+
+  .Account, .Blocks {
+    td {
+      padding: 1.25em 1em;
+    }
+
+    td.important {
+      font-size: 1.3em;
+
+      .subheader {
+        font-size: 0.6em;
+      }
+    }
+  }
+
+  .Blocks td:first-of-type, .DetailsHeader td:first-of-type, .AccountDetails td.nextPage:first-of-type {
+    background-color: $medBlue;
+    color: $white;
+    text-align: center;
+    padding: 0.75em;
+    width: 5%;
+  }
+
+  .DetailsHeader, .AccountDetailsHeader {
+    .pure-table {
+      tr:first-of-type {
+        .subheader {
+          color: $white;
+        }
+
+        td {
+          font-size: 1.5em;
+        }
+
+        td:first-of-type:hover {
+          background-color: $danger;
+        }
+      }
+    }
+  }
 }
 
 @media (min-width: 48em) {
   body {
     font-size: 16px;
-  }
-}
-
-.Account, .Blocks {
-  td {
-    padding: 1.25em 1em;
-  }
-
-  td.important {
-    font-size: 1.3em;
-
-    .subheader {
-      font-size: 0.6em;
-    }
-  }
-}
-
-.Blocks td:first-of-type, .DetailsHeader td:first-of-type, .AccountDetails td.nextPage:first-of-type {
-  background-color: $medBlue;
-  color: $white;
-  text-align: center;
-  padding: 0.75em;
-  width: 5%;
-}
-
-.DetailsHeader, .AccountDetailsHeader {
-  .pure-table {
-    tr:first-of-type {
-      .subheader {
-        color: $white;
-      }
-
-      td {
-        font-size: 1.5em;
-      }
-
-      td:first-of-type:hover {
-        background-color: $danger;
-      }
-    }
   }
 }

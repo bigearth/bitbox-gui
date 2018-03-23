@@ -17,4 +17,31 @@
   .account {
     font-size: 1.75em;
   }
+
+  .AccountDetailsHeader {
+    .subheader {
+      font-size: .8em;
+      margin-bottom: 0;
+    }
+
+    .balance {
+      margin: 10px 0;
+      color: black;
+      font-size: 1.75em;
+    }
+
+    .balance:first-of-type {
+      font-weight: bold;
+    }
+
+    .subbalance {
+      margin-top: 0;
+      color: $lightGrey;
+      font-size: 1em;
+    }
+
+    div {
+      padding: 1em 2em;
+    }
+  }
 }
