@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   Redirect
 } from 'react-router-dom';
+import '../styles/account.scss';
 
 class Account extends Component {
   constructor(props) {

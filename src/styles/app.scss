@@ -242,31 +242,6 @@ a.pure-button-primary {
   font-weight: normal;
 }
 
-.Account td, .Blocks td {
-  padding: 1.25em 1em;
-}
-
-.Account td.important .subheader, .Blocks td.important .subheader {
-  font-size: 0.6em;
-}
-
-.Account td.important, .Blocks td.important {
-  font-size: 1.3em;
-}
-
-.Account {
-  .danger {
-    font-size: .6em;
-  }
-  .danger:first-of-type {
-    font-size: 1em;
-  }
-
-  .hdPath {
-    font-size: 0.75em;
-    font-weight: 200;
-  }
-}
 
 .pure-button {
   background-color: $medBlue;

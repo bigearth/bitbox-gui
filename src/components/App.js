@@ -12,27 +12,27 @@ import {
 // custom models
 import underscore from 'underscore';
 
-import WalletContainer from './containers/WalletContainer'
-import BlocksContainer from './containers/BlocksContainer';
-import BlockContainer from './containers/BlockContainer';
-import AddressContainer from './containers/AddressContainer';
-import AccountDetailsContainer from './containers/AccountDetailsContainer';
-import TransactionContainer from './containers/TransactionContainer';
-import SignAndVerifyContainer from './containers/SignAndVerifyContainer'
-import ImportAndExportContainer from './containers/ImportAndExportContainer'
-import ConvertContainer from './containers/ConvertContainer';
-import StatusBarContainer from './containers/StatusBarContainer';
-import ExplorerContainer from './containers/ExplorerContainer'
+import WalletContainer from '../containers/WalletContainer'
+import BlocksContainer from '../containers/BlocksContainer';
+import BlockContainer from '../containers/BlockContainer';
+import AddressContainer from '../containers/AddressContainer';
+import AccountDetailsContainer from '../containers/AccountDetailsContainer';
+import TransactionContainer from '../containers/TransactionContainer';
+import SignAndVerifyContainer from '../containers/SignAndVerifyContainer'
+import ImportAndExportContainer from '../containers/ImportAndExportContainer'
+import ConvertContainer from '../containers/ConvertContainer';
+import StatusBarContainer from '../containers/StatusBarContainer';
+import ExplorerContainer from '../containers/ExplorerContainer'
 
 // custom components
-import Configuration from './components/Configuration';
+import Configuration from '../components/Configuration';
 
 // utilities
-import Miner from './utilities/Miner';
-import reduxStore from './utilities/ReduxStore'
+import Miner from '../utilities/Miner';
+import reduxStore from '../utilities/ReduxStore'
 
 // css
-import './styles/app.scss';
+import '../styles/app.scss';
 
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
@@ -40,7 +40,7 @@ import { createStore } from 'redux'
 // redux actions
 import {
   toggleVisibility
-} from './actions/ImportAndExportActions';
+} from '../actions/ImportAndExportActions';
 
 // const unsubscribe = reduxStore.subscribe(() =>{
 //   console.log(JSON.stringify(reduxStore.getState(), null, 2))
