@@ -32,6 +32,7 @@ import Miner from '../utilities/Miner';
 import reduxStore from '../utilities/ReduxStore'
 
 // css
+import '../styles/theme.scss';
 import '../styles/app.scss';
 
 import { Provider } from 'react-redux'

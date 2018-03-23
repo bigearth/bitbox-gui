@@ -1,0 +1,209 @@
+@import 'themeColors';
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  font-size: 13px;
+  line-height: 1.7em;
+  color: $lightGrey;
+  min-width: 1250px;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  label {
+      color: $darkGrey;
+  }
+
+  li {
+    list-style-type: none;
+  }
+
+  * {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+  }
+
+  .right {
+    float: right;
+  }
+
+  .l-box {
+      padding: 1em;
+  }
+
+  .l-box-lrg {
+      padding: 2em;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .is-center {
+      text-align: center;
+  }
+
+  .pure-form label {
+      margin: 1em 0 0;
+      font-weight: bold;
+      font-size: 100%;
+  }
+
+  .pure-form input[type] {
+      border: 2px solid #ddd;
+      box-shadow: none;
+      font-size: 100%;
+      margin-bottom: 1em;
+  }
+
+  .pure-button {
+      color: $white;
+      padding: 0.5em 2em;
+      border-radius: 5px;
+  }
+
+  a.pure-button-primary {
+      background: $white;
+      color: $lightBlue;
+      border-radius: 5px;
+      font-size: 120%;
+  }
+
+  .pure-menu.pure-menu-fixed {
+      /* Fixed menus normally have a border at the bottom. */
+      border-bottom: none;
+      /* I need a higher z-index here because of the scroll-over effect. */
+      z-index: 4;
+  }
+
+  .content {
+    padding: 1em 1em 3em;
+  }
+
+  .content-head {
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    font-size: 1.3em;
+  }
+
+  .footer {
+    background: #111;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  }
+
+  .main-header {
+    background: $slate;
+
+    a {
+      color: $medBlue;
+    }
+
+    .networkInfo {
+      background: $medBlue;
+
+      a {
+        color: $slate;
+      }
+    }
+  }
+}
+
+@media (min-width: 48em) {
+  body {
+    font-size: 16px;
+  }
+}
+
+.main-header .pure-menu-item a.pure-menu-link, .main-header a.pure-menu-link:hover {
+  background: none;
+}
+
+.main-header .pure-menu-item a.pure-menu-link.pure-menu-selected, .main-header a.pure-menu-link:hover {
+  color: #fff;
+}
+
+.pure-table {
+  width: 100%;
+  border: none;
+}
+
+.pure-table tbody {
+  border-style: solid;
+  border-color: $slate;
+  border-width: 0 0 1px 0;
+}
+
+.pure-table tr {
+  border-style: solid;
+  border-color: $slate;
+  border-width: 1px 0 0 0;
+}
+
+.pure-table td {
+  padding: 1em;
+  border: none;
+  line-height: 1.1em;
+  color: $slate;
+  font-weight: bold;
+}
+
+.pure-table td .subheader {
+  font-size: 0.75em;
+  padding-bottom: 0;
+  color: $slate;
+  font-weight: normal;
+}
+
+
+.pure-button {
+  background-color: $medBlue;
+}
+
+.main-header .pure-menu-horizontal {
+  padding: 1em 0;
+}
+
+.main-header .pure-menu-horizontal svg {
+  font-size: 1.25em;
+}
+
+.main-header .pure-menu-horizontal.networkInfo {
+  padding: 1em 0;
+  color: #fff;
+  font-size: 0.75em;
+  line-height: 1.25em;
+}
+
+.main-header .pure-menu-horizontal.networkInfo li {
+  padding-left: 1em;
+  padding-right: 10px;
+}
+
+.danger-background {
+  background-color: $danger;
+}
+
+.Account td, .Blocks td {
+  padding: 1.25em 1em;
+}
+
+.Account td.important .subheader, .Blocks td.important .subheader {
+  font-size: 0.6em;
+}
+
+.Account td.important, .Blocks td.important {
+  font-size: 1.3em;
+}
+
+
+.Blocks td:first-of-type, .DetailsHeader td:first-of-type, .AccountDetails td.nextPage:first-of-type {
+  background-color: $medBlue;
+  color: $white;
+  text-align: center;
+  padding: 0.75em;
+  width: 5%;
+}

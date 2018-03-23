@@ -1,18 +1,9 @@
-.Account td, .Blocks td {
-  padding: 1.25em 1em;
-}
-
-.Account td.important .subheader, .Blocks td.important .subheader {
-  font-size: 0.6em;
-}
-
-.Account td.important, .Blocks td.important {
-  font-size: 1.3em;
-}
+@import 'themeColors';
 
 .Account {
   .danger {
     font-size: .6em;
+    color: $danger;
   }
   .danger:first-of-type {
     font-size: 1em;
