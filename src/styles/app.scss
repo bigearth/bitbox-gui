@@ -22,19 +22,6 @@
   padding-left: 0;
 }
 
-.Faq .pure-g h2, .Faq h3, .Faq p {
-  padding-left: 2%;
-}
-
-.Faq .pure-g h2, .Faq h3 {
-  font-weight: 400;
-}
-
-.Faq a {
-  text-decoration: none;
-  color: $medBlue;
-}
-
 .rangeslider-horizontal .rangeslider__fill {
   background: $medBlue;
 }
@@ -458,87 +445,4 @@
 
 .AccountTransactions, .AccountReceive, .AccountSend {
   background: #eee;
-}
-
-.AccountTransactions {
-
-  h2 {
-    margin: 0;
-  }
-
-  table {
-    tbody {
-      border-width: 0 0 1px 0;
-      border-style: solid;
-      border-color: #d3d3d3;
-      cursor: pointer;
-    }
-
-    th {
-      text-align: left;
-      border: none;
-    }
-
-    tr:first-of-type {
-      border: none;
-    }
-
-    tr {
-      border-color: #d3d3d3;
-    }
-
-    tr:nth-child(2) {
-      box-shadow: 0px 0px 2px 0px #aaa;
-      background: $white;
-    }
-
-    tr:last-of-type {
-      box-shadow: 0px 1px 2px 0px #aaa;
-      background: $white;
-    }
-
-    tr:hover {
-      background: #eee;
-    }
-
-    td {
-      color: $lightGrey;
-    }
-  }
-
-  h2 {
-    padding: 1em;
-  }
-
-  th, td {
-    padding: 1.5em 2em;
-    font-weight: normal;
-  }
-  th:last-of-type, td:last-of-type {
-    text-align: right;
-  }
-
-  td:last-of-type {
-    color: black;
-  }
-}
-
-.AccountDetails {
-  .pure-menu.pure-menu-horizontal {
-    padding-bottom: 5px;
-
-    a.pure-menu-link:hover {
-      color: $medBlue;
-    }
-
-    a.pure-menu-link.pure-menu-selected {
-      color: $slate;
-      border-style: solid;
-      border-width: 0 0 1px 0;
-    }
-  }
-
-  .account {
-    font-size: 1.75em;
-  }
 }

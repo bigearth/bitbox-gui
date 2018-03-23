@@ -6,6 +6,8 @@ import {
   Redirect
 } from 'react-router-dom';
 
+import '../styles/accountTransactions.scss';
+
 class AccountTransactions extends Component {
   constructor(props) {
     super(props);

@@ -1,0 +1,20 @@
+@import 'themeColors';
+.AccountDetails {
+  .pure-menu.pure-menu-horizontal {
+    padding-bottom: 5px;
+
+    a.pure-menu-link:hover {
+      color: $medBlue;
+    }
+
+    a.pure-menu-link.pure-menu-selected {
+      color: $slate;
+      border-style: solid;
+      border-width: 0 0 1px 0;
+    }
+  }
+
+  .account {
+    font-size: 1.75em;
+  }
+}

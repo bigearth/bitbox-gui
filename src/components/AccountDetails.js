@@ -11,6 +11,8 @@ import {
   FormattedNumber
 } from 'react-intl';
 
+import '../styles/accountDetails.scss';
+
 import AccountTransactionsContainer from '../containers/AccountTransactionsContainer';
 import AccountSendContainer from '../containers/AccountSendContainer';
 import AccountReceiveContainer from '../containers/AccountReceiveContainer';
