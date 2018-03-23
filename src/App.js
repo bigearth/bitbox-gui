@@ -34,13 +34,13 @@ import Configuration from './components/Configuration';
 // utilities
 import BitcoinCash from './utilities/BitcoinCash';
 import Miner from './utilities/Miner';
+import reduxStore from './utilities/ReduxStore'
 
 // css
 import './styles/app.scss';
 
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
-import bitboxReducer from './reducers/bitbox'
 
 // redux actions
 import {
@@ -56,12 +56,6 @@ import {
   toggleVisibility
 } from './actions/ImportAndExportActions';
 
-import {
-  addTx
-} from './actions/MempoolActions';
-
-let reduxStore = createStore(bitboxReducer)
-
 // const unsubscribe = reduxStore.subscribe(() =>{
 //   console.log(JSON.stringify(reduxStore.getState(), null, 2))
 //   console.log('*********************************************');
@@ -75,7 +69,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     // Set up default redux store
-    Miner.setUpStore(reduxStore.dispatch)
+    Miner.setUpStore()
     this.createAccounts();
   }
 
@@ -107,23 +101,9 @@ class App extends Component {
     });
 
     let blockchain = reduxStore.getState().blockchain;
-    let previousBlock = underscore.last(blockchain.chain) || {};
     let account1 = reduxStore.getState().wallet.accounts[0];
     let account2 = reduxStore.getState().wallet.accounts[1];
-
-    let alice = bitbox.HDNode.fromWIF(account1.privateKeyWIF);
-    let txb = bitbox.BitcoinCash.transactionBuilder(walletConfig.network);
-    txb.addInput('61d520ccb74288c96bc1a2b20ea1c0d5a704776dd0164a396efec3ea7040349d', 0);
-    let value = 1250000000;
-    let addy = account1.addresses.getChainAddress(0);
-    txb.addOutput(addy, value);
-    txb.sign(0, alice);
-    let hex = txb.build().toHex();
-    // add tx to mempool
-    reduxStore.dispatch(addTx(hex));
-
-    // bump address counter to next address
-    account1.addresses.nextChainAddress(0);
+    let hex = Miner.createCoinbaseTx();
 
     let mempool = reduxStore.getState().mempool;
     bitbox.RawTransactions.decodeRawTransaction(mempool.transactions[0])
@@ -147,7 +127,7 @@ class App extends Component {
       })
 
       let tx = new Transaction({
-        value: value,
+        value: 1250000000,
         rawHex: hex,
         timestamp: Date(),
         hash: bitbox.Crypto.createSHA256Hash(hex),
@@ -162,13 +142,14 @@ class App extends Component {
       };
 
       let block = new Block(blockData)
+      let previousBlock = underscore.last(blockchain.chain) || {};
       block.previousBlockHeader = previousBlock.header || "#BCHForEveryone";
       block.header = bitbox.Crypto.createSHA256Hash(`${block.index}${block.previousBlockHeader}${JSON.stringify(block.transactions)}${block.timestamp}`);
 
       reduxStore.dispatch(updateAccount(account1));
       blockchain.chain.push(block);
 
-      Miner.mineBlock(reduxStore.dispatch, blockchain)
+      Miner.mineBlock(blockchain)
     }, (err) => { console.log(err);
     });
   }

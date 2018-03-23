@@ -1,6 +1,9 @@
 import BitcoinCash from './BitcoinCash'
 import Bitcoin from 'bitcoinjs-lib';
 import Block from '../models/Block';
+import underscore from 'underscore';
+import reduxStore from './ReduxStore'
+
 import {
   createConfig,
   updateStore,
@@ -26,7 +29,8 @@ import {
 
 import {
   createMempool,
-  emptyMempool
+  emptyMempool,
+  addTx
 } from '../actions/MempoolActions';
 
 import {
@@ -43,52 +47,66 @@ import {
 
 
 class Miner {
-  static setUpStore(dispatch) {
-    console.log('called', dispatch)
+  static setUpStore() {
     // Set up default redux store
     // configuration
-    dispatch(createConfig());
+    reduxStore.dispatch(createConfig());
 
     // import/export
-    dispatch(createImportAndExport());
+    reduxStore.dispatch(createImportAndExport());
 
     // conversion
-    dispatch(createConvert());
+    reduxStore.dispatch(createConvert());
 
     // blockchain
-    dispatch(createBlockchain());
+    reduxStore.dispatch(createBlockchain());
 
     // mempool
-    dispatch(createMempool());
+    reduxStore.dispatch(createMempool());
 
     // sign/verify
-    dispatch(createSignAndVerify());
+    reduxStore.dispatch(createSignAndVerify());
 
     // expolorer
-    dispatch(createExplorer());
+    reduxStore.dispatch(createExplorer());
 
     // exchange rate
-    dispatch(setExchangeRate());
+    reduxStore.dispatch(setExchangeRate());
 
     // wallet
-    dispatch(createWallet());
+    reduxStore.dispatch(createWallet());
 
     // account send
-    dispatch(createAccountSend());
+    reduxStore.dispatch(createAccountSend());
   }
 
-  static mineBlock(dispatch, blockchain) {
-    dispatch(addBlock(blockchain));
+  static mineBlock(blockchain) {
+    reduxStore.dispatch(addBlock(blockchain));
 
     // flush mempool
-    dispatch(emptyMempool());
+    reduxStore.dispatch(emptyMempool());
 
     // update store
-    dispatch(updateStore());
+    reduxStore.dispatch(updateStore());
   }
 
   static createCoinbaseTx() {
-    console.log('creating')
+    let account1 = reduxStore.getState().wallet.accounts[0];
+    let account2 = reduxStore.getState().wallet.accounts[1];
+    let alice = bitbox.HDNode.fromWIF(account1.privateKeyWIF);
+    let txb = bitbox.BitcoinCash.transactionBuilder(reduxStore.getState().configuration.wallet.network);
+    txb.addInput('61d520ccb74288c96bc1a2b20ea1c0d5a704776dd0164a396efec3ea7040349d', 0);
+    let value = 1250000000;
+    let addy = account1.addresses.getChainAddress(0);
+    txb.addOutput(addy, value);
+    txb.sign(0, alice);
+    let hex = txb.build().toHex();
+    // add tx to mempool
+    reduxStore.dispatch(addTx(hex));
+
+    // bump address counter to next address
+    account1.addresses.nextChainAddress(0);
+    return hex;
   }
 }
 
