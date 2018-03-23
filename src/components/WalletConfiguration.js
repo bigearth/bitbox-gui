@@ -9,6 +9,8 @@ import Toggle from 'react-toggle'
 import Slider from 'react-rangeslider'
 import 'react-rangeslider/lib/index.css'
 
+import '../styles/walletconfiguration.scss';
+
 class WalletConfiguration extends Component {
   constructor(props) {
     super(props);

@@ -363,6 +363,69 @@ body {
     text-decoration: none;
     cursor: pointer;
   }
+
+  .importAndExportBtn {
+    border: none;
+    background: none;
+    color: $medBlue;
+  }
+
+  .importAndExportBtn:hover{
+    border: none;
+    background: none;
+  }
+
+  .importAndExportBtn:focus{
+    border: none;
+    background: none;
+  }
+
+  #keyImportAndExportModal {
+    .modal-body {
+
+      .ImportAndExport {
+        height: 400px;
+
+        textarea {
+          width: 100%;
+          height: 350px;
+          border: none;
+        }
+      }
+    }
+  }
+
+  .hide {
+    display: none;
+  }
+
+  .input-icon-wrap {
+    border: 1px solid $lightGrey;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .input-icon {
+    background: $slate;
+    color: $medBlue;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+
+  .input-with-icon {
+    background: $slate;
+    border: none;
+    flex: 1;
+    line-height: inherit;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    width: 400px;
+  }
+
+  .input-icon, .input-with-icon {
+    padding: 10px;
+  }
 }
 
 @media (min-width: 48em) {
