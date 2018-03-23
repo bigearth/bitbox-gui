@@ -3,46 +3,39 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-}
+  font-size: 13px;
+  line-height: 1.7em;
+  color: $lightGrey;
+  min-width: 1250px;
 
-.App {
-  text-align: center;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  label {
+      color: $darkGrey;
+  }
+
+  li {
+    list-style-type: none;
+  }
+
+  * {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+  }
 }
 
 .right {
   float: right;
 }
-
-li {
-  list-style-type: none;
-}
-
-* {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
 /*
  * -- BASE STYLES --
  * Most of these are inherited from Base, but I want to change a few.
  */
-body {
-  line-height: 1.7em;
-  color: $lightGrey;
-  font-size: 13px;
-  min-width: 1250px;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-label {
-    color: $darkGrey;
-}
 
 /*
  * -- LAYOUT STYLES --
@@ -138,25 +131,6 @@ a.pure-button-primary {
     letter-spacing: 0.1em;
     font-size: 1.3em;
     /* margin: 2em 0 1em; */
-}
-
-/* This is a modifier class used when the content-head is inside a ribbon */
-.content-head-ribbon {
-    color: $white;
-}
-
-/* This is the class used for the content sub-headers (<h3>) */
-.content-subhead {
-    color: $lightBlue;
-}
-    .content-subhead i {
-        margin-right: 7px;
-    }
-
-/* This is the class used for the dark-background areas. */
-.ribbon {
-    background: $slate;
-    color: #aaa;
 }
 
 /* This is the class used for the footer */
