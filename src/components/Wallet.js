@@ -4,6 +4,7 @@ import Bitcoin from 'bitcoinjs-lib';
 import Account from './Account';
 import AccountModal from './AccountModal';
 import underscore from 'underscore';
+import '../styles/wallet.scss';
 
 class Wallet extends Component {
   constructor(props) {

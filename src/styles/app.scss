@@ -112,36 +112,6 @@ a.pure-button-primary {
  * This is the blue top section that appears on the page.
  */
 
-.splash {
-    /* absolute center .splash within .splash-container */
-    width: 80%;
-    height: 50%;
-    margin: auto;
-    position: absolute;
-    top: 100px; left: 0; bottom: 0; right: 0;
-    text-align: center;
-    text-transform: uppercase;
-}
-
-/* This is the main heading that appears on the blue section */
-.splash-head {
-    font-size: 20px;
-    font-weight: bold;
-    color: $white;
-    border: 3px solid $white;
-    padding: 1em 1.6em;
-    font-weight: 100;
-    border-radius: 5px;
-    line-height: 1em;
-}
-
-/* This is the subheading that appears on the blue section */
-.splash-subhead {
-    color: $white;
-    letter-spacing: 0.05em;
-    opacity: 0.8;
-}
-
 /*
  * -- CONTENT STYLES --
  * This represents the content area (everything below the blue section)
@@ -209,49 +179,11 @@ a.pure-button-primary {
         font-size: 16px;
     }
 
-    /* We can align the menu header to the left, but float the
-    menu items to the right. */
-    .home-menu {
-        text-align: left;
-    }
-        .home-menu ul {
-            float: right;
-        }
-
-    /* We increase the height of the splash-container */
-/*    .splash-container {
-        height: 500px;
-    }*/
-
-    /* We decrease the width of the .splash, since we have more width
-    to work with */
-    .splash {
-        width: 50%;
-        height: 50%;
-    }
-
-    .splash-head {
-        font-size: 250%;
-    }
-
-
     /* We remove the border-separator assigned to .l-box-lrg */
     .l-box-lrg {
         border: none;
     }
 
-}
-
-/*
- * -- DESKTOP (AND UP) MEDIA QUERIES --
- * On desktops and other large devices, we want to over-ride some
- * of the mobile and tablet styles.
- */
-@media (min-width: 78em) {
-    /* We increase the header font size even more */
-    .splash-head {
-        font-size: 300%;
-    }
 }
 
 .main-header {
@@ -276,39 +208,6 @@ a.pure-button-primary {
 
 .main-header .networkInfo a {
   color: $slate;
-}
-
-.Wallet ul {
-  list-style-type: none;
-  color: $darkGrey;
-  padding-left: 1em;
-  padding-right: 1em;
-}
-
-.Wallet ul.subheader li {
-  display: inline;
-}
-
-.Wallet ul.subheader {
-  font-size: 0.8em;
-  margin: 0;
-}
-
-.Wallet.content {
-  padding: 1em 0;
-}
-
-.Wallet tr:hover {
-  background: #eee;
-  cursor: pointer;
-}
-
-.Wallet.content, .Blocks, .WrapperBlockDetails, .Configuration, .Transaction, .Convert, .SignAndVerify, .AccountDetails, .Address {
-  background: $white;
-}
-
-.Wallet td {
-  padding: 1.2em;
 }
 
 .pure-table {

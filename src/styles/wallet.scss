@@ -1,0 +1,33 @@
+@import 'themeColors';
+.Wallet ul {
+  list-style-type: none;
+  color: $darkGrey;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.Wallet ul.subheader li {
+  display: inline;
+}
+
+.Wallet ul.subheader {
+  font-size: 0.8em;
+  margin: 0;
+}
+
+.Wallet.content {
+  padding: 1em 0;
+}
+
+.Wallet tr:hover {
+  background: #eee;
+  cursor: pointer;
+}
+
+.Wallet.content, .Blocks, .WrapperBlockDetails, .Configuration, .Transaction, .Convert, .SignAndVerify, .AccountDetails, .Address {
+  background: $white;
+}
+
+.Wallet td {
+  padding: 1.2em;
+}
