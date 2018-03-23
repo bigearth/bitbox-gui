@@ -38,7 +38,6 @@ body {
 
   .l-box-lrg {
       padding: 2em;
-      border-bottom: 1px solid rgba(0,0,0,0.1);
   }
 
   .is-center {
@@ -109,6 +108,76 @@ body {
         color: $slate;
       }
     }
+
+    .pure-menu-item {
+      a.pure-menu-link, a.pure-menu-link:hover {
+        background: none;
+      }
+
+      a.pure-menu-link.pure-menu-selected, a.pure-menu-link:hover {
+        color: #fff;
+      }
+    }
+  }
+
+  .pure-table {
+    width: 100%;
+    border: none;
+
+    tbody {
+      border-style: solid;
+      border-color: $slate;
+      border-width: 0 0 1px 0;
+
+      tr {
+        border-style: solid;
+        border-width: 1px 0 0 0;
+
+        td {
+          padding: 1em;
+          border: none;
+          line-height: 1.1em;
+          color: $slate;
+
+          .subheader {
+            font-size: 0.75em;
+            padding-bottom: 0;
+            color: $slate;
+            font-weight: normal;
+          }
+        }
+      }
+    }
+  }
+
+  .pure-button {
+    background-color: $medBlue;
+  }
+
+  .danger-background {
+    background-color: $danger;
+  }
+
+  .main-header {
+    .pure-menu-horizontal {
+      padding: 1em 0;
+
+      svg {
+        font-size: 1.25em;
+      }
+    }
+
+    .pure-menu-horizontal.networkInfo {
+      padding: 1em 0;
+      color: #fff;
+      font-size: 0.75em;
+      line-height: 1.25em;
+
+      li {
+        padding-left: 1em;
+        padding-right: 10px;
+      }
+    }
   }
 }
 
@@ -118,87 +187,19 @@ body {
   }
 }
 
-.main-header .pure-menu-item a.pure-menu-link, .main-header a.pure-menu-link:hover {
-  background: none;
+.Account, .Blocks {
+  td {
+    padding: 1.25em 1em;
+  }
+
+  td.important {
+    font-size: 1.3em;
+
+    .subheader {
+      font-size: 0.6em;
+    }
+  }
 }
-
-.main-header .pure-menu-item a.pure-menu-link.pure-menu-selected, .main-header a.pure-menu-link:hover {
-  color: #fff;
-}
-
-.pure-table {
-  width: 100%;
-  border: none;
-}
-
-.pure-table tbody {
-  border-style: solid;
-  border-color: $slate;
-  border-width: 0 0 1px 0;
-}
-
-.pure-table tr {
-  border-style: solid;
-  border-color: $slate;
-  border-width: 1px 0 0 0;
-}
-
-.pure-table td {
-  padding: 1em;
-  border: none;
-  line-height: 1.1em;
-  color: $slate;
-  font-weight: bold;
-}
-
-.pure-table td .subheader {
-  font-size: 0.75em;
-  padding-bottom: 0;
-  color: $slate;
-  font-weight: normal;
-}
-
-
-.pure-button {
-  background-color: $medBlue;
-}
-
-.main-header .pure-menu-horizontal {
-  padding: 1em 0;
-}
-
-.main-header .pure-menu-horizontal svg {
-  font-size: 1.25em;
-}
-
-.main-header .pure-menu-horizontal.networkInfo {
-  padding: 1em 0;
-  color: #fff;
-  font-size: 0.75em;
-  line-height: 1.25em;
-}
-
-.main-header .pure-menu-horizontal.networkInfo li {
-  padding-left: 1em;
-  padding-right: 10px;
-}
-
-.danger-background {
-  background-color: $danger;
-}
-
-.Account td, .Blocks td {
-  padding: 1.25em 1em;
-}
-
-.Account td.important .subheader, .Blocks td.important .subheader {
-  font-size: 0.6em;
-}
-
-.Account td.important, .Blocks td.important {
-  font-size: 1.3em;
-}
-
 
 .Blocks td:first-of-type, .DetailsHeader td:first-of-type, .AccountDetails td.nextPage:first-of-type {
   background-color: $medBlue;
