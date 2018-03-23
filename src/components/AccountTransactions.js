@@ -30,7 +30,6 @@ class AccountTransactions extends Component {
       }} />)
     }
 
-    let account = underscore.findWhere(this.props.wallet.accounts, {index: +this.props.match.params.account_id});
     return (
       <div className="AccountTransactions pure-g">
         <div className="pure-u-1-1">

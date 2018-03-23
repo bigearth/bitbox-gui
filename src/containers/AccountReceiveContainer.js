@@ -1,10 +1,6 @@
 import { connect } from 'react-redux'
 import AccountReceive from '../components/AccountReceive'
 
-import {
-  updateAccount
-} from '../actions/WalletActions';
-
 const mapStateToProps = (state) => {
   return {
     configuration: state.configuration.wallet,
@@ -12,17 +8,8 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    updateAccount: (account) => {
-      dispatch(updateAccount(account))
-    }
-  }
-}
- 
 const AccountReceiveContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(AccountReceive)
  
 export default AccountReceiveContainer

@@ -1,31 +1,14 @@
 import { connect } from 'react-redux'
 import Address from '../components/Address'
-// import {
-//   createAddress,
-//   updateAddressValue
-// } from '../actions/AddressActions';
 
 const mapStateToProps = (state) => {
   return {
-    configuration: state.configuration.wallet,
-    convert: state.convert
+    configuration: state.configuration.wallet
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    // createAddress: () => {
-    //   dispatch(createAddress())
-    // },
-    // updateAddressValue: (prop, value) => {
-    //   dispatch(updateAddressValue(prop, value))
-    // }
-  }
-}
- 
-  const AddressContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
+const AddressContainer = connect(
+  mapStateToProps
 )(Address)
  
 export default AddressContainer

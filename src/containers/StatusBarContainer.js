@@ -24,16 +24,13 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    updateStore: () => {
-      dispatch(updateStore())
-    },
     updateAccount: (account) => {
       dispatch(updateAccount(account))
     },
     addTx: (tx) => {
       dispatch(addTx(tx))
     },
-    mineBlock: (blockchain) => {
+    mineblock: (blockchain) => {
       Miner.mineBlock(dispatch, blockchain)
     }
   }
