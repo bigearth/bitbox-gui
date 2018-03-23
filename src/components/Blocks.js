@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Block from './Block';
 import underscore from 'underscore';
+import '../styles/blocks.scss';
 
 class Blocks extends Component {
   constructor(props) {

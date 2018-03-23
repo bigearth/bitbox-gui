@@ -1,27 +1,4 @@
 @import 'themeColors';
-.DetailsHeader.pure-table td:first-of-type .subheader, .AccountDetailsHeader.pure-table td:first-of-type .subheader {
-  color: $white;
-}
-
-.Blocks tr:hover {
-  background: #eee;
-}
-
-.Blocks tr:hover td:first-of-type {
-  background: $danger;
-}
-
-.DetailsHeader.pure-table tr:first-of-type td, .AccountDetailsHeader.pure-table tr:first-of-type td {
-  font-size: 1.5em;
-}
-
-.DetailsHeader.pure-table tr:first-of-type td:first-of-type, .AccountDetailsHeader.pure-table tr:first-of-type td:first-of-type {
-  font-size: 1em;
-}
-
-.DetailsHeader.pure-table tr:first-of-type td:first-of-type:hover, .AccountDetailsHeader.pure-table tr:first-of-type td:first-of-type:hover {
-  background-color: $danger;
-}
 
 .tableFormatting.pure-table {
   font-size: 1em;
@@ -564,8 +541,4 @@
   .account {
     font-size: 1.75em;
   }
-}
-
-.AccountSend {
-
 }

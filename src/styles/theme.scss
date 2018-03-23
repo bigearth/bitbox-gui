@@ -208,3 +208,21 @@ body {
   padding: 0.75em;
   width: 5%;
 }
+
+.DetailsHeader, .AccountDetailsHeader {
+  .pure-table {
+    tr:first-of-type {
+      .subheader {
+        color: $white;
+      }
+
+      td {
+        font-size: 1.5em;
+      }
+
+      td:first-of-type:hover {
+        background-color: $danger;
+      }
+    }
+  }
+}

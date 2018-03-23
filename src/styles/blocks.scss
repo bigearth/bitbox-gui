@@ -1,0 +1,9 @@
+@import 'themeColors';
+.Blocks{
+  tr:hover {
+    background: #eee;
+    td:first-of-type {
+      background: $danger;
+    }
+  }
+}
