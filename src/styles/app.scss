@@ -64,15 +64,6 @@
   padding-left: 1em;
 }
 
-.Transaction .coinbase {
-  width: 10%;
-}
-
-.SignAndVerify {
-  padding-top: 15px;
-  margin-top: 0;
-}
-
 .Convert {
   padding-top: 15px;
   margin-top: 0;
@@ -98,20 +89,6 @@
   input {
     width: 100%;
   }
-}
-
-.SignAndVerify {
-  textarea, input {
-    width: 100%;
-  }
-
-  button {
-    margin-right: 10px;
-  }
-}
-
-#signature1 {
-  color: darkGrey;
 }
 
 /* The AccountModal (background) */
@@ -204,10 +181,6 @@
   display: none;
 }
 
-.Explorer {
-  padding-right: 10px;
-}
-
 .input-icon-wrap {
   border: 1px solid $lightGrey;
   border-radius: 20px;
@@ -234,36 +207,6 @@
 
 .input-icon, .input-with-icon {
   padding: 10px;
-}
-
-.AccountReceive .qr {
-  text-align: center;
-  p {
-    canvas {
-      width: 256px !important;
-      height: 256px !important;
-    }
-  }
-}
-
-.AccountReceive ul {
-  padding-left: 0;
-}
-
-.AccountReceive li {
-  border-width: 0 0 1px 0;
-  border-color: #eee;
-  border-style: solid;
-  padding: 5px 0 5px 10px;
-}
-
-.AccountReceive li:hover {
-  background: $white;
-  cursor: pointer;
-}
-
-.AccountReceive .totalReceived {
-  font-size: .8em;
 }
 
 .react-toggle {

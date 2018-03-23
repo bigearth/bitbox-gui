@@ -6,6 +6,8 @@ import {
 import underscore from 'underscore';
 import QRCode from 'qrcode.react';
 
+import '../styles/accountReceive.scss';
+
 class AccountReceive extends Component {
   constructor(props) {
     super(props);

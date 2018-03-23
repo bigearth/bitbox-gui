@@ -1,0 +1,33 @@
+@import 'themeColors';
+.AccountReceive {
+  .qr {
+    text-align: center;
+
+    p {
+      canvas {
+        width: 256px !important;
+        height: 256px !important;
+      }
+    }
+  }
+
+  ul {
+    padding-left: 0;
+
+    li {
+      border-width: 0 0 1px 0;
+      border-color: #eee;
+      border-style: solid;
+      padding: 5px 0 5px 10px;
+    }
+
+    li:hover {
+      background: $white;
+      cursor: pointer;
+    }
+  }
+
+  .totalReceived {
+    font-size: .8em;
+  }
+}

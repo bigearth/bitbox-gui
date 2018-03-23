@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import BitcoinCash from '../utilities/BitcoinCash';
 
+import '../styles/signandverify.scss';
+
 class SignAndVerify extends Component {
   constructor(props) {
     super(props);

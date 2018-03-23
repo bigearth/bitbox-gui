@@ -8,6 +8,8 @@ import Bitcoin from 'bitcoinjs-lib';
 import moment from 'moment';
 import underscore from 'underscore';
 
+import '../styles/transaction.scss';
+
 class Transaction extends Component {
   constructor(props) {
     super(props);
@@ -21,44 +23,7 @@ class Transaction extends Component {
       redirect: true
     })
   }
-
-  // componentDidMount() {
-  //   let t = bitbox.BitcoinCash.transaction();
-  //   let decodedTx = t.fromHex(this.state.transaction.rawHex);
-  //   let a = bitbox.BitcoinCash.address();
-  //   let s = bitbox.BitcoinCash.script();
-  //   let ins = [];
-  //   let ecpair = bitbox.BitcoinCash.ECPair();
-  //   decodedTx.ins.forEach((input, index) => {
-  //     let chunksIn = s.decompile(input.script);
-  //     let inputPubKey = ecpair.fromPublicKeyBuffer(chunksIn[1], Bitcoin.networks[this.props.wallet.network]).getAddress();
-  //     ins.push({
-  //       inputPubKey: inputPubKey,
-  //       hex: input.script.toString('hex'),
-  //       script: s.toASM(chunksIn)
-  //     });
-  //   })
-  //   this.setState({
-  //     inputs: ins
-  //   })
-  //
-  //   let outs = [];
-  //   let value = 0;
-  //   decodedTx.outs.forEach((output, index) => {
-  //     value += output.value;
-  //     let chunksIn = s.decompile(output.script);
-  //     let outputPubKey = a.fromOutputScript(output.script, Bitcoin.networks[this.props.wallet.network]);
-  //     outs.push({
-  //       outputPubKey: outputPubKey,
-  //       hex: output.script.toString('hex'),
-  //       script: s.toASM(chunksIn)
-  //     });
-  //   })
-  //   this.setState({
-  //     outputs: outs
-  //   })
-  // }
-
+  
   render() {
     let block = underscore.findWhere(this.props.blockchain.chain, {index: +this.props.match.params.block_id});
     let tx = underscore.findWhere(block.transactions, {hash: this.props.match.params.transaction_id});
