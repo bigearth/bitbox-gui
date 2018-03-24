@@ -11,8 +11,8 @@ export default function wallet(state = {}, action) {
     case CREATE_MEMPOOL:
       return Object.assign({}, state, new Mempool());
     case ADD_TX:
-    let mempoolConfig = state;
-    mempoolConfig.transactions.push(action.tx)
+      let mempoolConfig = state;
+      mempoolConfig.transactions.push(action.tx)
       return Object.assign({}, state, mempoolConfig);
     case EMPTY_MEMPOOL:
       return Object.assign({}, state,  new Mempool());

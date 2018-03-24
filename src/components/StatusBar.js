@@ -8,83 +8,14 @@ import Block from '../models/Block';
 import Transaction from '../models/Transaction';
 import Output from '../models/Output';
 import Input from '../models/Input';
+import Miner from '../utilities/Miner';
 import underscore from 'underscore';
 
 class StatusBar extends Component {
 
   createBlock() {
-    let mempool = this.props.mempool;
-    let blockchain = this.props.blockchain;
-    let previousBlock = underscore.last(blockchain.chain) || {};
-
-    let blockData = {
-      index: this.props.blockchain.chain.length,
-      transactions: [],
-      timestamp: Date()
-    };
-
-    let account1 = this.props.wallet.accounts[0];
-    let account2 = this.props.wallet.accounts[1];
-
-    let alice = bitbox.HDNode.fromWIF(account1.privateKeyWIF);
-    let txb = bitbox.BitcoinCash.transactionBuilder(this.props.configuration.wallet.network);
-    txb.addInput('61d520ccb74288c96bc1a2b20ea1c0d5a704776dd0164a396efec3ea7040349d', 0);
-    let value = 1250000000;
-    let addy = account1.addresses.getChainAddress(0);
-    txb.addOutput(addy, value);
-    txb.sign(0, alice);
-    let hex = txb.build().toHex();
-    // add tx to mempool
-    this.props.addTx(hex);
-
-    // bump address counter to next address
-    account1.addresses.nextChainAddress(0);
-    this.props.updateAccount(account1);
-
-    mempool.transactions.forEach((tx, index) => {
-      bitbox.RawTransactions.decodeRawTransaction(tx)
-      .then((result) => {
-        let inputs = [];
-        result.ins.forEach((vin, index) => {
-          inputs.push(new Input({
-            hex: vin.hex,
-            inputPubKey: vin.inputPubKey,
-            script: vin.script
-          }));
-        })
-
-        let outputs = [];
-        let total = 0;
-        result.outs.forEach((vout, index) => {
-          total += vout.value;
-          outputs.push(new Output({
-            hex: vout.hex,
-            outputPubKey: vout.outputPubKey,
-            script: vout.script,
-            value: vout.value
-          }));
-        })
-
-        let transaction = new Transaction({
-          value: total,
-          rawHex: tx,
-          timestamp: Date(),
-          hash: bitbox.Crypto.createSHA256Hash(tx),
-          inputs: inputs,
-          outputs: outputs
-        });
-
-        blockData.transactions.push(transaction);
-
-        if((index + 1) === mempool.transactions.length) {
-          let block = new Block(blockData)
-          block.previousBlockHeader = previousBlock.header || "#BCHForEveryone";
-          block.header = bitbox.Crypto.createSHA256Hash(`${block.index}${block.previousBlockHeader}${JSON.stringify(block.transactions)}${block.timestamp}`);
-          this.props.mineBlock(blockchain.chain.push(block));
-        }
-      }, (err) => { console.log(err);
-      });
-    })
+    Miner.createCoinbaseTx();
+    Miner.mineBlock();
   }
 
   render() {

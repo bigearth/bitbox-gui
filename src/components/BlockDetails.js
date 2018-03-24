@@ -35,7 +35,7 @@ class BlockDetails extends Component {
 
     if (this.state.redirect && this.state.transaction) {
       return (<Redirect to={{
-        pathname: `/blocks/${this.props.match.params.block_id}/transactions/${this.state.transaction.hash}`
+        pathname: `/blocks/${this.props.match.params.block_id}/transactions/${this.state.transaction.txid}`
       }} />)
     } else if (this.state.redirect) {
       return (<Redirect to={{
@@ -47,21 +47,21 @@ class BlockDetails extends Component {
     block.transactions.forEach((tx, idx) => {
       let ins = [];
       tx.inputs.forEach((inp, ind) => {
-        if(this.props.configuration.displayCashaddr) {
-          inp = bitbox.Address.toCashAddress(inp.inputPubKey);
-        } else {
-          inp = inp.inputPubKey;
-        }
-
-        ins.push(<li key={ind}>{inp}</li>);
+        // if(this.props.configuration.displayCashaddr) {
+        //   inp = bitbox.Address.toCashAddress(inp.inputPubKey);
+        // } else {
+        //   inp = inp.inputPubKey;
+        // }
+    //
+    //     ins.push(<li key={ind}>{inp}</li>);
       })
 
       let outs = [];
       tx.outputs.forEach((outp, ind) => {
         if(this.props.configuration.displayCashaddr) {
-          outp = bitbox.Address.toCashAddress(outp.outputPubKey);
+          outp = bitbox.Address.toCashAddress(outp.scriptPubKey.addresses[0]);
         } else {
-          outp = outp.outputPubKey;
+          outp = outp.scriptPubKey.addresses[0];
         }
         outs.push(<li key={ind}>{outp}</li>);
       })

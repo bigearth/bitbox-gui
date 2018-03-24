@@ -1,8 +1,6 @@
 class Output {
   constructor(outputData) {
-    this.hex = outputData.hex;
-    this.outputPubKey = outputData.outputPubKey;
-    this.script = outputData.script;
+    this.scriptPubKey = outputData.scriptPubKey;
     this.value = outputData.value;
   }
 }

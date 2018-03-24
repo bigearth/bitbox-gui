@@ -112,81 +112,100 @@ class Miner {
     });
   }
 
-  static mineBlock(blockchain) {
-    reduxStore.dispatch(addBlock(blockchain));
+  static mineBlock() {
+    let blockchain = reduxStore.getState().blockchain;
 
-    // flush mempool
-    reduxStore.dispatch(emptyMempool());
+    let mempool = reduxStore.getState().mempool;
 
-    // update store
-    reduxStore.dispatch(updateStore());
+    let blockData = {
+      index: blockchain.chain.length,
+      transactions: [],
+      timestamp: Date()
+    };
+    mempool.transactions.forEach((hex, index) => {
+      bitbox.RawTransactions.decodeRawTransaction(hex)
+      .then((result) => {
+        result = JSON.parse(result);
+        let inputs = [];
+        result.vin.forEach((vin, index) => {
+          inputs.push(new Input({
+            scriptSig: vin.scriptSig,
+            txid: vin.txid,
+            vout: vin.vout,
+            sequence: vin.sequence
+          }));
+        })
+
+        let value = 0;
+        let outputs = [];
+        result.vout.forEach((vout, index) => {
+          value += vout.value;
+          outputs.push(new Output({
+            scriptPubKey: vout.scriptPubKey,
+            value: vout.value
+          }));
+        })
+
+        let tx = new Transaction({
+          size: result.size,
+          vsize: result.vsize,
+          value: value,
+          rawHex: hex,
+          timestamp: Date(),
+          txid: result.txid,
+          inputs: inputs,
+          outputs: outputs
+        });
+
+        blockData.transactions.push(tx);
+
+        if((index + 1) === mempool.transactions.length) {
+          let block = new Block(blockData)
+          let previousBlock = underscore.last(blockchain.chain) || {};
+          block.previousBlockHeader = previousBlock.header || "#BCHForEveryone";
+          block.header = bitbox.Crypto.createSHA256Hash(`${block.index}${block.previousBlockHeader}${JSON.stringify(block.transactions)}${block.timestamp}`);
+
+          blockchain.chain.push(block);
+          //
+          // Miner.mineBlock(blockchain)
+
+          reduxStore.dispatch(addBlock(blockchain));
+
+          // flush mempool
+          reduxStore.dispatch(emptyMempool());
+
+          // update store
+          reduxStore.dispatch(updateStore());
+        }
+      }, (err) => { console.log(err);
+      });
+    })
   }
 
   static createCoinbaseTx() {
     let blockchain = reduxStore.getState().blockchain;
     let account1 = reduxStore.getState().wallet.accounts[0];
     let account2 = reduxStore.getState().wallet.accounts[1];
-    let alice = bitbox.HDNode.fromWIF(account1.privateKeyWIF);
+
+    // create transaction
     let txb = bitbox.BitcoinCash.transactionBuilder(reduxStore.getState().configuration.wallet.network);
-    txb.addInput('61d520ccb74288c96bc1a2b20ea1c0d5a704776dd0164a396efec3ea7040349d', 0);
+
+    // add input hash w/ index
+    txb.addInput('d77430e734b94e8e3754830e69675bf2e6a559c8fa8086eaeade0b412d4a36af', 0);
+
     let value = 1250000000;
     let addy = account1.addresses.getChainAddress(0);
     txb.addOutput(addy, value);
+
+    let alice = bitbox.HDNode.fromWIF(account1.privateKeyWIF);
     txb.sign(0, alice);
+
     let hex = txb.build().toHex();
     // add tx to mempool
     reduxStore.dispatch(addTx(hex));
 
     // bump address counter to next address
     account1.addresses.nextChainAddress(0);
-
-    let mempool = reduxStore.getState().mempool;
-    bitbox.RawTransactions.decodeRawTransaction(mempool.transactions[0])
-    .then((result) => {
-      let inputs = [];
-      result.ins.forEach((vin, index) => {
-        inputs.push(new Input({
-          hex: vin.hex,
-          inputPubKey: vin.inputPubKey,
-          script: vin.script
-        }));
-      })
-
-      let outputs = [];
-      result.outs.forEach((vout, index) => {
-        outputs.push(new Output({
-          hex: vout.hex,
-          outputPubKey: vout.outputPubKey,
-          script: vout.script
-        }));
-      })
-
-      let tx = new Transaction({
-        value: 1250000000,
-        rawHex: hex,
-        timestamp: Date(),
-        hash: bitbox.Crypto.createSHA256Hash(hex),
-        inputs: inputs,
-        outputs: outputs
-      });
-
-      let blockData = {
-        index: 0,
-        transactions: [tx],
-        timestamp: Date()
-      };
-
-      let block = new Block(blockData)
-      let previousBlock = underscore.last(blockchain.chain) || {};
-      block.previousBlockHeader = previousBlock.header || "#BCHForEveryone";
-      block.header = bitbox.Crypto.createSHA256Hash(`${block.index}${block.previousBlockHeader}${JSON.stringify(block.transactions)}${block.timestamp}`);
-
-      reduxStore.dispatch(updateAccount(account1));
-      blockchain.chain.push(block);
-
-      Miner.mineBlock(blockchain)
-    }, (err) => { console.log(err);
-    });
   }
 }
 

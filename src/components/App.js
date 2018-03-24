@@ -58,6 +58,7 @@ class App extends Component {
     Miner.setUpReduxStore()
     Miner.createAccounts()
     Miner.createCoinbaseTx();
+    Miner.mineBlock();
   }
 
   handlePathMatch(path) {

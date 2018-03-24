@@ -23,10 +23,10 @@ class Transaction extends Component {
       redirect: true
     })
   }
-  
+
   render() {
     let block = underscore.findWhere(this.props.blockchain.chain, {index: +this.props.match.params.block_id});
-    let tx = underscore.findWhere(block.transactions, {hash: this.props.match.params.transaction_id});
+    let tx = underscore.findWhere(block.transactions, {txid: this.props.match.params.transaction_id});
 
     if (this.state.redirect) {
       return <Redirect
@@ -39,42 +39,42 @@ class Transaction extends Component {
 
     let inputs = [];
     tx.inputs.forEach((input, index) => {
-      if(this.props.configuration.wallet.displayCashaddr) {
-        input.inputPubKey = bitbox.Address.toCashAddress(input.inputPubKey);
-      }
-      inputs.push(
-        <table className="pure-table tableFormatting" key={index}>
-          <tbody>
-            <tr>
-              <td>{input.inputPubKey}</td>
-            </tr>
-            <tr>
-              <td className='breakWord'>HEX<br /> {input.hex}</td>
-            </tr>
-            <tr>
-              <td className='breakWord'>REDEEM SCRIPT<br /> {input.script}</td>
-            </tr>
-          </tbody>
-        </table>
-      );
+      // if(this.props.configuration.wallet.displayCashaddr) {
+      //   input.inputPubKey = bitbox.Address.toCashAddress(input.inputPubKey);
+      // }
+      // inputs.push(
+      //   <table className="pure-table tableFormatting" key={index}>
+      //     <tbody>
+      //       <tr>
+      //         <td>{input.inputPubKey}</td>
+      //       </tr>
+      //       <tr>
+      //         <td className='breakWord'>HEX<br /> {input.hex}</td>
+      //       </tr>
+      //       <tr>
+      //         <td className='breakWord'>REDEEM SCRIPT<br /> {input.script}</td>
+      //       </tr>
+      //     </tbody>
+      //   </table>
+      // );
     });
 
     let outputs = [];
     tx.outputs.forEach((output, index) => {
-      if(this.props.configuration.wallet.displayCashaddr) {
-        output.outputPubKey = bitbox.Address.toCashAddress(output.outputPubKey);
+      if(!this.props.configuration.wallet.displayCashaddr) {
+        output.scriptPubKey.addresses[0] = bitbox.Address.toLegacyAddress(output.scriptPubKey.addresses[0]);
       }
       outputs.push(
         <table className="pure-table tableFormatting" key={index}>
           <tbody>
             <tr>
-              <td>{output.outputPubKey}</td>
+              <td>{output.scriptPubKey.addresses[0]}</td>
             </tr>
             <tr>
-              <td className='breakWord'>HEX<br /> {output.hex}</td>
+              <td className='breakWord'>LOCK SCRIPT<br /> {output.scriptPubKey.asm}</td>
             </tr>
             <tr>
-              <td className='breakWord'>LOCK SCRIPT<br /> {output.script}</td>
+              <td className='breakWord'>VALUE<br /> {bitbox.BitcoinCash.toBitcoinCash(output.value)} BCH</td>
             </tr>
           </tbody>
         </table>

@@ -1,8 +1,9 @@
 class Input {
   constructor(inputData) {
-    this.hex = inputData.hex;
-    this.inputPubKey = inputData.inputPubKey;
-    this.script = inputData.script;
+    this.scriptSig = inputData.scriptSig;
+    this.txid = inputData.txid;
+    this.vout = inputData.vout;
+    this.sequence = inputData.sequence;
   }
 }
 

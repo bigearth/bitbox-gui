@@ -30,7 +30,7 @@ const mapDispatchToProps = (dispatch) => {
     addTx: (tx) => {
       dispatch(addTx(tx))
     },
-    mineblock: (blockchain) => {
+    mineBlock: (blockchain) => {
       Miner.mineBlock(dispatch, blockchain)
     }
   }

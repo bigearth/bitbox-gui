@@ -90,38 +90,44 @@ class Server {
     server.post('/decoderawtransaction', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
-      let t = bitbox.BitcoinCash.transaction();
-      let decodedTx = t.fromHex(req.body.params[0]);
+      let decodedTx = {};
 
+      let transaction = bitbox.Transaction.fromHex(req.body.params[0]);
+
+      decodedTx.txid = transaction.getId();
+      decodedTx.size = transaction.byteLength();
+      decodedTx.vsize = transaction.virtualSize();
       let a = bitbox.BitcoinCash.address();
       let s = bitbox.BitcoinCash.script();
       let ins = [];
-      let ecpair = bitbox.BitcoinCash.ECPair();
-      decodedTx.ins.forEach((input, index) => {
-        let chunksIn = s.decompile(input.script);
-        let inputPubKey = ecpair.fromPublicKeyBuffer(chunksIn[1]).getAddress();
+      transaction.ins.forEach((input, index) => {
+        let txid = Buffer.from(input.hash).reverse().toString('hex')
         ins.push({
-          inputPubKey: inputPubKey,
-          hex: input.script.toString('hex'),
-          script: s.toASM(chunksIn)
+          txid: txid,
+          vout: index,
+          scriptSig: {
+            asm: s.toASM(input.script),
+            hex: input.script.toString('hex')
+          },
+          sequence: 4294967295
         });
       })
-      decodedTx.ins = ins;
+      decodedTx.vin = ins;
 
       let outs = [];
-      let value = 0;
-      decodedTx.outs.forEach((output, index) => {
-        value += output.value;
-        let chunksIn = s.decompile(output.script);
-        let outputPubKey = a.fromOutputScript(output.script);
+      transaction.outs.forEach((output, index) => {
         outs.push({
-          outputPubKey: outputPubKey,
-          hex: output.script.toString('hex'),
-          script: s.toASM(chunksIn),
+          scriptPubKey: {
+            asm: s.toASM(output.script),
+            hex: output.script.toString('hex'),
+            addresses: [
+              bitbox.Address.toCashAddress(a.fromOutputScript(output.script))
+            ]
+          },
           value: output.value
         });
       })
-      decodedTx.outs = outs;
+      decodedTx.vout = outs;
 
       res.send(decodedTx);
     });
