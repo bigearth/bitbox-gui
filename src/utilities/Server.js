@@ -102,15 +102,22 @@ class Server {
       let ins = [];
       transaction.ins.forEach((input, index) => {
         let txid = Buffer.from(input.hash).reverse().toString('hex')
-        ins.push({
-          txid: txid,
-          vout: index,
-          scriptSig: {
-            asm: s.toASM(input.script),
-            hex: input.script.toString('hex')
-          },
-          sequence: 4294967295
-        });
+        if(transaction.isCoinbase()) {
+          ins.push({
+            coinbase: input.script.toString('hex'),
+            sequence: 4294967295
+          });
+        } else {
+          ins.push({
+            txid: txid,
+            vout: index,
+            scriptSig: {
+              asm: s.toASM(input.script),
+              hex: input.script.toString('hex')
+            },
+            sequence: 4294967295
+          });
+        }
       })
       decodedTx.vin = ins;
 

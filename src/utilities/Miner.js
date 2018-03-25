@@ -5,6 +5,7 @@ import Block from '../models/Block';
 import Transaction from '../models/Transaction';
 import Output from '../models/Output';
 import Input from '../models/Input';
+import Bitcoin from 'bitcoinjs-lib';
 
 import {
   createConfig,
@@ -128,12 +129,20 @@ class Miner {
         result = JSON.parse(result);
         let inputs = [];
         result.vin.forEach((vin, index) => {
-          inputs.push(new Input({
-            scriptSig: vin.scriptSig,
-            txid: vin.txid,
-            vout: vin.vout,
+          let config = {
             sequence: vin.sequence
-          }));
+          };
+
+          if(vin.coinbase) {
+            config.coinbase = vin.coinbase;
+          } else {
+            config.scriptSig = vin.scriptSig;
+            config.txid = vin.txid;
+            config.vout = vin.vout;
+          }
+
+          let input = new Input(config);
+          inputs.push(input);
         })
 
         let value = 0;
@@ -183,29 +192,30 @@ class Miner {
   }
 
   static createCoinbaseTx() {
-    let blockchain = reduxStore.getState().blockchain;
     let account1 = reduxStore.getState().wallet.accounts[0];
-    let account2 = reduxStore.getState().wallet.accounts[1];
+    let baddress = Bitcoin.address;
 
     // create transaction
-    let txb = bitbox.BitcoinCash.transactionBuilder(reduxStore.getState().configuration.wallet.network);
+    let tx = new Bitcoin.Transaction();
+    tx.version = 1;
+    tx.locktime = 0;
 
-    // add input hash w/ index
-    txb.addInput('d77430e734b94e8e3754830e69675bf2e6a559c8fa8086eaeade0b412d4a36af', 0);
+    let txHash = Buffer.from('0000000000000000000000000000000000000000000000000000000000000000', 'hex');
+    let scriptSig = Buffer.from(bitbox.Crypto.createSHA256Hash('#BCHForEveryone'), 'hex');
+    tx.addInput(txHash, 4294967295, 4294967295, scriptSig)
 
     let value = 1250000000;
-    let addy = account1.addresses.getChainAddress(0);
-    txb.addOutput(addy, value);
+    let address = baddress.toOutputScript(bitbox.Address.toLegacyAddress(account1.addresses.getChainAddress(0)));
+    tx.addOutput(address, 1250000000)
 
-    let alice = bitbox.HDNode.fromWIF(account1.privateKeyWIF);
-    txb.sign(0, alice);
-
-    let hex = txb.build().toHex();
-    // add tx to mempool
-    reduxStore.dispatch(addTx(hex));
+    let hex = tx.toHex();
 
     // bump address counter to next address
     account1.addresses.nextChainAddress(0);
+
+    // add tx to mempool
+    reduxStore.dispatch(addTx(hex));
+
   }
 }
 
