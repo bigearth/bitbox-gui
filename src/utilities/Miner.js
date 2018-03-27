@@ -51,6 +51,12 @@ import {
   createAccountSend
 } from '../actions/AccountSendActions';
 
+import {
+  createUtxo,
+  addUtxo
+} from '../actions/UtxoActions';
+
+
 class Miner {
   static setUpReduxStore() {
     // Set up default redux store
@@ -83,6 +89,9 @@ class Miner {
 
     // account send
     reduxStore.dispatch(createAccountSend());
+
+    // utxo set
+    // reduxStore.dispatch(createUtxo());
   }
 
   static createAccounts() {
@@ -114,15 +123,22 @@ class Miner {
   }
 
   static mineBlock() {
-    let blockchain = reduxStore.getState().blockchain;
+    console.log('mining block')
 
-    let mempool = reduxStore.getState().mempool;
-
+    let a = bitbox.BitcoinCash.address();
+    let s = Bitcoin.script;
+    let ecpair = bitbox.BitcoinCash.ECPair();
+    let state = reduxStore.getState();
+    let blockchain = state.blockchain;
+    let accounts = state.wallet.accounts;
+    let mempool = state.mempool;
+    let configuration = state.configuration.wallet;
     let blockData = {
       index: blockchain.chain.length,
       transactions: [],
       timestamp: Date()
     };
+
     mempool.transactions.forEach((hex, index) => {
       bitbox.RawTransactions.decodeRawTransaction(hex)
       .then((result) => {
@@ -139,20 +155,62 @@ class Miner {
             config.scriptSig = vin.scriptSig;
             config.txid = vin.txid;
             config.vout = vin.vout;
+            // update balances
+            let chunksIn = s.decompile(new Buffer(config.scriptSig.hex, 'hex'));
+            let address = ecpair.fromPublicKeyBuffer(chunksIn[1]).getAddress();
+            accounts.forEach((account) => {
+              account.addresses.chains.forEach((chain, indx) => {
+                chain.addresses.forEach((addy, ind) => {
+                  if(address === addy) {
+                    // todo fetch previous tx to get value
+                    account.balance -= 0;
+                    account.sent += 0;
+                    reduxStore.dispatch(updateAccount(account));
+                  }
+                });
+              });
+            })
           }
 
           let input = new Input(config);
           inputs.push(input);
+
         })
 
         let value = 0;
         let outputs = [];
         result.vout.forEach((vout, index) => {
           value += vout.value;
-          outputs.push(new Output({
+          let output = new Output({
             scriptPubKey: vout.scriptPubKey,
             value: vout.value
-          }));
+          });
+          outputs.push(output);
+
+          // update balances
+          // get address from output scriptPubKey
+          let address = output.scriptPubKey.addresses[0];
+          if(!configuration.displayCashaddr) {
+            address = bitbox.Address.toLegacyAddress(address);
+          }
+          // for each utxo loop over account's previous and fresh addresses
+          accounts.forEach((account) => {
+            account.addresses.chains.forEach((chain, indx) => {
+              chain.addresses.forEach((addy, ind) => {
+                if(configuration.displayCashaddr) {
+                  addy = bitbox.Address.toCashAddress(addy);
+                }
+                if(address === addy) {
+                  account.balance += output.value;
+                  account.received += output.value;
+                  account.addresses.nextChainAddress(0);
+                  reduxStore.dispatch(updateAccount(account));
+                }
+              });
+            });
+          })
+          //
+          // reduxStore.dispatch(addUtxo(vout));
         })
 
         let tx = new Transaction({
@@ -204,14 +262,12 @@ class Miner {
     let scriptSig = Buffer.from(bitbox.Crypto.createSHA256Hash('#BCHForEveryone'), 'hex');
     tx.addInput(txHash, 4294967295, 4294967295, scriptSig)
 
-    let value = 1250000000;
-    let address = baddress.toOutputScript(bitbox.Address.toLegacyAddress(account1.addresses.getChainAddress(0)));
-    tx.addOutput(address, 1250000000)
+    let value = bitbox.BitcoinCash.toSatoshi(12.5);
+    let address = account1.addresses.getChainAddress(0);
+    let scriptPubKey = baddress.toOutputScript(address);
+    tx.addOutput(scriptPubKey, value)
 
     let hex = tx.toHex();
-
-    // bump address counter to next address
-    account1.addresses.nextChainAddress(0);
 
     // add tx to mempool
     reduxStore.dispatch(addTx(hex));

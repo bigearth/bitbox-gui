@@ -35,10 +35,58 @@ class Wallet extends Component {
   render() {
     let list = [];
     if(this.props.wallet && this.props.wallet.accounts && this.props.wallet.accounts.length) {
+      let a = bitbox.BitcoinCash.address();
+      let s = Bitcoin.script;
+      let ecpair = bitbox.BitcoinCash.ECPair();
       this.props.wallet.accounts.forEach((account) => {
+
+        // update tx count
+        let txCount = 0;
+        this.props.blockchain.chain.forEach((block, index) => {
+          block.transactions.forEach((tx, indx) => {
+            // check all inputs/outputs in each block to see if they are from/to account
+            tx.inputs.forEach((input) => {
+              if(input.scriptSig !== undefined) {
+                let chunksIn = s.decompile(new Buffer(input.scriptSig.hex, 'hex'));
+                let address = ecpair.fromPublicKeyBuffer(chunksIn[1]).getAddress();
+
+                account.addresses.chains.forEach((chain, indx) => {
+                  chain.addresses.forEach((addy, ind) => {
+                    if(this.props.configuration.displayCashaddr) {
+                      addy = bitbox.Address.toCashAddress(addy);
+                    }
+                    if(address === addy) {
+                      // if so increment account tx count
+                      txCount += 1;
+                    }
+                  });
+                });
+              }
+            });
+
+            tx.outputs.forEach((output) => {
+              let address = output.scriptPubKey.addresses[0];
+
+              account.addresses.chains.forEach((chain, indx) => {
+                chain.addresses.forEach((addy, ind) => {
+                  if(this.props.configuration.displayCashaddr) {
+                    addy = bitbox.Address.toCashAddress(addy);
+                  }
+                  if(address === addy) {
+                    // if so increment account tx count
+                    txCount += 1;
+                  }
+                });
+              });
+            });
+
+          });
+        });
+
         list.push(
           <Account
             account={account}
+            txCount={txCount}
             key={account.index}
             displayCashaddr={this.props.configuration.displayCashaddr}
             showAccountModal={this.showAccountModal.bind(this)}

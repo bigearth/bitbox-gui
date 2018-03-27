@@ -8,7 +8,8 @@ import {
 const mapStateToProps = state => {
   return {
     wallet: state.wallet,
-    configuration: state.configuration.wallet
+    configuration: state.configuration.wallet,
+    blockchain: state.blockchain
   }
 }
 

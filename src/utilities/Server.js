@@ -127,6 +127,8 @@ class Server {
           scriptPubKey: {
             asm: s.toASM(output.script),
             hex: output.script.toString('hex'),
+            reqSigs: 1,
+            type: "pubkeyhash",
             addresses: [
               bitbox.Address.toCashAddress(a.fromOutputScript(output.script))
             ]

@@ -7,6 +7,11 @@ class Account {
     this.xpriv = config.xpriv;
     this.xpub = config.xpub;
     this.displayAccount = false;
+    this.balance = 0;
+    this.txCount = 0;
+    this.sent = 0;
+    this.received = 0;
+    this.transactions = [];
   }
 }
 

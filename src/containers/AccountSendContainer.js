@@ -13,7 +13,8 @@ const mapStateToProps = (state) => {
   return {
     configuration: state.configuration.wallet,
     wallet: state.wallet,
-    accountSend: state.accountsend
+    accountSend: state.accountsend,
+    blockchain: state.blockchain
   }
 }
 

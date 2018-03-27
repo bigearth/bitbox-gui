@@ -47,7 +47,6 @@ class AccountDetails extends Component {
     }
 
     let account = underscore.findWhere(this.props.wallet.accounts, {index: +this.props.match.params.account_id});
-
     return (
       <div className="AccountDetails">
         <div className="pure-menu pure-menu-horizontal">
@@ -96,8 +95,8 @@ class AccountDetails extends Component {
         <div className="pure-g AccountDetailsHeader">
           <div className="pure-u-1-4">
             <p className='subheader'>Balance</p>
-            <p className='balance'><FormattedNumber value={507.4200000 * this.props.configuration.exchangeRate} style="currency" currency={this.props.configuration.exchangeCurrency} /></p>
-            <p className='subbalance'>507.4200000 BCH</p>
+            <p className='balance'><FormattedNumber value={bitbox.BitcoinCash.toBitcoinCash(account.balance) * this.props.configuration.exchangeRate} style="currency" currency={this.props.configuration.exchangeCurrency} /></p>
+            <p className='subbalance'>{bitbox.BitcoinCash.toBitcoinCash(account.balance)} BCH</p>
 
           </div>
           <div className="pure-u-1-4">
@@ -107,13 +106,13 @@ class AccountDetails extends Component {
           </div>
           <div className="pure-u-1-4">
             <p className='subheader'>Received</p>
-            <p className='balance'><span className="plus">+</span> <FormattedNumber value={20 * this.props.configuration.exchangeRate} style="currency" currency={this.props.configuration.exchangeCurrency} /></p>
-            <p className='subbalance'>20 BCH</p>
+            <p className='balance'><span className="plus">+</span> <FormattedNumber value={bitbox.BitcoinCash.toBitcoinCash(account.received) * this.props.configuration.exchangeRate} style="currency" currency={this.props.configuration.exchangeCurrency} /></p>
+            <p className='subbalance'>{bitbox.BitcoinCash.toBitcoinCash(account.received)} BCH</p>
           </div>
           <div className="pure-u-1-4">
             <p className='subheader'>Sent</p>
-            <p className='balance'><span className="minus">-</span> <FormattedNumber value={20 * this.props.configuration.exchangeRate} style="currency" currency={this.props.configuration.exchangeCurrency} /></p>
-            <p className='subbalance'>20 BCH</p>
+            <p className='balance'><span className="minus">-</span> <FormattedNumber value={bitbox.BitcoinCash.toBitcoinCash(account.sent) * this.props.configuration.exchangeRate} style="currency" currency={this.props.configuration.exchangeCurrency} /></p>
+            <p className='subbalance'>{bitbox.BitcoinCash.toBitcoinCash(account.sent)} BCH</p>
           </div>
         </div>
         <Route path="/accounts/:account_id/transactions" component={AccountTransactionsContainer}/>

@@ -4,6 +4,7 @@ import AccountDetails from '../components/AccountDetails'
 const mapStateToProps = (state) => {
   return {
     configuration: state.configuration.wallet,
+    blockchain: state.blockchain,
     wallet: state.wallet
   }
 }

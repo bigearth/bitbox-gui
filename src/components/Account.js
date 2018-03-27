@@ -15,13 +15,14 @@ class Account extends Component {
     if(e.target.nodeName === 'BUTTON' || e.target.nodeName === 'path') {
       this.props.showAccountModal(this.props.account)
     } else {
-    this.setState({
-      redirect: true
-    });
+      this.setState({
+        redirect: true
+      });
     }
   }
 
   render() {
+
     let address;
     if(this.props.displayCashaddr) {
       address = <span>{bitbox.Address.toCashAddress(this.props.account.addresses.getChainAddress(0))}</span>;
@@ -47,8 +48,8 @@ class Account extends Component {
     return (
       <tr className="Account" onClick={this.handleRedirect.bind(this)}>
         <td className='important'><span className='subheader'>ADDRESS{coinbase}</span> <br />{address} <br /><span className='hdPath'>{HDPath}/{index}&rsquo;/0/{addressHeight}</span></td>
-        <td className='important'><span className='subheader'>BALANCE</span> <br />0 BCH</td>
-        <td><span className='subheader'>TX COUNT</span> <br />0</td>
+        <td className='important'><span className='subheader'>BALANCE</span> <br />{bitbox.BitcoinCash.toBitcoinCash(this.props.account.balance)} BCH</td>
+        <td><span className='subheader'>TX COUNT</span> <br />{this.props.txCount}</td>
         <td><span className='subheader'>ACCOUNT</span> <br />{index}</td>
         <td><button className="pure-button openModal"><i className="fas fa-key openModal" /></button></td>
       </tr>

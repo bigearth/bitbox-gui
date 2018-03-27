@@ -6,16 +6,15 @@ class AccountSend extends Component {
     let walletConfig = this.props.configuration;
 
     let privateKeyWIF = this.props.wallet.accounts[0].privateKeyWIF;
-    let account2 = this.props.wallet.accounts[1];
 
     let account1 = bitbox.HDNode.fromWIF(privateKeyWIF)
     let txb = bitbox.BitcoinCash.transactionBuilder(walletConfig.network)
-    txb.addInput('61d520ccb74288c96bc1a2b20ea1c0d5a704776dd0164a396efec3ea7040349d', 0);
+    txb.addInput(this.props.blockchain.chain[0].transactions[0].txid, 0);
     let amount = this.props.accountSend.amount;
     txb.addOutput(bitbox.Address.toLegacyAddress(this.props.accountSend.to), bitbox.BitcoinCash.toSatoshi(amount));
     txb.sign(0, account1)
     let hex = txb.build().toHex();
-    
+
     // add to mempool
     this.props.addTx(hex);
 

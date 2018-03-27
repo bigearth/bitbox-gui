@@ -9,6 +9,7 @@ import signandverify from './signandverify';
 import explorer from './explorer';
 import accountsend from './accountsend';
 import mempool from './mempool';
+import utxo from './utxo';
  
 const bitboxReducer = combineReducers({
   configuration,
@@ -19,7 +20,8 @@ const bitboxReducer = combineReducers({
   signandverify,
   explorer,
   accountsend,
-  mempool
+  mempool,
+  utxo
 })
 
 const rootReducer = (state, action) => {
