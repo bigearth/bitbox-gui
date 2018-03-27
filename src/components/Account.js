@@ -49,7 +49,7 @@ class Account extends Component {
       <tr className="Account" onClick={this.handleRedirect.bind(this)}>
         <td className='important'><span className='subheader'>ADDRESS{coinbase}</span> <br />{address} <br /><span className='hdPath'>{HDPath}/{index}&rsquo;/0/{addressHeight}</span></td>
         <td className='important'><span className='subheader'>BALANCE</span> <br />{bitbox.BitcoinCash.toBitcoinCash(this.props.account.balance)} BCH</td>
-        <td><span className='subheader'>TX COUNT</span> <br />{this.props.txCount}</td>
+        <td><span className='subheader'>TX COUNT</span> <br />{this.props.account.txCount}</td>
         <td><span className='subheader'>ACCOUNT</span> <br />{index}</td>
         <td><button className="pure-button openModal"><i className="fas fa-key openModal" /></button></td>
       </tr>

@@ -158,17 +158,15 @@ class Miner {
             // update balances
             let chunksIn = s.decompile(new Buffer(config.scriptSig.hex, 'hex'));
             let address = ecpair.fromPublicKeyBuffer(chunksIn[1]).getAddress();
+
             accounts.forEach((account) => {
-              account.addresses.chains.forEach((chain, indx) => {
-                chain.addresses.forEach((addy, ind) => {
-                  if(address === addy) {
-                    // todo fetch previous tx to get value
-                    account.balance -= 0;
-                    account.sent += 0;
-                    reduxStore.dispatch(updateAccount(account));
-                  }
-                });
-              });
+              let derivedNode = account.addresses.derive(bitbox.Address.toLegacyAddress(address))
+              if(derivedNode) {
+                account.balance -= 0;
+                account.sent += 0;
+                account.txCount += 1;
+                reduxStore.dispatch(updateAccount(account));
+              }
             })
           }
 
@@ -190,24 +188,16 @@ class Miner {
           // update balances
           // get address from output scriptPubKey
           let address = output.scriptPubKey.addresses[0];
-          if(!configuration.displayCashaddr) {
-            address = bitbox.Address.toLegacyAddress(address);
-          }
           // for each utxo loop over account's previous and fresh addresses
           accounts.forEach((account) => {
-            account.addresses.chains.forEach((chain, indx) => {
-              chain.addresses.forEach((addy, ind) => {
-                if(configuration.displayCashaddr) {
-                  addy = bitbox.Address.toCashAddress(addy);
-                }
-                if(address === addy) {
-                  account.balance += output.value;
-                  account.received += output.value;
-                  account.addresses.nextChainAddress(0);
-                  reduxStore.dispatch(updateAccount(account));
-                }
-              });
-            });
+            let derivedNode = account.addresses.derive(bitbox.Address.toLegacyAddress(address))
+            if(derivedNode) {
+              account.balance += output.value;
+              account.received += output.value;
+              account.txCount += 1;
+              account.addresses.nextChainAddress(0);
+              reduxStore.dispatch(updateAccount(account));
+            }
           })
           //
           // reduxStore.dispatch(addUtxo(vout));
@@ -276,3 +266,5 @@ class Miner {
 }
 
 export default Miner;
+
+// 1FT4Ncw4MVf2Z45NZ4yn8TfEwwQNPQBjKx

@@ -68,9 +68,9 @@ class AccountTransactions extends Component {
       })
     });
     let blocksMarkup = [];
-    blocks.forEach((block) => {
+    blocks.forEach((block, x) => {
       let blockMarkup =
-        <table className="pure-table">
+        <table key={x} className="pure-table">
           <tbody onClick={this.handlexTransactionDetails.bind(this, {hash: '4a335a59f2a76c94f3de9fe365f97408bd9d225e4b7f4998c4f08f040f167f9c'})}>
             <tr>
               <th colSpan="2" className='important'>{moment(block.timestamp).format('MMMM Do YYYY')}</th>
