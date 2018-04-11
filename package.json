@@ -9,8 +9,8 @@
     "build": "webpack",
     "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
     "create-installer-mac": "electron-installer-dmg ./release-builds/BITBOX-darwin-x64/BITBOX.app BITBOX --out=release-builds --overwrite --icon=assets/icons/mac/icon.icns",
-    "package-win": "electron-packager . bitbox --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/windows/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName='BITBOX'",
-    "create-installer-win": "node ./installers/windows/createinstaller.js",
+        "package-win": "electron-packager . bitbox --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"BITBOX\"",
+    "create-installer-win": "node /installers/windows/createinstaller.js",
     "test": "mocha --compilers js:babel-core/register"
   },
   "repository": "https://github.com/bigearth/bitbox-electron",
@@ -24,6 +24,8 @@
   "author": "Gabriel Cardona w/ EARTH",
   "license": "MIT",
   "devDependencies": {
+    "electron": "^1.8.4",
+    "electron-packager": "^10.1.2",
     "electron-winstaller": "^2.6.4"
   },
   "dependencies": {
@@ -41,8 +43,6 @@
     "chai": "^4.1.2",
     "cors": "^2.8.4",
     "css-loader": "^0.28.9",
-    "electron": "^1.7.12",
-    "electron-packager": "^10.1.2",
     "electron-store": "^1.3.0",
     "express": "^4.16.2",
     "mocha": "^5.0.1",
