@@ -98,7 +98,7 @@ class Server {
       decodedTx.size = transaction.byteLength();
       decodedTx.vsize = transaction.virtualSize();
       let a = bitbox.BitcoinCash.address();
-      let s = bitbox.BitcoinCash.script();
+      let script = bitbox.Script;
       let ins = [];
       transaction.ins.forEach((input, index) => {
         let txid = Buffer.from(input.hash).reverse().toString('hex')
@@ -112,7 +112,7 @@ class Server {
             txid: txid,
             vout: index,
             scriptSig: {
-              asm: s.toASM(input.script),
+              asm: script.toASM(input.script),
               hex: input.script.toString('hex')
             },
             sequence: 4294967295
@@ -125,7 +125,7 @@ class Server {
       transaction.outs.forEach((output, index) => {
         outs.push({
           scriptPubKey: {
-            asm: s.toASM(output.script),
+            asm: script.toASM(output.script),
             hex: output.script.toString('hex'),
             reqSigs: 1,
             type: "pubkeyhash",
@@ -1355,7 +1355,8 @@ class Server {
       res.setHeader('Content-Type', 'application/json');
 
       let privateKeyWIF = req.body.params[0];
-      let signature = BitcoinCash.signMessage(req.body.params[1], privateKeyWIF);
+      let signature = bitbox.BitcoinCash.signMessageWithPrivKey(privateKeyWIF, req.body.params[1]);
+
       res.send(signature.toString('base64'));
     });
 

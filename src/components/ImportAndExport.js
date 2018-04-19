@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
 import BitcoinCash from '../utilities/BitcoinCash';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faDownload from '@fortawesome/fontawesome-free-solid/faDownload';
+import faUpload from '@fortawesome/fontawesome-free-solid/faUpload';
+import faCheckSquare from '@fortawesome/fontawesome-free-solid/faCheckSquare';
+import faClipboard from '@fortawesome/fontawesome-free-solid/faClipboard';
 
 class ImportAndExport extends Component {
   constructor(props) {
@@ -35,12 +40,12 @@ class ImportAndExport extends Component {
     let importAndExportConfig = this.props.state.importAndExport;
 
     const importState = importAndExportConfig.importState
-    const normalImportIcon = <i className='fas fa-download' />
-    const successfulImportIcon = <i className='far fa-check-square' />
+    const normalImportIcon = <FontAwesomeIcon icon={faDownload} />
+    const successfulImportIcon = <FontAwesomeIcon icon={faCheckSquare} />
 
     const exportCopied = importAndExportConfig.exportCopied
-    const normalExportIcon = <i className='fas fa-clipboard' />
-    const copiedExportIcon = <i className='far fa-check-square' />
+    const normalExportIcon = <FontAwesomeIcon icon={faClipboard} />
+    const copiedExportIcon = <FontAwesomeIcon icon={faCheckSquare} />
 
     let textarea;
     if(importAndExportConfig.activePane === 'import') {
@@ -65,16 +70,16 @@ class ImportAndExport extends Component {
     if(importAndExportConfig.visible) {
       let icon;
       if(importAndExportConfig.activePane === 'import') {
-        icon = 'fas fa-download';
+        icon = 'faDownload';
       } else {
-        icon = 'fas fa-upload';
+        icon = 'faUpload';
       }
       modal =
         <div id="keyImportAndExportModal" className="modal">
           <div className="modal-content">
             <div className="modal-header">
               <span onClick={this.toggleVisibility.bind(this)} className="close">&times;</span>
-              <h2><i className={icon} /> {importAndExportConfig.activePane.toUpperCase()}</h2>
+              <h2><FontAwesomeIcon icon={icon} /> {importAndExportConfig.activePane.toUpperCase()}</h2>
             </div>
             <div className="modal-body">
               <div className="ImportAndExport">

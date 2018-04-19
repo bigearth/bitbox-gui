@@ -1,6 +1,6 @@
 {
   "name": "BITBOX",
-  "version": "0.3.5",
+  "version": "0.7.1",
   "description": "A development framework for Bitcoin Cash",
   "main": "main.js",
   "productName": "BITBOX",
@@ -25,6 +25,11 @@
     "babel-preset-env": "^1.6.1"
   },
   "dependencies": {
+    "@fortawesome/fontawesome": "^1.1.5",
+    "@fortawesome/fontawesome-free-brands": "^5.0.9",
+    "@fortawesome/fontawesome-free-regular": "^5.0.9",
+    "@fortawesome/fontawesome-free-solid": "^5.0.9",
+    "@fortawesome/react-fontawesome": "0.0.18",
     "axios": "^0.18.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
@@ -32,7 +37,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-register": "^6.26.0",
     "bchaddrjs": "^0.1.4",
-    "bitbox-cli": "0.4.0",
+    "bitbox-cli": "0.7.1",
     "bitcoinjs-lib": "^3.3.2",
     "bitcoinjs-message": "^2.0.0",
     "body-parser": "^1.18.2",

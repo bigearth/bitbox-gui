@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 
 import underscore from 'underscore';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faSearch from '@fortawesome/fontawesome-free-solid/faSearch';
 
 import '../styles/explorer.scss';
 
@@ -25,24 +27,25 @@ class Explorer extends Component {
         result = underscore.findWhere(blockchain.chain, {header: searchTerm});
       }
     }
-
+    
     if(result) {
       this.props.history.push(`/blocks/${result.index}`)
-    } else {
-
-      blockchain.chain.forEach((block) => {
-        block.transactions.forEach((tx) => {
-          // next search by tx hash and raw hex
-          if(tx.hash === searchTerm || tx.rawHex === searchTerm) {
-            result = tx;
-            index = block.index;
-          }
-        })
-      })
-
-      if(result) {
-        this.props.history.push(`/blocks/${index}/transactions/${result.hash}`)
-      }
+    // } else {
+    //
+    //   blockchain.chain.forEach((block) => {
+    //     block.transactions.forEach((tx) => {
+    //       // next search by tx hash and raw hex
+    //       if(tx.hash === searchTerm || tx.rawHex === searchTerm) {
+    //         result = tx;
+    //         index = block.index;
+    //       }
+    //     })
+    //   })
+    //
+    //   if(result) {
+    //     console.log(`/blocks/${index}/transactions/${result.hash}`)
+    //     this.props.history.push(`/blocks/${index}/transactions/${result.hash}`)
+    //   }
     }
     this.props.resetValue();
     event.preventDefault();
@@ -52,9 +55,9 @@ class Explorer extends Component {
     return (
       <span className="input-icon-wrap">
         <form onSubmit={this.handleSubmit.bind(this, this.props.explorer.searchTerm, this.props.blockchain, this.props.wallet)}>
-          <input id="form-name" onChange={this.props.updateExplorerValue.bind(this)} value={this.props.explorer.searchTerm} placeholder="SEARCH BLOCK AND TRANSACTIONS" type="text" className="pure-input-rounded input-with-icon" />
+          <input id="form-name" onChange={this.props.updateExplorerValue.bind(this)} value={this.props.explorer.searchTerm} placeholder="SEARCH BLOCK HASH" type="text" className="pure-input-rounded input-with-icon" />
         </form>
-        <span className="input-icon"><i className="fas fa-search" /></span>
+        <span className="input-icon"><FontAwesomeIcon icon={faSearch} /></span>
       </span>
     );
   }

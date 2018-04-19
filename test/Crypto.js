@@ -5,7 +5,7 @@ let bitbox = new BITBOXCli();
 
 describe('create SHA256Hash', () => {
   it('should create a SHA256Hash hex encoded', () => {
-    let sha256Hash = bitbox.Crypto.createSHA256Hash('foobar');
+    let sha256Hash = bitbox.Crypto.sha256('foobar');
     assert.lengthOf(sha256Hash, 64);
     assert.equal(sha256Hash, 'c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2');
   });

@@ -51,7 +51,7 @@ const mapDispatchToProps = (dispatch) => {
       if(configuration.autogenerateHDMnemonic) {
         // create a random mnemonic w/ user provided entropy size
         let randomBytes = bitbox.Crypto.randomBytes(configuration.entropy);
-        configuration.mnemonic = bitbox.Mnemonic.entropyToMnemonic(randomBytes, bitbox.Mnemonic.mnemonicWordLists()[configuration.language]);
+        configuration.mnemonic = bitbox.Mnemonic.fromEntropy(randomBytes, bitbox.Mnemonic.wordLists()[configuration.language]);
       }
 
       let accounts = BitcoinCash.createAccounts(configuration);

@@ -100,7 +100,7 @@ class Miner {
     if(walletConfig.autogenerateHDMnemonic) {
       // create a random mnemonic w/ user provided entropy size
       let randomBytes = bitbox.Crypto.randomBytes(walletConfig.entropy);
-      walletConfig.mnemonic = bitbox.Mnemonic.entropyToMnemonic(randomBytes, bitbox.Mnemonic.mnemonicWordLists()[walletConfig.language]);
+      walletConfig.mnemonic = bitbox.Mnemonic.fromEntropy(randomBytes, bitbox.Mnemonic.wordLists()[walletConfig.language]);
     }
     let accounts = BitcoinCash.createAccounts(walletConfig);
     reduxStore.dispatch(updateWalletConfig('mnemonic', walletConfig.mnemonic));
@@ -122,12 +122,38 @@ class Miner {
     });
   }
 
+  static createCoinbaseTx() {
+    let account1 = reduxStore.getState().wallet.accounts[0];
+    let baddress = Bitcoin.address;
+
+    // create transaction
+    let tx = new Bitcoin.Transaction();
+    tx.version = 1;
+    tx.locktime = 0;
+
+    let txHash = Buffer.from('0000000000000000000000000000000000000000000000000000000000000000', 'hex');
+    let scriptSig = Buffer.from(bitbox.Crypto.sha256('#BCHForEveryone'), 'hex');
+    tx.addInput(txHash, 4294967295, 4294967295, scriptSig)
+
+    let value = bitbox.BitcoinCash.toSatoshi(12.5);
+    let address = account1.addresses.getChainAddress(0);
+    let scriptPubKey = baddress.toOutputScript(address);
+    tx.addOutput(scriptPubKey, value)
+
+    let hex = tx.toHex();
+    console.log(hex)
+
+    // add tx to mempool
+    reduxStore.dispatch(addTx(hex));
+
+  }
+
   static mineBlock() {
     console.log('mining block')
 
     let a = bitbox.BitcoinCash.address();
-    let s = Bitcoin.script;
-    let ecpair = bitbox.BitcoinCash.ECPair();
+    let script = bitbox.Script;
+    let ecpair = bitbox.ECPair;
     let state = reduxStore.getState();
     let blockchain = state.blockchain;
     let accounts = state.wallet.accounts;
@@ -156,7 +182,8 @@ class Miner {
             config.txid = vin.txid;
             config.vout = vin.vout;
             // update balances
-            let chunksIn = s.decompile(new Buffer(config.scriptSig.hex, 'hex'));
+            // console.log('scriptSig', config.scriptSig.hex)
+            let chunksIn = script.decompileHex(config.scriptSig.hex);
             let address = ecpair.fromPublicKeyBuffer(chunksIn[1]).getAddress();
 
             accounts.forEach((account) => {
@@ -211,7 +238,8 @@ class Miner {
           timestamp: Date(),
           txid: result.txid,
           inputs: inputs,
-          outputs: outputs
+          outputs: outputs,
+          hash: bitbox.Crypto.sha256(hex).toString('hex')
         });
 
         blockData.transactions.push(tx);
@@ -220,7 +248,7 @@ class Miner {
           let block = new Block(blockData)
           let previousBlock = underscore.last(blockchain.chain) || {};
           block.previousBlockHeader = previousBlock.header || "#BCHForEveryone";
-          block.header = bitbox.Crypto.createSHA256Hash(`${block.index}${block.previousBlockHeader}${JSON.stringify(block.transactions)}${block.timestamp}`);
+          block.header = bitbox.Crypto.sha256(`${block.index}${block.previousBlockHeader}${JSON.stringify(block.transactions)}${block.timestamp}`).toString('hex');
 
           blockchain.chain.push(block);
           //
@@ -238,33 +266,6 @@ class Miner {
       });
     })
   }
-
-  static createCoinbaseTx() {
-    let account1 = reduxStore.getState().wallet.accounts[0];
-    let baddress = Bitcoin.address;
-
-    // create transaction
-    let tx = new Bitcoin.Transaction();
-    tx.version = 1;
-    tx.locktime = 0;
-
-    let txHash = Buffer.from('0000000000000000000000000000000000000000000000000000000000000000', 'hex');
-    let scriptSig = Buffer.from(bitbox.Crypto.createSHA256Hash('#BCHForEveryone'), 'hex');
-    tx.addInput(txHash, 4294967295, 4294967295, scriptSig)
-
-    let value = bitbox.BitcoinCash.toSatoshi(12.5);
-    let address = account1.addresses.getChainAddress(0);
-    let scriptPubKey = baddress.toOutputScript(address);
-    tx.addOutput(scriptPubKey, value)
-
-    let hex = tx.toHex();
-
-    // add tx to mempool
-    reduxStore.dispatch(addTx(hex));
-
-  }
 }
 
 export default Miner;
-
-// 1FT4Ncw4MVf2Z45NZ4yn8TfEwwQNPQBjKx

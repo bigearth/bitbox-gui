@@ -18,11 +18,11 @@
 .Wallet.content {
   padding: 1em 0;
 }
-
-.Wallet tr:hover {
-  background: #eee;
-  cursor: pointer;
-}
+//
+// .Wallet tr:hover {
+//   background: #eee;
+//   cursor: pointer;
+// }
 
 .Wallet.content, .Blocks, .WrapperBlockDetails, .Configuration, .Transaction, .Convert, .SignAndVerify, .AccountDetails, .Address {
   background: $white;

@@ -5,6 +5,9 @@ import {
 
 import underscore from 'underscore';
 import QRCode from 'qrcode.react';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faQrcode from '@fortawesome/fontawesome-free-solid/faQrcode';
+import faClock from '@fortawesome/fontawesome-free-solid/faClock';
 
 import '../styles/accountReceive.scss';
 
@@ -75,14 +78,14 @@ class AccountReceive extends Component {
     return (
       <div className="AccountReceive content pure-g">
         <div className="pure-u-1-2">
-          <h2><i className="fas fa-qrcode" /> Receive Bitcoin Cash</h2>
-          <h3><i className="far fa-clock" /> Fresh Addresses</h3>
+          <h2><FontAwesomeIcon icon={faQrcode} /> Receive Bitcoin Cash</h2>
+          <h3><FontAwesomeIcon icon={faClock} /> Fresh Addresses</h3>
           <ul>
             {freshAddresses}
           </ul>
           <button className='pure-button pure-button-primary' onClick={this.moreAddresses.bind(this, account)}>More Addresses</button>
 
-          <h3><i className="fas fa-clock" /> Previous Addresses</h3>
+          <h3><FontAwesomeIcon icon={faClock} /> Previous Addresses</h3>
           <ul>
             {previousAddresses}
           </ul>

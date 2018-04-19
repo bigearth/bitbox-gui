@@ -9,8 +9,15 @@ import {
   NavLink
 } from 'react-router-dom';
 
-// custom models
 import underscore from 'underscore';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faUser from '@fortawesome/fontawesome-free-solid/faUser';
+import faCubes from '@fortawesome/fontawesome-free-solid/faCubes';
+import faQrcode from '@fortawesome/fontawesome-free-solid/faQrcode';
+import faCheckCircle from '@fortawesome/fontawesome-free-solid/faCheckCircle';
+import faUpload from '@fortawesome/fontawesome-free-solid/faUpload';
+import faDownload from '@fortawesome/fontawesome-free-solid/faDownload';
+import faCog from '@fortawesome/fontawesome-free-solid/faCog';
 
 import WalletContainer from '../containers/WalletContainer'
 import BlocksContainer from '../containers/BlocksContainer';
@@ -126,7 +133,7 @@ class App extends Component {
                     activeClassName="pure-menu-selected"
                     className="pure-menu-link"
                     to="/wallet">
-                    <i className="fas fa-user"></i> Wallet
+                    <FontAwesomeIcon icon={faUser} /> Wallet
                   </NavLink>
                 </li>
                 <li className="pure-menu-item">
@@ -135,7 +142,7 @@ class App extends Component {
                     activeClassName="pure-menu-selected"
                     className="pure-menu-link"
                     to="/blocks">
-                    <i className="fas fa-cubes"></i> Blocks
+                    <FontAwesomeIcon icon={faCubes} /> Blocks
                   </NavLink>
                 </li>
                 <li className="pure-menu-item">
@@ -144,7 +151,7 @@ class App extends Component {
                     activeClassName="pure-menu-selected"
                     className="pure-menu-link"
                     to="/convert">
-                    <i className="fas fa-qrcode" /> Convert
+                    <FontAwesomeIcon icon={faQrcode} /> Convert
                   </NavLink>
                 </li>
                 <li className="pure-menu-item">
@@ -153,7 +160,7 @@ class App extends Component {
                     activeClassName="pure-menu-selected"
                     className="pure-menu-link"
                     to="/signandverify">
-                    <i className="far fa-check-circle"></i> Sign &amp; Verify
+                    <FontAwesomeIcon icon={faCheckCircle} /> Sign &amp; Verify
                   </NavLink>
                 </li>
               </ul>
@@ -163,12 +170,12 @@ class App extends Component {
                 </li>
                 <li className="pure-menu-item">
                   <button className="importAndExportBtn" onClick={this.showExport.bind(this)}>
-                    <i className="fas fa-upload" />
+                    <FontAwesomeIcon icon={faUpload} />
                   </button>
                 </li>
                 <li className="pure-menu-item">
                   <button className="importAndExportBtn" onClick={this.showImport.bind(this)}>
-                    <i className="fas fa-download" />
+                    <FontAwesomeIcon icon={faDownload} />
                   </button>
                 </li>
                 <li className="pure-menu-item">
@@ -177,7 +184,7 @@ class App extends Component {
                     activeClassName="pure-menu-selected"
                     className="pure-menu-link"
                     to="/configuration/wallet">
-                    <i className="fas fa-cog" />
+                    <FontAwesomeIcon icon={faCog} />
                   </NavLink>
                 </li>
               </ul>

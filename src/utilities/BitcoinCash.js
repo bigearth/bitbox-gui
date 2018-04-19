@@ -61,10 +61,10 @@ class BitcoinCash {
     }
 
     // create root seed buffer
-    let rootSeedBuffer = bitbox.Mnemonic.mnemonicToSeedBuffer(config.mnemonic, config.password);
+    let rootSeedBuffer = bitbox.Mnemonic.toSeed(config.mnemonic, config.password);
 
     // create master hd node
-    let masterHDNode = bitbox.HDNode.fromSeedBuffer(rootSeedBuffer, config.network);
+    let masterHDNode = bitbox.HDNode.fromSeed(rootSeedBuffer, config.network);
 
     let HDPath = `m/${config.HDPath.purpose}/${config.HDPath.coinCode}`
 

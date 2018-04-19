@@ -14,9 +14,64 @@ class Convert extends Component {
     event.preventDefault();
   }
 
+  isXPriv(inputValue) {
+    let node = bitbox.HDNode.fromXPriv(inputValue);
+
+    let wif = bitbox.HDNode.toWIF(node);
+    this.props.updateConvertValue('privateKeyWIF', wif);
+
+    let xpriv = inputValue;
+    this.props.updateConvertValue('xpriv', xpriv);
+
+    let xpub = bitbox.HDNode.toXPub(node);
+    this.props.updateConvertValue('xpub', xpub);
+
+    let cashaddr = bitbox.HDNode.toCashAddress(node);
+    this.props.updateConvertValue('cashaddr', cashaddr);
+
+    let base58Check = bitbox.HDNode.toLegacyAddress(node);
+    this.props.updateConvertValue('base58Check', base58Check);
+  }
+
+  isXPub(inputValue) {
+    let node = bitbox.HDNode.fromXPub(inputValue);
+
+    let xpub = inputValue;
+    this.props.updateConvertValue('xpub', xpub);
+
+    let cashaddr = bitbox.HDNode.toCashAddress(node);
+    this.props.updateConvertValue('cashaddr', cashaddr);
+
+    let base58Check = bitbox.HDNode.toLegacyAddress(node);
+    this.props.updateConvertValue('base58Check', base58Check);
+  }
+
+  isWIF(inputValue) {
+    let ecpair = bitbox.ECPair.fromWIF(inputValue);
+
+    let wif = inputValue;
+    this.props.updateConvertValue('privateKeyWIF', wif);
+
+    let cashaddr = bitbox.ECPair.toCashAddress(ecpair);
+    this.props.updateConvertValue('cashaddr', cashaddr);
+
+    let base58Check = bitbox.ECPair.toLegacyAddress(ecpair);
+    this.props.updateConvertValue('base58Check', base58Check);
+  }
+
+  isOther(inputValue) {
+    let cashaddr = bitbox.Address.toCashAddress(inputValue);
+    this.props.updateConvertValue('cashaddr', cashaddr);
+
+    let base58Check = bitbox.Address.toLegacyAddress(inputValue);
+    this.props.updateConvertValue('base58Check', base58Check);
+  }
+
   convert(e) {
     let inputValue = e.target.value;
     let keyPair = '';
+    let xpriv = this.props.convert.xpriv;
+    let xpub = this.props.convert.xpub;
     let cashaddr = this.props.convert.cashaddr;
     let base58Check = this.props.convert.base58Check;
     let error = this.props.convert.error;
@@ -25,40 +80,34 @@ class Convert extends Component {
     this.props.updateConvertValue('inputValue', inputValue);
     this.props.updateConvertValue('error', null);
     this.props.updateConvertValue('errorMsg', '');
+
     try {
-      keyPair = bitbox.HDNode.fromWIF(inputValue, this.props.configuration.network);
-      privateKeyWIF = inputValue;
-      this.props.updateConvertValue('privateKeyWIF', inputValue);
-
-      cashaddr = bitbox.Address.toCashAddress(keyPair.getAddress());
-      this.props.updateConvertValue('cashaddr', cashaddr);
-
-      base58Check = bitbox.Address.toLegacyAddress(keyPair.getAddress());
-      this.props.updateConvertValue('base58Check', base58Check);
+      this.isXPriv(inputValue)
     }
     catch (e) {
       try {
-        cashaddr = bitbox.Address.toCashAddress(inputValue);
-        this.props.updateConvertValue('cashaddr', cashaddr);
-
-        base58Check = bitbox.Address.toLegacyAddress(inputValue);
-        this.props.updateConvertValue('base58Check', base58Check);
+        this.isXPub(inputValue)
       }
       catch (e) {
-        error = true;
-        this.props.updateConvertValue('error', error);
-        errorMsg = 'Invalid address';
-        this.props.updateConvertValue('errorMsg', errorMsg);
-
-        this.props.updateConvertValue('privateKeyWIF', '');
-        this.props.updateConvertValue('cashaddr', '');
-        this.props.updateConvertValue('base58Check', '');
+        try {
+          this.isWIF(inputValue)
+        }
+        catch (e) {
+          try {
+            this.isOther(inputValue)
+          }
+          catch (e) {
+          console.log('eror', e)
+          }
+        }
       }
     }
   }
 
   render() {
     let conversion;
+    let extended;
+    let xpub;
     let privateKeyWIF;
     if(this.props.convert.base58Check !== '' && this.props.convert.cashaddr !== '') {
       conversion = <div className="pure-g">
@@ -75,7 +124,39 @@ class Convert extends Component {
         </div>
     }
 
-    if(this.props.convert.privateKeyWIF !== '') {
+    if(this.props.convert.xpriv !== '' && this.props.convert.xpub !== '') {
+      extended = <div className="pure-g">
+          <div className="pure-u-1-2 alignLeft">
+            <h3>Private Key WIF</h3>
+            <p><QRCode value={this.props.convert.privateKeyWIF} /></p>
+            <p>{this.props.convert.privateKeyWIF}</p>
+          </div>
+          <div className="pure-u-1-2 alignRight">
+            <h3>XPriv</h3>
+            <p><QRCode value={this.props.convert.xpriv} /></p>
+            <p>{this.props.convert.xpriv}</p>
+          </div>
+        </div>
+      xpub = <div className="pure-g">
+          <div className="pure-u-1-2 alignLeft">
+            <h3>XPub</h3>
+            <p><QRCode value={this.props.convert.xpub} /></p>
+            <p>{this.props.convert.xpub}</p>
+          </div>
+        </div>
+    }
+
+    if(this.props.convert.xpriv === '' && this.props.convert.xpub !== '') {
+      xpub = <div className="pure-g">
+          <div className="pure-u-1-2 alignLeft">
+            <h3>XPub</h3>
+            <p><QRCode value={this.props.convert.xpub} /></p>
+            <p>{this.props.convert.xpub}</p>
+          </div>
+        </div>
+    }
+
+    if(this.props.convert.xpriv === '' && this.props.convert.privateKeyWIF !== '') {
       privateKeyWIF =
         <div className="pure-g">
           <div className="pure-u-1-1 alignLeft">
@@ -109,6 +190,8 @@ class Convert extends Component {
         </div>
         {error}
         {conversion}
+        {extended}
+        {xpub}
         {privateKeyWIF}
       </div>
     );

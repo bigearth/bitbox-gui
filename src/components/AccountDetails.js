@@ -17,6 +17,12 @@ import AccountTransactionsContainer from '../containers/AccountTransactionsConta
 import AccountSendContainer from '../containers/AccountSendContainer';
 import AccountReceiveContainer from '../containers/AccountReceiveContainer';
 import underscore from 'underscore';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faArrowLeft from '@fortawesome/fontawesome-free-solid/faArrowLeft';
+import faIdCard from '@fortawesome/fontawesome-free-solid/faIdCard';
+import faExchangeAlt from '@fortawesome/fontawesome-free-solid/faExchangeAlt';
+import faQrcode from '@fortawesome/fontawesome-free-solid/faQrcode';
+import faChevronUp from '@fortawesome/fontawesome-free-solid/faChevronUp';
 
 import '../styles/accountDetails.scss';
 
@@ -55,11 +61,11 @@ class AccountDetails extends Component {
               <NavLink
                 to={`/`}
                 className="pure-menu-link">
-                <i className="fa fa-arrow-left" /> Back
+                <FontAwesomeIcon icon={faArrowLeft} /> Back
               </NavLink>
             </li>
             <li className="pure-menu-item account">
-              <i className="far fa-id-card" /> ACCOUNT {account.index}
+              <FontAwesomeIcon icon={faIdCard} /> ACCOUNT {account.index}
             </li>
           </ul>
           <ul className="pure-menu-list right">
@@ -69,7 +75,7 @@ class AccountDetails extends Component {
                 activeClassName="pure-menu-selected"
                 to={`/accounts/${account.index}/transactions`}
                 className="pure-menu-link">
-                <i className="fas fa-exchange-alt" /> TRANSACTIONS
+                <FontAwesomeIcon icon={faExchangeAlt} /> TRANSACTIONS
               </NavLink>
             </li>
             <li className="pure-menu-item">
@@ -78,7 +84,7 @@ class AccountDetails extends Component {
                 activeClassName="pure-menu-selected"
                 to={`/accounts/${account.index}/receive`}
                 className="pure-menu-link">
-                <i className="fas fa-qrcode" /> RECEIVE
+                <FontAwesomeIcon icon={faQrcode} /> RECEIVE
               </NavLink>
             </li>
             <li className="pure-menu-item">
@@ -87,7 +93,7 @@ class AccountDetails extends Component {
                 activeClassName="pure-menu-selected"
                 to={`/accounts/${account.index}/send`}
                 className="pure-menu-link">
-                <i className="fas fa-chevron-up"></i> SEND
+                <FontAwesomeIcon icon={faChevronUp} /> SEND
               </NavLink>
             </li>
           </ul>

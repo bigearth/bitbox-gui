@@ -158,7 +158,7 @@ describe('create 512 bit HMAC-SHA512 root seed', () => {
 describe('create master private key', () => {
   it('should create 32 byte chain code', () => {
     let rootSeed = bitbox.BitcoinCash.mnemonicToSeed(bitbox.BitcoinCash.entropyToMnemonic(32), 'password');
-    let masterkey = bitbox.BitcoinCash.fromSeedBuffer(rootSeed);
+    let masterkey = bitbox.BitcoinCash.fromSeed(rootSeed);
     assert.equal(masterkey.chainCode.byteLength, 32);
   });
 });

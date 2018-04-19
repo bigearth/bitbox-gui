@@ -8,6 +8,8 @@ import PropTypes from 'prop-types'
 import Toggle from 'react-toggle'
 import Slider from 'react-rangeslider'
 import 'react-rangeslider/lib/index.css'
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faRedo from '@fortawesome/fontawesome-free-solid/faRedo';
 
 import '../styles/walletconfiguration.scss';
 
@@ -52,7 +54,7 @@ class WalletConfiguration extends Component {
       if(val === '') {
         msg = val;
       } else {
-        msg = bitbox.Mnemonic.validateMnemonic(val, bitbox.Mnemonic.mnemonicWordLists()[this.props.configuration.wallet.language]);
+        msg = bitbox.Mnemonic.validate(val, bitbox.Mnemonic.wordLists()[this.props.configuration.wallet.language]);
       }
 
       e = {
@@ -66,6 +68,42 @@ class WalletConfiguration extends Component {
   }
 
   render() {
+                // <div> <label>Exchange Currency</label>
+                //   <select value={this.props.configuration.wallet.exchangeCurrency} id='exchangeCurrency' onChange={this.handleConfigChange.bind(this)}>
+                //     <option value="USD">US Dollar</option>
+                //     <option value="AUD">Australian Dollar</option>
+                //     <option value="BRL">Brazilian Real</option>
+                //     <option value="CAD">Canadian Dollar</option>
+                //     <option value="CHF">Swiss Franc</option>
+                //     <option value="CLP">Chilean Peso</option>
+                //     <option value="CNY">Chinese Yuan</option>
+                //     <option value="CZK">Czech Koruna</option>
+                //     <option value="DKK">Danish Krone</option>
+                //     <option value="EUR">Euro</option>
+                //     <option value="GBP">British Pound</option>
+                //     <option value="HKD">Hong Kong Dollar</option>
+                //     <option value="HUF">Hungarian Forint</option>
+                //     <option value="IDR">Indonesian Rupiah</option>
+                //     <option value="ILS">Israeli Shekel</option>
+                //     <option value="INR">Indian rupee</option>
+                //     <option value="JPY">Japanese Yen</option>
+                //     <option value="KRW">South Korean Won</option>
+                //     <option value="MXN">Mexican Peso</option>
+                //     <option value="MYR">Malaysian Ringgit</option>
+                //     <option value="NOK">Norwegian Krone</option>
+                //     <option value="NZD">New Zealand Dollar</option>
+                //     <option value="PHP">Philippine Piso</option>
+                //     <option value="PKR">Pakistani rupee</option>
+                //     <option value="PLN">Polish Zloty</option>
+                //     <option value="RUB">Russian Ruble</option>
+                //     <option value="SEK">Swedish Krona</option>
+                //     <option value="SGD">Singapore Dollar</option>
+                //     <option value="THB">Thai Baht</option>
+                //     <option value="TRY">Turkish Lira</option>
+                //     <option value="TWD">Taiwan New Dollar</option>
+                //     <option value="ZAR">South African Rand</option>
+                //   </select>
+                // </div>
     if (this.state.redirect) {
       return <Redirect to='/'/>;
     }
@@ -84,9 +122,9 @@ class WalletConfiguration extends Component {
 
     let restartBtn;
     if(!this.props.configuration.wallet.autogenerateHDMnemonic && this.props.configuration.wallet.mnemonicValidationMsg !== 'Valid mnemonic') {
-      restartBtn = <button disabled className="pure-button"><i className="fas fa-redo" /> Restart</button>
+      restartBtn = <button disabled className="pure-button"><FontAwesomeIcon icon={faRedo} /> Restart</button>
     } else {
-      restartBtn = <button className="pure-button" onClick={this.resetBitbox.bind(this, this.props.configuration.wallet)}><i className="fas fa-redo" /> Restart</button>
+      restartBtn = <button className="pure-button" onClick={this.resetBitbox.bind(this, this.props.configuration.wallet)}><FontAwesomeIcon icon={faRedo} /> Restart</button>
     }
 
     let customPathLabel;
@@ -138,42 +176,6 @@ class WalletConfiguration extends Component {
                     <option value="japanese">Japanese</option>
                     <option value="korean">Korean</option>
                     <option value="spanish">Spanish</option>
-                  </select>
-                </div>
-                <div> <label>Exchange Currency</label>
-                  <select value={this.props.configuration.wallet.exchangeCurrency} id='exchangeCurrency' onChange={this.handleConfigChange.bind(this)}>
-                    <option value="USD">US Dollar</option>
-                    <option value="AUD">Australian Dollar</option>
-                    <option value="BRL">Brazilian Real</option>
-                    <option value="CAD">Canadian Dollar</option>
-                    <option value="CHF">Swiss Franc</option>
-                    <option value="CLP">Chilean Peso</option>
-                    <option value="CNY">Chinese Yuan</option>
-                    <option value="CZK">Czech Koruna</option>
-                    <option value="DKK">Danish Krone</option>
-                    <option value="EUR">Euro</option>
-                    <option value="GBP">British Pound</option>
-                    <option value="HKD">Hong Kong Dollar</option>
-                    <option value="HUF">Hungarian Forint</option>
-                    <option value="IDR">Indonesian Rupiah</option>
-                    <option value="ILS">Israeli Shekel</option>
-                    <option value="INR">Indian rupee</option>
-                    <option value="JPY">Japanese Yen</option>
-                    <option value="KRW">South Korean Won</option>
-                    <option value="MXN">Mexican Peso</option>
-                    <option value="MYR">Malaysian Ringgit</option>
-                    <option value="NOK">Norwegian Krone</option>
-                    <option value="NZD">New Zealand Dollar</option>
-                    <option value="PHP">Philippine Piso</option>
-                    <option value="PKR">Pakistani rupee</option>
-                    <option value="PLN">Polish Zloty</option>
-                    <option value="RUB">Russian Ruble</option>
-                    <option value="SEK">Swedish Krona</option>
-                    <option value="SGD">Singapore Dollar</option>
-                    <option value="THB">Thai Baht</option>
-                    <option value="TRY">Turkish Lira</option>
-                    <option value="TWD">Taiwan New Dollar</option>
-                    <option value="ZAR">South African Rand</option>
                   </select>
                 </div>
               </fieldset>

@@ -8,6 +8,8 @@ import {
 import Bitcoin from 'bitcoinjs-lib';
 import moment from 'moment';
 import underscore from 'underscore';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faArrowLeft from '@fortawesome/fontawesome-free-solid/faArrowLeft';
 
 class BlockDetails extends Component {
   constructor(props) {
@@ -89,7 +91,7 @@ class BlockDetails extends Component {
         <table className="pure-table DetailsHeader">
           <tbody>
             <tr className="">
-              <td className='important nextPage' onClick={this.handleRedirect.bind(this)}><i className="fa fa-arrow-left" /> <span className='subheader'>BACK</span></td>
+              <td className='important nextPage' onClick={this.handleRedirect.bind(this)}><FontAwesomeIcon icon={faArrowLeft} /> <span className='subheader'>BACK</span></td>
               <td className='important'>BLOCK {block.index}</td>
             </tr>
           </tbody>

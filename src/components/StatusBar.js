@@ -10,6 +10,9 @@ import Output from '../models/Output';
 import Input from '../models/Input';
 import Miner from '../utilities/Miner';
 import underscore from 'underscore';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faSpinner from '@fortawesome/fontawesome-free-solid/faSpinner';
+import faCube from '@fortawesome/fontawesome-free-solid/faCube';
 
 class StatusBar extends Component {
 
@@ -30,10 +33,10 @@ class StatusBar extends Component {
             RPC SERVER <br /> http://127.0.0.1:8332
           </li>
           <li className="pure-menu-item">
-            MINING STATUS <br /> AUTOMINING <i className="fas fa-spinner fa-spin" />
+            MINING STATUS <br /> AUTOMINING <FontAwesomeIcon icon={faSpinner} />
           </li>
           <li className="pure-menu-item">
-            <button className='pure-button danger-background' onClick={this.createBlock.bind(this)}><i className="fas fa-cube"></i> Create block</button>
+            <button className='pure-button danger-background' onClick={this.createBlock.bind(this)}><FontAwesomeIcon icon={faCube} /> Create block</button>
           </li>
         </ul>
       </div>

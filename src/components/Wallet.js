@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import BitcoinCash from '../utilities/BitcoinCash';
-import Bitcoin from 'bitcoinjs-lib';
 import Account from './Account';
 import AccountModal from './AccountModal';
 import underscore from 'underscore';
@@ -35,9 +34,6 @@ class Wallet extends Component {
   render() {
     let list = [];
     if(this.props.wallet && this.props.wallet.accounts && this.props.wallet.accounts.length) {
-      let a = bitbox.BitcoinCash.address();
-      let s = Bitcoin.script;
-      let ecpair = bitbox.BitcoinCash.ECPair();
       this.props.wallet.accounts.forEach((account) => {
         list.push(
           <Account

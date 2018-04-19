@@ -5,7 +5,6 @@ import {
   withRouter,
   Redirect
 } from 'react-router-dom';
-import Bitcoin from 'bitcoinjs-lib';
 
 import '../styles/accountTransactions.scss';
 
@@ -32,8 +31,8 @@ class AccountTransactions extends Component {
     }
 
     let a = bitbox.BitcoinCash.address();
-    let s = Bitcoin.script;
-    let ecpair = bitbox.BitcoinCash.ECPair();
+    let script = bitbox.Script;
+    let ecpair = bitbox.ECPair;
     let blocks = [];
     let account = underscore.findWhere(this.props.wallet.accounts, {index: +this.props.match.params.account_id});
     this.props.blockchain.chain.forEach((block, indx) => {
@@ -47,7 +46,7 @@ class AccountTransactions extends Component {
 
             tx.inputs.forEach((input) => {
               if(input.scriptSig) {
-                let chunksIn = s.decompile(new Buffer(input.scriptSig.hex, 'hex'));
+                let chunksIn = script.decompileHex(input.scriptSig.hex);
                 let address = ecpair.fromPublicKeyBuffer(chunksIn[1]).getAddress();
 
                 if(address === addy) {

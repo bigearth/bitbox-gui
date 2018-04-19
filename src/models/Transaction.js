@@ -8,6 +8,7 @@ class Transaction {
     this.txid = transactionData.txid;
     this.inputs = transactionData.inputs;
     this.outputs = transactionData.outputs;
+    this.hash = transactionData.hash;
   }
 }
 

@@ -13,7 +13,8 @@ More info: https://www.bitbox.earth
 1. `git clone https://github.com/bigearth/bitbox-electron.git`
 2. `cd bitbox-electron`
 3. `npm install`
-4. `npm test`
-5. `npm start`
+4. `npm run build`
+5. `npm test`
+6. `npm start`
 
 Or download the app from [https://www.bitbox.earth](https://www.bitbox.earth). Verify the authenticity of these files before running them.  You can find signatures and checksum hashes on [github](https://github.com/bigearth/keys-n-hashes).

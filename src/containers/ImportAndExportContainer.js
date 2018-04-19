@@ -23,12 +23,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     importStore: (store) => {
       let parsedStore = JSON.parse(store);
-      let seedHex = bitbox.Mnemonic.mnemonicToSeedHex(parsedStore.configuration.wallet.mnemonic)
-      let hdnode = bitbox.HDNode.fromSeedHex(seedHex)
+      let seed = bitbox.Mnemonic.toSeed(parsedStore.configuration.wallet.mnemonic);
+      let hdnode = bitbox.HDNode.fromSeed(seed);
       parsedStore.wallet.accounts.forEach((account, index) => {
-        let ac = hdnode.derivePath(`m/44'/145'/${index}'`);
-        let external = ac.derivePath("0")
-        let internal = ac.derivePath("1")
+        let ac = bitbox.HDNode.derivePath(hdnode, `m/44'/145'/${index}'`);
+        let external = bitbox.HDNode.derivePath(ac, `0`);
+        let internal = bitbox.HDNode.derivePath(ac, `1`);
 
         let a = bitbox.HDNode.createAccount([external, internal]);
         account.addresses = a;

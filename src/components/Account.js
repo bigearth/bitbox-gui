@@ -3,6 +3,9 @@ import {
   Redirect
 } from 'react-router-dom';
 import '../styles/account.scss';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faAsterisk from '@fortawesome/fontawesome-free-solid/faAsterisk';
+import faKey from '@fortawesome/fontawesome-free-solid/faKey';
 
 class Account extends Component {
   constructor(props) {
@@ -12,13 +15,14 @@ class Account extends Component {
   }
 
   handleRedirect(e) {
-    if(e.target.nodeName === 'BUTTON' || e.target.nodeName === 'path') {
-      this.props.showAccountModal(this.props.account)
-    } else {
-      this.setState({
-        redirect: true
-      });
-    }
+    this.props.showAccountModal(this.props.account)
+    // if(e.target.nodeName === 'BUTTON' || e.target.nodeName === 'path') {
+    //   this.props.showAccountModal(this.props.account)
+    // } else {
+    //   this.setState({
+    //     redirect: true
+    //   });
+    // }
   }
 
   render() {
@@ -32,7 +36,7 @@ class Account extends Component {
 
     let coinbase;
     if(this.props.account.index === 0) {
-      coinbase = <span> <i className="fas fa-asterisk" /> Coinbase</span>
+      coinbase = <span> <FontAwesomeIcon icon={faAsterisk} /> Coinbase</span>
     }
 
     let index = this.props.account.index;
@@ -46,12 +50,12 @@ class Account extends Component {
     let HDPath = `m/${this.props.configuration.HDPath.purpose}/${this.props.configuration.HDPath.coinCode}`;
     let addressHeight = this.props.account.addresses.chains[0].find(this.props.account.addresses.getChainAddress(0))
     return (
-      <tr className="Account" onClick={this.handleRedirect.bind(this)}>
-        <td className='important'><span className='subheader'>ADDRESS{coinbase}</span> <br />{address} <br /><span className='hdPath'>{HDPath}/{index}&rsquo;/0/{addressHeight}</span></td>
+      <tr className="Account">
+        <td className='important'><span className='subheader'>ADDRESS {coinbase}</span> <br />{address} <br /><span className='hdPath'>{HDPath}/{index}&rsquo;/0/{addressHeight}</span></td>
         <td className='important'><span className='subheader'>BALANCE</span> <br />{bitbox.BitcoinCash.toBitcoinCash(this.props.account.balance)} BCH</td>
         <td><span className='subheader'>TX COUNT</span> <br />{this.props.account.txCount}</td>
         <td><span className='subheader'>ACCOUNT</span> <br />{index}</td>
-        <td><button className="pure-button openModal"><i className="fas fa-key openModal" /></button></td>
+        <td><button onClick={this.handleRedirect.bind(this)} className="pure-button openModal"><FontAwesomeIcon className="openModal" icon={faKey} /></button></td>
       </tr>
     );
   }
