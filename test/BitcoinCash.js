@@ -36,13 +36,13 @@ describe('address conversion', () => {
 describe('address format detection', () => {
   it('should detect base58Check address', () => {
     let base58Check = fixtures.base58check;
-    let isBase58Check = bitbox.BitcoinCash.isLegacyAddress(base58Check);
+    let isBase58Check = bitbox.Address.isLegacyAddress(base58Check);
     assert.equal(isBase58Check, true);
   });
 
   it('should detect cashaddr address', () => {
     let cashaddr = fixtures.cashaddr;
-    let isCashaddr = bitbox.BitcoinCash.isCashAddress(cashaddr);
+    let isCashaddr = bitbox.Address.isCashAddress(cashaddr);
     assert.equal(isCashaddr, true);
   });
 });
@@ -50,13 +50,13 @@ describe('address format detection', () => {
 describe('network detection', () => {
   it('should detect mainnet address', () => {
     let mainnet = fixtures.base58check;
-    let isMainnet = bitbox.BitcoinCash.isMainnetAddress(mainnet);
+    let isMainnet = bitbox.Address.isMainnetAddress(mainnet);
     assert.equal(isMainnet, true);
   });
 
   it('should detect testnet address', () => {
     let testnet = fixtures.testnet;
-    let isTestnet = bitbox.BitcoinCash.isTestnetAddress(testnet);
+    let isTestnet = bitbox.Address.isTestnetAddress(testnet);
     assert.equal(isTestnet, true);
   });
 });
@@ -64,13 +64,13 @@ describe('network detection', () => {
 describe('address type detection', () => {
   it('should detect P2PKH address', () => {
     let P2PKH = fixtures.base58check;
-    let isP2PKH = bitbox.BitcoinCash.isP2PKHAddress(P2PKH);
+    let isP2PKH = bitbox.Address.isP2PKHAddress(P2PKH);
     assert.equal(isP2PKH, true);
   });
 
   it('should detect P2SH address', () => {
     let P2SH = fixtures.P2SH;
-    let isP2SH = bitbox.BitcoinCash.isP2SHAddress(P2SH);
+    let isP2SH = bitbox.Address.isP2SHAddress(P2SH);
     assert.equal(isP2SH, true);
   });
 });
@@ -78,13 +78,13 @@ describe('address type detection', () => {
 describe('return address format', () => {
   it('should return base58Check address', () => {
     let base58Check = fixtures.base58check;
-    let isBase58Check = bitbox.BitcoinCash.detectAddressFormat(base58Check);
+    let isBase58Check = bitbox.Address.detectAddressFormat(base58Check);
     assert.equal(isBase58Check, 'legacy');
   });
 
   it('should return cashaddr address', () => {
     let cashaddr = fixtures.cashaddr;
-    let isCashaddr = bitbox.BitcoinCash.detectAddressFormat(cashaddr);
+    let isCashaddr = bitbox.Address.detectAddressFormat(cashaddr);
     assert.equal(isCashaddr, 'cashaddr');
   });
 });
@@ -92,13 +92,13 @@ describe('return address format', () => {
 describe('return address network', () => {
   it('should return mainnet', () => {
     let mainnet = fixtures.base58check;
-    let isMainnet = bitbox.BitcoinCash.detectAddressNetwork(mainnet);
+    let isMainnet = bitbox.Address.detectAddressNetwork(mainnet);
     assert.equal(isMainnet, 'mainnet');
   });
 
   it('should return testnet', () => {
     let testnet = fixtures.testnet;
-    let isTestnet = bitbox.BitcoinCash.detectAddressNetwork(testnet);
+    let isTestnet = bitbox.Address.detectAddressNetwork(testnet);
     assert.equal(isTestnet, 'testnet');
   });
 });
@@ -106,46 +106,46 @@ describe('return address network', () => {
 describe('return address type', () => {
   it('should return P2PKH', () => {
     let P2PKH = fixtures.base58check;
-    let isP2PKH = bitbox.BitcoinCash.detectAddressType(P2PKH);
+    let isP2PKH = bitbox.Address.detectAddressType(P2PKH);
     assert.equal(isP2PKH, 'p2pkh');
   });
 
   it('should return P2SH', () => {
     let P2SH = fixtures.P2SH;
-    let isP2SH = bitbox.BitcoinCash.detectAddressType(P2SH);
+    let isP2SH = bitbox.Address.detectAddressType(P2SH);
     assert.equal(isP2SH, 'p2sh');
   });
 });
 
 describe('generate specific length mnemonic', () => {
   it('should generate a 12 word mnemonic', () => {
-    let mnemonic = bitbox.BitcoinCash.entropyToMnemonic(16);
+    let mnemonic = bitbox.Mnemonic.generate(128);
     assert.lengthOf(mnemonic.split(' '), 12);
   });
 
   it('should generate a 15 word mnemonic', () => {
-    let mnemonic = bitbox.BitcoinCash.entropyToMnemonic(20);
+    let mnemonic = bitbox.Mnemonic.generate(160);
     assert.lengthOf(mnemonic.split(' '), 15);
   });
 
   it('should generate an 18 word mnemonic', () => {
-    let mnemonic = bitbox.BitcoinCash.entropyToMnemonic(24);
+    let mnemonic = bitbox.Mnemonic.generate(192);
     assert.lengthOf(mnemonic.split(' '), 18);
   });
 
   it('should generate an 21 word mnemonic', () => {
-    let mnemonic = bitbox.BitcoinCash.entropyToMnemonic(28);
+    let mnemonic = bitbox.Mnemonic.generate(224);
     assert.lengthOf(mnemonic.split(' '), 21);
   });
 
   it('should generate an 24 word mnemonic', () => {
-    let mnemonic = bitbox.BitcoinCash.entropyToMnemonic(32);
+    let mnemonic = bitbox.Mnemonic.generate(256);
     assert.lengthOf(mnemonic.split(' '), 24);
   });
 });
 
 describe('create 512 bit HMAC-SHA512 root seed', () => {
-  let rootSeed = bitbox.BitcoinCash.mnemonicToSeed(bitbox.BitcoinCash.entropyToMnemonic(32), 'password');
+  let rootSeed = bitbox.Mnemonic.toSeed(bitbox.Mnemonic.generate(256), 'password');
   it('should create 64 byte root seed', () => {
     assert.equal(rootSeed.byteLength, 64);
   });
@@ -157,8 +157,8 @@ describe('create 512 bit HMAC-SHA512 root seed', () => {
 
 describe('create master private key', () => {
   it('should create 32 byte chain code', () => {
-    let rootSeed = bitbox.BitcoinCash.mnemonicToSeed(bitbox.BitcoinCash.entropyToMnemonic(32), 'password');
-    let masterkey = bitbox.BitcoinCash.fromSeed(rootSeed);
+    let rootSeed = bitbox.Mnemonic.toSeed(bitbox.Mnemonic.generate(256), 'password');
+    let masterkey = bitbox.HDNode.fromSeed(rootSeed);
     assert.equal(masterkey.chainCode.byteLength, 32);
   });
 });
