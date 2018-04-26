@@ -124,7 +124,9 @@ class App extends Component {
         <Router>
           <div className="header main-header">
             <div className="pure-menu pure-menu-horizontal">
-              <Link className="pure-menu-heading" to="/wallet">BitBox</Link>
+              <Link className="pure-menu-heading header-logo" to="/wallet">
+                <img src='assets/logo.png' /> <br />BitBox
+              </Link>
               <ul className="pure-menu-list">
 
                 <li className="pure-menu-item">
