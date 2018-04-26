@@ -25,24 +25,24 @@ class AccountSend extends Component {
           <h2><FontAwesomeIcon icon={faChevronUp} /> Send Bitcoin Cash</h2>
 
           <form className="pure-form pure-form-aligned" onSubmit={this.handleSubmit.bind(this)}>
-              <fieldset>
-                  <div className="pure-control-group">
-                      <label htmlFor="address">Address</label>
-                      <input onChange={this.handleInputChange.bind(this)} id="to" type="text" placeholder="Address" />
-                  </div>
+            <fieldset>
+              <div className="pure-control-group">
+                <label htmlFor="address">Address</label>
+                <input onChange={this.handleInputChange.bind(this)} id="to" type="text" placeholder="Address" />
+              </div>
 
-                  <div className="pure-control-group">
-                      <label htmlFor="password">Amount</label>
-                      <input onChange={this.handleInputChange.bind(this)} id="amount" type="number" placeholder="Amount" />
-                  </div>
-                  <div className="pure-controls">
-                      <button type="submit" className="pure-button pure-button-primary">Submit</button>
-                  </div>
-              </fieldset>
+              <div className="pure-control-group">
+                <label htmlFor="password">Amount</label>
+                <input onChange={this.handleInputChange.bind(this)} id="amount" type="number" placeholder="Amount" />
+              </div>
+              <div className="pure-controls">
+                <button type="submit" className="pure-button pure-button-primary">Submit</button>
+              </div>
+            </fieldset>
           </form>
         </div>
       </div>
-    );
+   );
   }
 }
 
