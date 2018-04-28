@@ -15,14 +15,13 @@ class Account extends Component {
   }
 
   handleRedirect(e) {
-    this.props.showAccountModal(this.props.account)
-    // if(e.target.nodeName === 'BUTTON' || e.target.nodeName === 'path') {
-    //   this.props.showAccountModal(this.props.account)
-    // } else {
-    //   this.setState({
-    //     redirect: true
-    //   });
-    // }
+    if(e.target.nodeName === 'BUTTON' || e.target.nodeName === 'path') {
+      this.props.showAccountModal(this.props.account)
+    } else {
+      this.setState({
+        redirect: true
+      });
+    }
   }
 
   render() {
@@ -50,12 +49,12 @@ class Account extends Component {
     let HDPath = `m/${this.props.configuration.HDPath.purpose}/${this.props.configuration.HDPath.coinCode}`;
     let addressHeight = this.props.account.addresses.chains[0].find(this.props.account.addresses.getChainAddress(0))
     return (
-      <tr className="Account">
+      <tr className="Account" onClick={this.handleRedirect.bind(this)}>
         <td className='important'><span className='subheader'>ADDRESS {coinbase}</span> <br />{address} <br /><span className='hdPath'>{HDPath}/{index}&rsquo;/0/{addressHeight}</span></td>
         <td className='important'><span className='subheader'>BALANCE</span> <br />{bitbox.BitcoinCash.toBitcoinCash(this.props.account.balance)} BCH</td>
         <td><span className='subheader'>TX COUNT</span> <br />{this.props.account.txCount}</td>
         <td><span className='subheader'>ACCOUNT</span> <br />{index}</td>
-        <td><button onClick={this.handleRedirect.bind(this)} className="pure-button openModal"><FontAwesomeIcon className="openModal" icon={faKey} /></button></td>
+        <td><button className="pure-button openModal"><FontAwesomeIcon className="openModal" icon={faKey} /></button></td>
       </tr>
     );
   }
