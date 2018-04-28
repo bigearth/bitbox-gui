@@ -125,9 +125,9 @@ class Miner {
   static createCoinbaseTx() {
     let account1 = reduxStore.getState().wallet.accounts[0];
     let baddress = Bitcoin.address;
+    let walletConfig = reduxStore.getState().configuration.wallet;
+    let tx = new Bitcoin.Transaction('bitcoin');
 
-    // create transaction
-    let tx = new Bitcoin.Transaction();
     tx.version = 1;
     tx.locktime = 0;
 
@@ -135,13 +135,18 @@ class Miner {
     let scriptSig = Buffer.from(bitbox.Crypto.sha256('#BCHForEveryone'), 'hex');
     tx.addInput(txHash, 4294967295, 4294967295, scriptSig)
 
+    let network;
+    if(walletConfig.network === 'bitcoin') {
+      network = Bitcoin.networks.bitcoin;
+    } else {
+      network = Bitcoin.networks.testnet;
+    }
     let value = bitbox.BitcoinCash.toSatoshi(12.5);
     let address = account1.addresses.getChainAddress(0);
-    let scriptPubKey = baddress.toOutputScript(address);
+    let scriptPubKey = baddress.toOutputScript(address, network);
     tx.addOutput(scriptPubKey, value)
 
     let hex = tx.toHex();
-    console.log(hex)
 
     // add tx to mempool
     reduxStore.dispatch(addTx(hex));
