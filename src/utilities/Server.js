@@ -35,7 +35,7 @@ class Server {
       });
     });
 
-    server.post('/decodeScript/:hex', (req, res) => {
+    server.get('/decodeScript/:hex', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
       // let params = req.body.params;
       // let redeemScript = params[0];
@@ -58,7 +58,7 @@ class Server {
       }));
     });
 
-    server.post('/getaddednodeinfo', (req, res) => {
+    server.get('/getAddedNodeInfo', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify([
@@ -75,14 +75,14 @@ class Server {
       ]));
     });
 
-    server.post('/getbestblockhash', (req, res) => {
+    server.get('/getBestBlockHash', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
       let bestblock = underscore.last(store.get('state').blockchain.chain);
 
       res.send(JSON.stringify(bestblock.header));
     });
 
-    server.post('/getblock', (req, res) => {
+    server.get('/getBlock/:hash', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
       let blockchain = store.get('state').blockchain;
       let block = underscore.findWhere(blockchain.chain, {header: req.body.params[0]});
@@ -90,7 +90,7 @@ class Server {
       res.send(JSON.stringify(block));
     });
 
-    server.post('/getblockchaininfo', (req, res) => {
+    server.get('/getBlockchainInfo', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
@@ -144,13 +144,13 @@ class Server {
       }));
     });
 
-    server.post('/getblockcount', (req, res) => {
+    server.get('/getBlockCount', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
       let blockCount = store.get('state').blockchain.chain.length;
       res.send(JSON.stringify(blockCount));
     });
 
-    server.post('/getblockhash', (req, res) => {
+    server.get('/getBlockHash/:height', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
       let blockchain = store.get('state').blockchain;
       let block = underscore.findWhere(blockchain.chain, {index: +req.body.params[0]});
@@ -158,7 +158,7 @@ class Server {
       res.send(block ? block.header : 'n/a');
     });
 
-    server.post('/getblockheader', (req, res) => {
+    server.get('/getBlockHeader/:hash', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
       let blockchain = store.get('state').blockchain;
       let block = underscore.findWhere(blockchain.chain, {header: req.body.params[0]});
@@ -166,12 +166,12 @@ class Server {
       res.send(block ? block.header : 'n/a');
     });
 
-    server.post('/getblocktemplate', (req, res) => {
+    server.get('/getBlockTemplate', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify({ template_request: req.body.params[0] }));
     });
 
-    server.post('/getchaintips', (req, res) => {
+    server.get('/getChainTips', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify([
         {
@@ -189,19 +189,19 @@ class Server {
       ]));
     });
 
-    server.post('/getconnectioncount', (req, res) => {
+    server.get('/getConnectionCount', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send('success');
     });
 
-    server.post('/getdifficulty', (req, res) => {
+    server.get('/getDifficulty', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify('0'));
     });
 
-    server.post('/getinfo', (req, res) => {
+    server.get('/getInfo', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send({
@@ -223,7 +223,7 @@ class Server {
       });
     });
 
-    server.post('/getMemoryInfo', (req, res) => {
+    server.get('/getMemoryInfo', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify({
