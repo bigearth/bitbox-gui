@@ -35,7 +35,7 @@ class Server {
       });
     });
 
-    server.post('/decodeScript/:hex', (req, res) => {
+    server.get('/decodeScript/:hex', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
       // let params = req.body.params;
       // let redeemScript = params[0];
