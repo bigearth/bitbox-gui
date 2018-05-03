@@ -35,7 +35,7 @@ class Server {
       });
     });
 
-    server.post('/decodeScript', (req, res) => {
+    server.post('/decodeScript/:hex', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
       // let params = req.body.params;
       // let redeemScript = params[0];
@@ -58,40 +58,6 @@ class Server {
       }));
     });
 
-    server.post('/fundrawtransaction', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify({
-      	"hex": "01000000011da9283b4ddf8d89eb996988b89ead56cecdc44041ab38bf787f1206cd90b51e0000000000ffffffff01405dc600000000001976a9140dfc8bafc8419853b34d5e072ad37d1a5159f58488ac00000000",
-      	"fee": 0.0000245,
-      	"changepos": 2
-      }));
-    });
-
-    server.post('/generate', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify([]));
-    });
-
-    server.post('/generatetoaddress', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify([]));
-    });
-
-    server.post('/getaccountaddress', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(bitbox.Address.toCashAddress(bitbox.HDNode.fromWIF(store.get('addresses')[0].privateKeyWIF).getAddress()));
-    });
-
-    server.post('/getaccount', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send('');
-    });
-
     server.post('/getaddednodeinfo', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
@@ -107,23 +73,6 @@ class Server {
           ]
         }
       ]));
-    });
-
-    server.post('/getaddressesbyaccount', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-      let state = store.get('state');
-      let accounts = state.wallet.accounts;
-      let addresses = [];
-      accounts.forEach((account, index) => {
-        addresses.push(account.cashAddr);
-      });
-      res.send(addresses);
-    });
-
-    server.post('/getbalance', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify('0.00000000'));
     });
 
     server.post('/getbestblockhash', (req, res) => {
@@ -250,12 +199,6 @@ class Server {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify('0'));
-    });
-
-    server.post('/getexcessiveblock', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send('success');
     });
 
     server.post('/getinfo', (req, res) => {
@@ -499,14 +442,6 @@ class Server {
       }));
     });
 
-    server.post('/getnewaddress', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-      let state = store.get('state');
-      let accounts = state.wallet.accounts;
-
-      res.send(accounts[0].cashAddr);
-    });
-
     server.post('/getpeerinfo', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
@@ -553,14 +488,6 @@ class Server {
           }
         }
       ]));
-    });
-
-    server.post('/getrawchangeaddress', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-      let state = store.get('state');
-      let accounts = state.wallet.accounts;
-
-      res.send(accounts[0].cashAddr);
     });
 
     server.post('/getrawmempool', (req, res) => {
@@ -674,55 +601,6 @@ class Server {
       res.send(JSON.stringify(resp));
     });
 
-    server.post('/getreceivedbyaccount', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send('0.00000000');
-    });
-
-    server.post('/getreceivedbyaddress', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send('0.00000000');
-    });
-
-    server.post('/gettransaction', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify({
-          "amount" : 0.00000000,
-          "fee" : 0.00000000,
-          "confirmations" : 106670,
-          "blockhash" : "000000008b630b3aae99b6fe215548168bed92167c47a2f7ad4df41e571bcb51",
-          "blockindex" : 1,
-          "blocktime" : 1396321351,
-          "txid" : "5a7d24cd665108c66b2d56146f244932edae4e2376b561b3d396d5ae017b9589",
-          "walletconflicts" : [
-          ],
-          "time" : 1396321351,
-          "timereceived" : 1418924711,
-          "bip125-replaceable" : "no",
-          "details" : [
-              {
-                  "account" : "",
-                  "address" : "mjSk1Ny9spzU2fouzYgLqGUD8U41iR35QN",
-                  "category" : "send",
-                  "amount" : -0.10000000,
-                  "vout" : 0,
-                  "fee" : 0.00000000
-              },
-              {
-                  "account" : "doc test",
-                  "address" : "mjSk1Ny9spzU2fouzYgLqGUD8U41iR35QN",
-                  "category" : "receive",
-                  "amount" : 0.10000000,
-                  "vout" : 0
-              }
-          ],
-          "hex" : "0100000001cde58f2e37d000eabbb60d9cf0b79ddf67cede6dba58732539983fa341dd5e6c010000006a47304402201feaf12908260f666ab369bb8753cdc12f78d0c8bdfdef997da17acff502d321022049ba0b80945a7192e631c03bafd5c6dc3c7cb35ac5c1c0ffb9e22fec86dd311c01210321eeeb46fd878ce8e62d5e0f408a0eab41d7c3a7872dc836ce360439536e423dffffffff0180969800000000001976a9142b14950b8d31620c6cc923c5408a701b1ec0a02088ac00000000"
-      }));
-    });
-
     server.post('/gettxout', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
@@ -778,112 +656,6 @@ class Server {
       }));
     });
 
-    server.post('/getunconfirmedbalance', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send('0.00000000');
-    });
-
-    server.post('/getwalletinfo', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify({
-          "walletversion" : 60000,
-          "balance" : 1.45060000,
-          "txcount" : 17,
-          "keypoololdest" : 1398809500,
-          "keypoolsize" : 196,
-          "unlocked_until" : 0
-      }));
-    });
-
-    server.post('/help', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send('https://www.youtube.com/watch?v=ZNahS3OHPwA');
-    });
-
-    server.post('/importaddress', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify({ result: null }));
-    });
-
-    server.post('/importmulti', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify([
-        {
-          "success": true
-        },
-        {
-          "success": false,
-          "error": {
-          "code": -8,
-          "message": "Internal must be set for hex scriptPubKey"
-          }
-        }
-      ]));
-    });
-
-    server.post('/importprivkey', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify({ result: null }));
-    });
-
-    server.post('/importprunedfunds', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify({ result: null }));
-    });
-
-    server.post('/importwallet', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify({ result: null }));
-    });
-
-    server.post('/keypoolrefill', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify({ result: null }));
-    });
-
-    server.post('/listaccounts', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify({
-          "" : -2.73928803,
-          "Refund from example.com" : 0.00000000,
-          "doc test" : -498.45900000,
-          "someone else's address" : 0.00000000,
-          "someone else's address2" : 0.00050000,
-          "test" : 499.97975293,
-          "test account" : 0.00000000,
-          "test label" : 0.48961280,
-          "test1" : 1.99900000
-      }));
-    });
-
-    server.post('/listaddressgroupings', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify([
-          [
-              [
-                  "mgKgzJ7HR64CrB3zm1B4FUUCLtaSqUKfDb",
-                  0.00000000
-              ],
-              [
-                  "mnUbTmdAFD5EAg3348Ejmonub7JcWtrMck",
-                  0.00000000,
-                  "test1"
-              ]
-          ]
-      ]));
-    });
-
     server.post('/listbanned', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
@@ -903,165 +675,6 @@ class Server {
       ]));
     });
 
-    server.post('/listlockunspent', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify([
-          {
-              "txid" : "ca7cb6a5ffcc2f21036879493db4530c0ce9b5bff9648f9a3be46e2dfc8e0166",
-              "vout" : 0
-          }
-      ]));
-    });
-
-    server.post('/listreceivedbyaccount', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify([
-          {
-              "account" : "",
-              "amount" : 0.19960000,
-              "confirmations" : 53601
-          },
-          {
-              "account" : "doc test",
-              "amount" : 0.30000000,
-              "confirmations" : 8991
-          }
-      ]));
-    });
-
-    server.post('/listreceivedbyaddress', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify([
-          {
-              "address" : "mnUbTmdAFD5EAg3348Ejmonub7JcWtrMck",
-              "account" : "test1",
-              "amount" : 1.99900000,
-              "confirmations" : 55680,
-              "label" : "test1",
-              "txids" : [
-                  "4d71a6127796766c39270881c779b6e05183f2bf35589261e9572436356f287f",
-                  "997115d0cf7b83ed332e6c1f2e8c44f803c95ea43490c84ce3e9ede4b2e1605f"
-              ]
-          },
-          {
-              "involvesWatchonly" : true,
-              "address" : "n3GNqMveyvaPvUbH469vDRadqpJMPc84JA",
-              "account" : "someone else's address2",
-              "amount" : 0.00050000,
-              "confirmations" : 34714,
-              "label" : "someone else's address2",
-              "txids" : [
-                  "99845fd840ad2cc4d6f93fafb8b072d188821f55d9298772415175c456f3077d"
-              ]
-          }
-      ]));
-    });
-
-    server.post('/listsinceblock', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify({
-          "transactions" : [
-              {
-                  "account" : "doc test",
-                  "address" : "mmXgiR6KAhZCyQ8ndr2BCfEq1wNG2UnyG6",
-                  "category" : "receive",
-                  "amount" : 0.10000000,
-                  "vout" : 0,
-                  "confirmations" : 76478,
-                  "blockhash" : "000000000017c84015f254498c62a7c884a51ccd75d4dd6dbdcb6434aa3bd44d",
-                  "blockindex" : 1,
-                  "blocktime" : 1399294967,
-                  "txid" : "85a98fdf1529f7d5156483ad020a51b7f3340e47448cf932f470b72ff01a6821",
-                  "walletconflicts" : [
-                  ],
-                  "time" : 1399294967,
-                  "timereceived" : 1418924714,
-                  "bip125-replaceable": "no"
-              },
-              {
-                  "involvesWatchonly" : true,
-                  "account" : "someone else's address2",
-                  "address" : "n3GNqMveyvaPvUbH469vDRadqpJMPc84JA",
-                  "category" : "receive",
-                  "amount" : 0.00050000,
-                  "vout" : 0,
-                  "confirmations" : 34714,
-                  "blockhash" : "00000000bd0ed80435fc9fe3269da69bb0730ebb454d0a29128a870ea1a37929",
-                  "blockindex" : 11,
-                  "blocktime" : 1411051649,
-                  "txid" : "99845fd840ad2cc4d6f93fafb8b072d188821f55d9298772415175c456f3077d",
-                  "walletconflicts" : [
-                  ],
-                  "time" : 1418695703,
-                  "timereceived" : 1418925580,
-                  "bip125-replaceable": "no"
-              }
-          ],
-          "lastblock" : "0000000000984add1a686d513e66d25686572c7276ec3e358a7e3e9f7eb88619"
-      }));
-    });
-
-    server.post('/listtransactions', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify([
-          {
-              "involvesWatchonly" : true,
-              "account" : "",
-              "address" : "1GeDA9rRpqaCdsdkTzGtbajt6jPvn3pg2N",
-              "category" : "send",
-              "amount" : -3.45902877,
-              "vout" : 0,
-              "fee" : -0.00032890,
-              "confirmations" : 29710,
-              "blockhash" : "0000000000000000008b9cb38cd3105e75af94b3af79d0a59cbe4edb618fb814",
-              "blockindex" : 1705,
-              "blocktime" : 1463173519,
-              "txid" : "9b32d4315ac4c5e0d3a5fb947b9a198d3641698badc820643a7df23081f99695e",
-              "walletconflicts" : [
-              ],
-              "time" : 1418695703,
-              "timereceived" : 1418925580,
-      	"bip125-replaceable" : "no",
-      	"abandoned": false
-          }
-      ]));
-    });
-
-    server.post('/listunspent', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify([
-          {
-              "txid" : "d54994ece1d11b19785c7248868696250ab195605b469632b7bd68130e880c9a",
-              "vout" : 1,
-              "address" : "mgnucj8nYqdrPFh2JfZSB1NmUThUGnmsqe",
-              "account" : "test label",
-              "scriptPubKey" : "76a9140dfc8bafc8419853b34d5e072ad37d1a5159f58488ac",
-              "amount" : 0.00010000,
-              "confirmations" : 6210,
-              "spendable" : true,
-              "sovable" : true
-          }
-      ]));
-    });
-
-    server.post('/lockunspent', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(true);
-    });
-
-    server.post('/move', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(true);
-    });
-
     server.post('/ping', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
@@ -1074,76 +687,16 @@ class Server {
       res.send(JSON.stringify(null));
     });
 
-    server.post('/prioritisetransaction', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(true);
-    });
-
     server.post('/pruneblockchain', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send('success');
     });
 
-    server.post('/removeprunedfunds', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify(null));
-    });
-
-    server.post('/sendfrom', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send('f14ee5368c339644d3037d929bbe1f1544a532f8826c7b7288cb994b0b0ff5d8');
-    });
-
-    server.post('/sendmany', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send('ec259ab74ddff199e61caa67a26e29b13b5688dc60f509ce0df4d044e8f4d63d');
-    });
-
     server.post('/sendrawtransaction', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send('f5a5ce5988cc72b9b90e8d1d6c910cda53c88d2175177357cc2f2cf0899fbaad');
-    });
-
-    server.post('/sendtoaddress', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send('a2a2eb18cb051b5fe896a32b1cb20b179d981554b6bd7c5a956e56a0eecb04f0');
-    });
-
-    server.post('/setaccount', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify(null));
-    });
-
-    server.post('/setban', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify(null));
-    });
-
-    server.post('/setexcessiveblock', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send('success');
-    });
-
-    server.post('/setnetworkactive', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify(null));
-    });
-
-    server.post('/settxfee', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(true);
     });
 
     server.post('/signmessage', (req, res) => {
@@ -1165,31 +718,6 @@ class Server {
       let message = req.body.params[1];
       let signature = bitbox.BitcoinCash.signMessageWithPrivKey(privateKeyWIF, message);
       res.send(signature);
-    });
-
-    server.post('/signmessagewithprivkey', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      let privateKeyWIF = req.body.params[0];
-      let signature = bitbox.BitcoinCash.signMessageWithPrivKey(privateKeyWIF, req.body.params[1]);
-
-      res.send(signature.toString('base64'));
-    });
-
-
-    server.post('/signrawtransaction', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify({
-          "hex" : "01000000011da9283b4ddf8d89eb996988b89ead56cecdc44041ab38bf787f1206cd90b51e000000006a47304402200ebea9f630f3ee35fa467ffc234592c79538ecd6eb1c9199eb23c4a16a0485a20220172ecaf6975902584987d295b8dddf8f46ec32ca19122510e22405ba52d1f13201210256d16d76a49e6c8e2edc1c265d600ec1a64a45153d45c29a2fd0228c24c3a524ffffffff01405dc600000000001976a9140dfc8bafc8419853b34d5e072ad37d1a5159f58488ac00000000",
-          "complete" : true
-      }));
-    });
-
-    server.post('/stop', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send('Bitcoin server stopping');
     });
 
     server.post('/submitblock', (req, res) => {
@@ -1220,53 +748,12 @@ class Server {
       res.send(true);
     });
 
-    server.post('/verifymessage', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-      let address;
-      let verified;
-      try {
-        address = bitbox.Address.toLegacyAddress(req.body.params[0]);
-      }
-      catch (e) {
-        address = e.message;
-      }
-      if(address === 'Received an invalid Bitcoin Cash address as input.') {
-        res.send(address);
-        return false;
-      }
-
-      try {
-        verified = bitbox.BitcoinCash.verifyMessage(address, req.body.params[1], req.body.params[2])
-      }
-      catch (e) {
-        verified = e.message;
-      }
-      res.send(verified);
-    });
-
     server.post('/verifytxoutproof', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
 
       res.send(JSON.stringify([
       "f20e44c818ec332d95119507fbe36f1b8b735e2c387db62adbe28e50f7904683"
       ]));
-    });
-
-    server.post('/walletlock', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify(null));
-    });
-
-    server.post('/walletpassphrase', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify(null));
-    });
-    server.post('/walletpassphrasechange', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-
-      res.send(JSON.stringify(null));
     });
 
     server.listen(port, () => {console.log('listening on port 8332,')});
